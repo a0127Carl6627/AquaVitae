@@ -12,7 +12,7 @@ export default function WelcomeHeader({
       <h1 style={{
         fontSize: '28px',
         fontWeight: '700',
-        color: '#0f172a',
+        color: '#004B93',
         margin: '0 0 8px 0',
         letterSpacing: '-0.02em',
       }}>
