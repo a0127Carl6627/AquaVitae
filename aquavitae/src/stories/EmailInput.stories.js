@@ -24,7 +24,7 @@ export const Empty = {
 
 export const Disabled = {
   args: {
-    placeholder: 'irmaalfonso@hotmail.com',
+    placeholder: "Correo electrónico",
     disabled: true,
   },
 };
