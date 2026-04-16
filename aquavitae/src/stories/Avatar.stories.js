@@ -1,7 +1,7 @@
 import Avatar from './Avatar';
 
 export default {
-  title: 'Example/Avatar',
+  title: 'SCRUM-22/Avatar',
   component: Avatar,
   argTypes: {
     size: {
