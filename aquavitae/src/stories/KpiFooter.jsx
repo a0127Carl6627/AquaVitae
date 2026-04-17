@@ -49,7 +49,7 @@ const styles = {
   },
 };
 
-// Colores personalizados para cada KPI
+
 const KPI_COLORS = {
   uptime: {
     bg: '#ffffff',      
@@ -116,7 +116,7 @@ export default function KpiFooter({ kpis = KPI_DEFAULTS }) {
   return (
     <div style={styles.container}>
       {kpis.map(({ key, label, value, icon }) => {
-        const colors = KPI_COLORS[key] || KPI_COLORS.uptime; // fallback
+        const colors = KPI_COLORS[key] || KPI_COLORS.uptime; 
         return (
           <div key={key} style={{ ...styles.card, background: colors.bg }}>
             <div style={{ ...styles.iconWrap, background: 'rgba(255,255,255,0.4)' }}>
