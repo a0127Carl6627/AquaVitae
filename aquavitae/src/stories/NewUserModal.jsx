@@ -107,7 +107,12 @@ export default function NewUserModal() {
           <button type="button" className="new-user-modal__confirm-button">
             Confirmar
           </button>
+
+          <button type="button" className="new-user-modal__cancel-button">
+            Cancelar
+          </button>
         </div>
+
       </div>
     </div>
   );

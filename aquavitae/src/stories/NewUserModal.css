@@ -181,6 +181,9 @@
   padding: 0 44px 38px;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+
+  gap: 16px;
 }
 
 .new-user-modal__confirm-button {
@@ -188,7 +191,7 @@
   height: 62px;
   border: none;
   border-radius: 14px;
-  background: linear-gradient(135deg, #3a82f6 0%, #2f66ea 100%);
+  background: linear-gradient(135deg, #438afc 0%, #205be6 100%);
   color: #ffffff;
   font-size: 18px;
   font-weight: 600;
@@ -198,7 +201,27 @@
   font-family: 'Inter', sans-serif;
 }
 
+
+.new-user-modal__cancel-button {
+  min-width: 198px;
+  height: 62px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f6ab3a 0%, #ea2f2f 100%);
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(234, 47, 47, 0.28);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  font-family: 'Inter', sans-serif;
+}
+
 .new-user-modal__confirm-button:hover {
+  transform: translateY(-1px);
+}
+
+.new-user-modal__cancel-button:hover {
   transform: translateY(-1px);
 }
 
