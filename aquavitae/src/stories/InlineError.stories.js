@@ -12,13 +12,13 @@ export default meta;
 
 export const Default = {
   args: {
-    message: 'Correo no registrado',
+    message: 'Credenciales incorrectas',
   },
 };
 
 export const PasswordError = {
   args: {
-    message: 'Contraseña incorrecta',
+    message: 'Credenciales incorrectas',
   },
 };
 
