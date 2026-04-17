@@ -72,7 +72,7 @@ export default function ButtonEliminar({
           }
         }}
       >
-        {/* Icono de papelera */}
+        {/* Icono de eliminación */}
         <svg
           width="16"
           height="16"

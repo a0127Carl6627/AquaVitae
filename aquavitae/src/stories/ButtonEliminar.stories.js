@@ -50,17 +50,6 @@ export const EliminarAlerta = {
   },
 };
 
-export const EliminarPlanta = {
-  args: {
-    size: 'medium',
-    itemName: 'planta',
-    itemDescription: 'Estás a punto de eliminar la planta "Planta Industrial Querétaro". Esta acción es irreversible y perderás todos los datos asociados.',
-    confirmLabel: 'Eliminar Planta',
-    showLabel: true,
-    onConfirm: () => alert('Planta eliminada'),
-  },
-};
-
 export const Pequeno = {
   args: {
     size: 'small',
