@@ -71,7 +71,7 @@ const styles = {
   },
   td: {
     padding: '0.75rem 0.5rem',
-    borderBottom: '0.5px solid #21262d',
+    borderBottom: '0.5px solid #9da1a6',
     color: '#0F172A',
     cursor: 'pointer',
   },
