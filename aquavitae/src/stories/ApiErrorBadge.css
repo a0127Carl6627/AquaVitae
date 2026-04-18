@@ -1,0 +1,34 @@
+.api-error-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.api-error-badge__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.api-error-badge__label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1f2937;
+  font-family: 'inter', sans-serif;
+}
+
+.api-error-badge__subtitle {
+  font-size: 13px;
+  color: #a0a8b5;
+  font-family: 'inter', sans-serif;
+}
+
+.api-error-badge--warning {
+  color: #f2a14a;
+}
+
+.api-error-badge--danger {
+  color: #e5476a;
+}

@@ -1,0 +1,28 @@
+.api-kpi-dashboard {
+  width: 100%;
+  max-width: 1240px;
+  background: #ffffff;
+  border: 1px solid #e7edf3;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(53, 79, 110, 0.12);
+}
+
+.api-kpi-dashboard__top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid #edf1f5;
+}
+
+.api-kpi-dashboard__top > * {
+  padding: 24px 24px;
+}
+
+.api-kpi-dashboard__top > *:first-child {
+  border-right: 1px solid #edf1f5;
+}
+
+.api-kpi-dashboard__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
