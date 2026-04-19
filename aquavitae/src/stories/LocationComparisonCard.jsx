@@ -1,6 +1,8 @@
 import React from 'react';
-import BarChartHistorico from './BarChartHistorico';
-import LineChartTendencia from './LineChartTendencia';
+import {
+  BarChart, Bar, XAxis, Cell, ResponsiveContainer, Tooltip as ReTooltip,
+  Area, AreaChart,
+} from 'recharts';
 
 const STATUS = {
   favorable: { label: 'FAVORABLE', bg: '#dcfce7', color: '#15803d' },
@@ -8,7 +10,9 @@ const STATUS = {
   critico:   { label: 'CRÍTICO',   bg: '#fee2e2', color: '#dc2626' },
 };
 
-const TREND_DOT = { favorable: '#3b82f6', riesgo: '#f59e0b', critico: '#ef4444' };
+const TREND_DOT  = { favorable: '#3b82f6', riesgo: '#f59e0b', critico: '#ef4444' };
+const BAR_COLORS = { favorable: '#bfdbfe', riesgo: '#fde68a', critico: '#fecaca' };
+const BAR_ACTIVE = { favorable: '#2563eb', riesgo: '#f59e0b', critico: '#ef4444' };
 
 function formatVolume(m3) {
   if (m3 >= 1000000) return `${(m3 / 1000000).toFixed(1)}M m³`;
@@ -91,15 +95,45 @@ export default function LocationComparisonCard({ locationData = {} }) {
 
       {/* Gráfica de barras histórica */}
       {barData.length > 0 && (
-        <div style={{ margin: '0 -20px' }}>
-          <BarChartHistorico data={barData} />
+        <div style={{ height: 90 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={barData} barCategoryGap="20%" margin={{ top: 2, right: 2, left: 2, bottom: 0 }}>
+              <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} />
+              <ReTooltip contentStyle={{ fontSize: 11, borderRadius: 6, border: '1px solid #e2e8f0' }} cursor={false}
+                formatter={v => [`${Math.round(v / 1000)}k m³`, 'Disponibilidad']} />
+              <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                {barData.map((_, i) => (
+                  <Cell key={i} fill={i === barData.length - 1 ? BAR_ACTIVE[status] : BAR_COLORS[status]} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       )}
 
       {/* Gráfica de tendencia */}
       {lineData.length > 0 && (
-        <div style={{ margin: '0 -20px' }}>
-          <LineChartTendencia data={lineData} nivel={status} />
+        <div>
+          <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>
+            Tendencia de sequía (12 meses)
+          </div>
+          <div style={{ height: 75 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={lineData} margin={{ top: 4, right: 2, left: 2, bottom: 0 }}>
+                <defs>
+                  <linearGradient id={`grad-${status}`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={dotColor} stopOpacity={0.15}/>
+                    <stop offset="95%" stopColor={dotColor} stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }}
+                  ticks={['Enero', 'Junio', 'Diciembre']} />
+                <ReTooltip contentStyle={{ fontSize: 11, borderRadius: 6, border: '1px solid #e2e8f0' }} cursor={false} />
+                <Area type="monotone" dataKey="value" stroke={dotColor} strokeWidth={2}
+                  fill={`url(#grad-${status})`} dot={false} activeDot={{ r: 3, fill: dotColor, strokeWidth: 0 }} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       )}
 
