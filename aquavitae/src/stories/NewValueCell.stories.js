@@ -1,6 +1,5 @@
 import React from 'react';
 import NewValueCell from './NewValueCell';
-import PreviousValueCell from './PreviousValueCell';
 
 export default {
   title: 'Auditoria/NewValueCell',
@@ -115,8 +114,8 @@ export const ComparacionAnteriorNuevo = {
                 <td style={{ padding: '10px 12px', fontFamily: 'monospace', color: '#374151', fontWeight: 600 }}>
                   {f.campo}
                 </td>
-                <td style={{ padding: '10px 12px', maxWidth: 220 }}>
-                  <PreviousValueCell value={f.anterior} />
+                <td style={{ padding: '10px 12px', maxWidth: 220, fontSize: 12, color: '#6b7280', fontStyle: 'italic' }}>
+                  {f.anterior === null ? '—' : typeof f.anterior === 'object' ? JSON.stringify(f.anterior) : String(f.anterior)}
                 </td>
                 <td style={{ padding: '10px 12px', maxWidth: 220 }}>
                   <NewValueCell value={f.nuevo} previousValue={f.anterior} />
