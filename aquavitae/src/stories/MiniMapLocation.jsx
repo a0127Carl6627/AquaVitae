@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// Fix default marker icon
+// Carga el CSS de Leaflet desde CDN para evitar el null-loader de Storybook
+if (typeof document !== 'undefined') {
+  if (!document.getElementById('leaflet-cdn-css')) {
+    const link = document.createElement('link');
+    link.id = 'leaflet-cdn-css';
+    link.rel = 'stylesheet';
+    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    document.head.appendChild(link);
+  }
+}
+
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
@@ -74,7 +83,6 @@ export default function MiniMapLocation({
       fontFamily: 'sans-serif',
       backgroundColor: '#fff',
     }}>
-      {/* Título */}
       <div style={{ padding: '14px 16px 10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/>
@@ -85,7 +93,6 @@ export default function MiniMapLocation({
         </span>
       </div>
 
-      {/* Mapa */}
       <div style={{ position: 'relative', height: '200px' }}>
         <MapContainer
           center={[coordinates.lat, coordinates.lng]}
@@ -109,7 +116,6 @@ export default function MiniMapLocation({
         </MapContainer>
       </div>
 
-      {/* Footer */}
       <div style={{ padding: '10px 16px', borderTop: '1px solid #f1f5f9' }}>
         <div style={{ display: 'flex', gap: '20px', marginBottom: '10px' }}>
           <div>
