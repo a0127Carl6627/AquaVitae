@@ -1,0 +1,35 @@
+.generate-feasibility-report-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 56px;
+  padding: 0 28px;
+
+  border: none;
+  border-radius: 16px;
+
+  background: linear-gradient(135deg, #2f8df3 0%, #1f78e6 100%);
+  color: #ffffff;
+
+  font-size: 16px;
+  font-weight: 600;
+    font-family: 'inter', sans-serif;
+  line-height: 1;
+
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(31, 120, 230, 0.24);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.generate-feasibility-report-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(31, 120, 230, 0.28);
+}
+
+.generate-feasibility-report-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}

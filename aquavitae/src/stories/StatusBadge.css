@@ -1,0 +1,21 @@
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  Font-family: inter,sans-serif;
+  line-height: 1;
+}
+
+.status-badge--active {
+  background: #e8f7ee;
+  color: #2ea26b;
+}
+
+.status-badge--inactive {
+  background: #eef1f4;
+  color: #7f8898;
+}

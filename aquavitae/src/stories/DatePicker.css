@@ -1,0 +1,38 @@
+.date-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+
+  height: 48px;
+  padding: 0 14px;
+
+  background-color: #ececf3;
+  border-radius: 16px;
+
+  box-sizing: border-box;
+}
+
+.date-picker__icon {
+  color: #5f6b85;
+  display: flex;
+  align-items: center;
+}
+
+.date-picker__svg {
+  width: 22px;
+  height: 22px;
+}
+
+.date-picker__input {
+  flex: 1;
+
+  border: none;
+  background: transparent;
+
+  font-size: 20px;
+  color: #0f1733;
+  font-family: 'inter', sans-serif;
+
+  outline: none;
+
+}

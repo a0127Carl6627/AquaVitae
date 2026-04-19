@@ -1,0 +1,65 @@
+.users-table {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e7edf3;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.users-table__grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1.5fr 1fr 0.9fr 0.8fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.users-table__header {
+  padding: 16px 20px;
+  background: #f9fafb;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.users-table__header span {
+  font-size: 12px;
+  font-weight: 700;
+  color: #98a2b3;
+  font-family: 'inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.users-table__row {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.users-table__row:last-child {
+  border-bottom: none;
+}
+
+.users-table__name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+  font-family: 'inter', sans-serif;
+}
+
+.users-table__text {
+  font-size: 14px;
+  color: #374151;
+  font-family: 'inter', sans-serif;
+}
+
+.users-table__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.users-table__icon-button {
+  border: none;
+  background: #f4f6f8;
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+}

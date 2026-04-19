@@ -1,0 +1,26 @@
+.navigation-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
+  background: #f4f6f8;
+  border-radius: 14px;
+}
+
+.navigation-tabs__item {
+  border: none;
+  background: transparent;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #667085;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navigation-tabs__item.is-active {
+  background: #ffffff;
+  color: #111827;
+  box-shadow: 0 2px 8px rgba(17, 24, 39, 0.08);
+}

@@ -1,9 +1,9 @@
-[20:58:34.922] [INFO] [36mInitializing Storybook[39m
-[20:58:35.865] [DEBUG] Getting package.json info for C:\Users\cmom_\OneDrive\Escritorio\ESCUELA2\5TO_Sem_Reto_Repo\AquaVitae\package.json...
-[20:58:35.866] [DEBUG] Getting CLI versions from NPM for storybook...
-[20:58:35.866] [DEBUG] Executing command: npm info storybook version
-[20:58:37.039] [INFO] Adding Storybook version 10.3.5 to your project
-[20:58:37.041] [ERROR] Unable to initialize Storybook in this directory.
+[23:35:36.516] [INFO] [36mInitializing Storybook[39m
+[23:35:37.844] [DEBUG] Getting package.json info for C:\Users\cmom_\OneDrive\Escritorio\ESCUELA2\5TO_Sem_Reto_Repo\AquaVitae\package.json...
+[23:35:37.844] [DEBUG] Getting CLI versions from NPM for storybook...
+[23:35:37.845] [DEBUG] Executing command: npm info storybook version
+[23:35:39.547] [INFO] Adding Storybook version 10.3.5 to your project
+[23:35:39.551] [ERROR] Unable to initialize Storybook in this directory.
 
 Storybook couldn't detect a supported framework or configuration for your project. Make sure you're inside a framework project (e.g., React, Vue, Svelte, Angular, Next.js) and that its dependencies are installed.
 
