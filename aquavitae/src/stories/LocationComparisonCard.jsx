@@ -1,8 +1,6 @@
 import React from 'react';
-import {
-  BarChart, Bar, XAxis, ResponsiveContainer, Tooltip as ReTooltip,
-  LineChart, Line, Area, AreaChart,
-} from 'recharts';
+import BarChartHistorico from './BarChartHistorico';
+import LineChartTendencia from './LineChartTendencia';
 
 const STATUS = {
   favorable: { label: 'FAVORABLE', bg: '#dcfce7', color: '#15803d' },
@@ -10,11 +8,7 @@ const STATUS = {
   critico:   { label: 'CRÍTICO',   bg: '#fee2e2', color: '#dc2626' },
 };
 
-const TREND_COLORS = {
-  favorable: '#3b82f6',
-  riesgo:    '#f59e0b',
-  critico:   '#ef4444',
-};
+const TREND_DOT = { favorable: '#3b82f6', riesgo: '#f59e0b', critico: '#ef4444' };
 
 function formatVolume(m3) {
   if (m3 >= 1000000) return `${(m3 / 1000000).toFixed(1)}M m³`;
@@ -56,7 +50,7 @@ export default function LocationComparisonCard({ locationData = {} }) {
     stressLabel = 'Estrés hídrico',
   } = locationData;
 
-  const trendColor = TREND_COLORS[status] || '#3b82f6';
+  const dotColor = TREND_DOT[status] || '#3b82f6';
 
   return (
     <div style={{
@@ -97,54 +91,21 @@ export default function LocationComparisonCard({ locationData = {} }) {
 
       {/* Gráfica de barras histórica */}
       {barData.length > 0 && (
-        <div style={{ height: 80 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={barData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-              <XAxis dataKey="year" tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-              <ReTooltip
-                contentStyle={{ fontSize: 11, borderRadius: 6, border: '1px solid #e2e8f0' }}
-                formatter={(v) => [formatVolume(v), 'Disponibilidad']}
-              />
-              <Bar dataKey="value" radius={[3, 3, 0, 0]}
-                fill={status === 'favorable' ? '#bfdbfe' : status === 'riesgo' ? '#fde68a' : '#fecaca'}
-                activeBar={{ fill: trendColor }}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+        <div style={{ margin: '0 -20px' }}>
+          <BarChartHistorico data={barData} />
         </div>
       )}
 
       {/* Gráfica de tendencia */}
       {lineData.length > 0 && (
-        <div>
-          <div style={{ fontSize: 10, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
-            Tendencia de sequía (12 meses)
-          </div>
-          <div style={{ height: 70 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={lineData} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id={`grad-${status}`} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={trendColor} stopOpacity={0.15}/>
-                    <stop offset="95%" stopColor={trendColor} stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="month" tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false}
-                  ticks={['Enero', 'Junio', 'Diciembre']}
-                />
-                <ReTooltip contentStyle={{ fontSize: 11, borderRadius: 6, border: '1px solid #e2e8f0' }} />
-                <Area type="monotone" dataKey="value" stroke={trendColor} strokeWidth={2}
-                  fill={`url(#grad-${status})`} dot={false}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
+        <div style={{ margin: '0 -20px' }}>
+          <LineChartTendencia data={lineData} nivel={status} />
         </div>
       )}
 
       {/* Footer */}
       <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: 10, fontSize: 11, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 6 }}>
-        <span style={{ width: 8, height: 8, borderRadius: '50%', background: trendColor, display: 'inline-block' }} />
+        <span style={{ width: 8, height: 8, borderRadius: '50%', background: dotColor, display: 'inline-block' }} />
         {stressLabel}
       </div>
     </div>
