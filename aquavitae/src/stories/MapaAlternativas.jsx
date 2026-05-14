@@ -109,7 +109,7 @@ export default function MapaAlternativas({
         layersRef.current = {};
       }
     };
-  }, []);
+  }, [plantaActual, alternativas, onSelectAlternativa]);
 
   // Ref to track current selectedEstado inside Leaflet event handlers
   const selectedEstadoRef = useRef(selectedEstado);
@@ -139,7 +139,7 @@ export default function MapaAlternativas({
         fillOpacity: isSelected ? 0.95 : 0.7,
       });
     });
-  }, [selectedEstado]);
+  }, [selectedEstado, plantaActual, alternativas]);
 
   return (
     <div style={{

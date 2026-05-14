@@ -121,7 +121,7 @@ export default function TablaCostosUbicacion({
         <span style={{ fontSize: 11, color: '#8a93a3' }}>
           {alternativas.length} ubicaciones analizadas · 1 recomendada
         </span>
-        <a href="#" style={{
+        <a href="javascript:void(0)" style={{
           fontSize: 12, fontWeight: 600, color: '#1d4ed8',
           textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4,
         }}>

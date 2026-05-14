@@ -27,12 +27,6 @@ const config = {
       path.resolve(__dirname, '../node_modules'),
     ];
 
-    // Ignorar cualquier import de CSS de leaflet
-    config.module.rules.push({
-      test: /leaflet.*\.css$/,
-      use: 'null-loader',
-    });
-
     return config;
   },
 };
