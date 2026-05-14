@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SimulacionPage from './pages/SimulacionPage';
 import AlternativasPage from './pages/AlternativasPage';
+import LoginContainer from './components/LoginPage/LoginContainer';
 
 const NAV = [
   {
@@ -25,7 +26,14 @@ const NAV = [
 
 export default function App() {
   const [page, setPage] = useState('simulacion');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // Si no está autenticado, mostrar login
+  if (!isAuthenticated) {
+    return <LoginContainer onLogin={() => setIsAuthenticated(true)} />;
+  }
+
+  // Si está autenticado, mostrar la app con sidebar
   return (
     <div style={{ display: 'flex', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif' }}>
 
@@ -70,9 +78,10 @@ export default function App() {
 
         <div style={{ flex: 1 }} />
 
-        {/* Logout placeholder */}
+        {/* Botón Logout — ahora funcional */}
         <button
           title="Salir"
+          onClick={() => setIsAuthenticated(false)}
           style={{
             width: 40, height: 40, borderRadius: 10,
             display: 'grid', placeItems: 'center',
