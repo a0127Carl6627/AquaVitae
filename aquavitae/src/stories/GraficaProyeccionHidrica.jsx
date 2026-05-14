@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   ComposedChart, Area, Line, XAxis, YAxis,
-  Tooltip, ReferenceLine, ResponsiveContainer, Legend,
+  Tooltip, ReferenceLine, ResponsiveContainer,
 } from 'recharts';
 
 const TooltipCustom = ({ active, payload, label }) => {

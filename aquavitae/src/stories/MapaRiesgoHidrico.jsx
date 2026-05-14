@@ -82,7 +82,7 @@ export default function MapaRiesgoHidrico({
         instanceRef.current = null;
       }
     };
-  }, []);
+  }, [plantas, onSelectPlanta]);
 
   return (
     <div style={{
