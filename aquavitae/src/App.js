@@ -3,24 +3,29 @@ import ExpandableSidebar from './components/ExpandableSidebar';
 import DashboardInicio from './pages/DashboardInicio';
 import SimulacionPage from './pages/SimulacionPage';
 import AlternativasPage from './pages/AlternativasPage';
+import LoginContainer from './components/LoginPage/LoginContainer';
 
 export default function App() {
   const [page, setPage] = useState('dashboard');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleNavigate = (newPage) => {
     setPage(newPage);
   };
 
   const handleLogout = () => {
-    // TODO: Implement logout logic
-    console.log('Logout clicked');
+    setIsAuthenticated(false); // Cierra sesión
   };
+
+  if (!isAuthenticated) {
+    return <LoginContainer onLogin={() => setIsAuthenticated(true)} />;
+  }
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif' }}>
       <ExpandableSidebar activePage={page} onNavigate={handleNavigate} onLogout={handleLogout} />
-
-      {/* Page content */}
+      
+      {/* Contenido dinámico según la página seleccionada */}
       {page === 'dashboard' && <DashboardInicio />}
       {page === 'simulacion' && <SimulacionPage />}
       {page === 'alternativas' && <AlternativasPage />}
