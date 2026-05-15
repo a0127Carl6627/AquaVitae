@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 
 const RISK_COLOR = {
   ALTO:       '#ef4444',
@@ -18,6 +19,16 @@ const MEXICO_CENTER = [23.6345, -102.5528];
 const ZOOM_INICIAL  = 5;
 
 export default function MexicoRiskMap({ plantas = [], altura = '360px' }) {
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    if (mapRef.current) {
+      setTimeout(() => {
+        mapRef.current.invalidateSize();
+      }, 100);
+    }
+  }, [altura, plantas.length]);
+
   const counts = plantas.reduce((acc, p) => {
     acc[p.nivelRiesgo] = (acc[p.nivelRiesgo] ?? 0) + 1;
     return acc;
@@ -37,7 +48,7 @@ export default function MexicoRiskMap({ plantas = [], altura = '360px' }) {
           zoom={ZOOM_INICIAL}
           scrollWheelZoom={true}
           style={{ height: altura, width: '100%' }}
-          key="mexico-risk-map"
+          ref={mapRef} 
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
