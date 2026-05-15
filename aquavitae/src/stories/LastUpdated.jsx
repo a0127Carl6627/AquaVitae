@@ -17,7 +17,6 @@ function formatDate(value) {
   return `${day} ${monthCap} ${year}, ${hours}:${minutes} ${ampm}`;
 }
 
-
 export default function LastUpdated({ fechaActualizacion, onRefresh, loading = false }) {
   return (
     <div style={{

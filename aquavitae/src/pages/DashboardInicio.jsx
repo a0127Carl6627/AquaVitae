@@ -116,12 +116,12 @@ function LoadingScreen() {
 export default function DashboardInicio() {
 
   const [plantas,    setPlantas]    = useState([]);
-  const [resumen,    setResumen]    = useState(null);  
+  const [resumen,    setResumen]    = useState(null);
   const [alertas,    setAlertas]    = useState([]);
   const [evolucion,  setEvolucion]  = useState([]);
   const [loading,    setLoading]    = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [lastUpdate, setLastUpdate] = useState(null);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
   const [error,      setError]      = useState(null);
 
   const fetchData = useCallback(async (isRefresh = false) => {
@@ -149,9 +149,9 @@ export default function DashboardInicio() {
         ubicacionNombre:  p.ubicacionNombre,
         latitud:          p.latitud,
         longitud:         p.longitud,
-        nivelRiesgo:      p.nivelRiesgo,      
-        tendencia:        p.tendencia,         
-        indiceHidricoPct: p.indiceHidricoPct, 
+        nivelRiesgo:      p.nivelRiesgo,
+        tendencia:        p.tendencia,
+        indiceHidricoPct: p.indiceHidricoPct,
         indiceHidrico:    (p.indiceHidricoPct ?? 0) / 100,
       }));
 
@@ -165,27 +165,27 @@ export default function DashboardInicio() {
 
       const alertasTransformadas = (alertasData || []).map(a => ({
         id:          a.id,
-        tipo:        a.tipo,  
+        tipo:        a.tipo,
         titulo:      a.titulo,
         descripcion: a.descripcion,
         hora:        formatHora(a.fecha),
       }));
 
       const evolucionTransformada = (evolucionData || []).map(p => ({
-        fecha:        formatFechaCorta(p.fecha),   
-        valorPromedio: p.valorPromedio,           
+        fecha:         formatFechaCorta(p.fecha),
+        valorPromedio: p.valorPromedio,
       }));
 
       setPlantas(plantasTransformadas);
       setResumen(resumenTransformado);
       setAlertas(alertasTransformadas);
       setEvolucion(evolucionTransformada);
-      setLastUpdate(new Date());
 
     } catch (err) {
       console.error('Dashboard error:', err);
       setError(err.message ?? 'No se pudo cargar el dashboard.');
     } finally {
+      setLastUpdate(new Date());
       setLoading(false);
       setRefreshing(false);
     }
@@ -193,17 +193,17 @@ export default function DashboardInicio() {
 
   useEffect(() => { fetchData(false); }, [fetchData]);
 
+  const totalPlantas = resumen ? resumen.alto + resumen.medio + resumen.bajo : 0;
+
   const nivelGeneral = !resumen || totalPlantas === 0
-  ? 'bajo'
-  : resumen.alto > 0
-  ? 'alto'
-  : resumen.medio > 0
-  ? 'medio'
-  : 'bajo';
+    ? 'bajo'
+    : resumen.alto > 0
+    ? 'alto'
+    : resumen.medio > 0
+    ? 'medio'
+    : 'bajo';
 
   if (loading) return <LoadingScreen />;
-
-  const totalPlantas = resumen ? resumen.alto + resumen.medio + resumen.bajo : 0;
 
   return (
     <div style={{
@@ -216,12 +216,17 @@ export default function DashboardInicio() {
     }}>
 
       <style>{`
+        /*
+         * dash-gauge-row: RiskGauge (columna fija ~220px) + StatCards (resto del espacio).
+         * align-items: center alinea verticalmente el gauge con el bloque de 4 cards,
+         * logrando que visualmente queden a la misma altura como en el diseño de referencia.
+         */
         .dash-gauge-row {
           display: grid;
-          grid-template-columns: 240px 1fr;
+          grid-template-columns: 220px 1fr;
           gap: 16px;
           margin-bottom: 20px;
-          align-items: start;
+          align-items: center;
         }
         .dash-map-row {
           display: grid;
@@ -257,6 +262,7 @@ export default function DashboardInicio() {
 
       <div style={{ maxWidth: 1400, margin: '0 auto' }}>
 
+        {/* ── Header ── */}
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -284,6 +290,7 @@ export default function DashboardInicio() {
           />
         </div>
 
+        {/* ── Error banner ── */}
         {error && (
           <div style={{
             padding: '12px 16px',
@@ -311,16 +318,15 @@ export default function DashboardInicio() {
           </div>
         )}
 
+        {/* ── Gauge + StatCards ── */}
         <div className="dash-gauge-row">
-          {/* Velocímetro */}
-          <div style={card}>
+          <div style={{ ...card, padding: '16px 12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <RiskGauge
               nivel={nivelGeneral}
               regiones={resumen?.crisisActivas ?? 0}
             />
           </div>
 
-          {/* 4 tarjetas de métricas */}
           <StatCards
             crisisActivas={resumen?.crisisActivas   ?? 0}
             plantasAltoRiesgo={resumen?.alto        ?? 0}
@@ -330,6 +336,7 @@ export default function DashboardInicio() {
           />
         </div>
 
+        {/* ── Map + Plant Table ── */}
         <div className="dash-map-row">
           <div style={card}>
             <MexicoRiskMap plantas={plantas} altura="340px" />
@@ -339,9 +346,8 @@ export default function DashboardInicio() {
           </div>
         </div>
 
+        {/* ── Donut + Evolution + Alerts ── */}
         <div className="dash-bottom-row">
-
-          {/* Dona de distribución */}
           <div style={card}>
             <DonutChart
               alto={resumen?.alto  ?? 0}
@@ -350,7 +356,6 @@ export default function DashboardInicio() {
             />
           </div>
 
-          {/* Gráfica de evolución 7 días */}
           <div style={{ ...card, display: 'flex', flexDirection: 'column' }}>
             <h3 style={{ fontSize: 15, fontWeight: 500, color: '#111827', margin: '0 0 2px' }}>
               Evolución del riesgo hídrico
@@ -363,13 +368,12 @@ export default function DashboardInicio() {
             </div>
           </div>
 
-          {/* Alertas recientes */}
           <div style={card}>
             <AlertsList alerts={alertas} />
           </div>
         </div>
 
-        {/* ── FOOTER: notificaciones ──────────────────────── */}
+        {/* ── Email notifications footer ── */}
         <div style={{
           backgroundColor: '#ffffff',
           borderRadius: 12,
