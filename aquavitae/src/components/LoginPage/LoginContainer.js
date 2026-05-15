@@ -2,11 +2,15 @@ import { useState } from "react";
 import LoginPage from "./LoginPage";
 import { loginWithEmail } from "../../lib/authService";
 
+// onLogin es la función que App.js pasa como prop:
+//   <LoginContainer onLogin={() => setIsAuthenticated(true)} />
+// Al llamarla, App.js actualiza su estado y muestra el dashboard
+// sin recargar la página.
 export default function LoginContainer({ onLogin }) {
-  const [generalError, setGeneralError] = useState("");
-  const [emailError, setEmailError] = useState("");
+  const [generalError,  setGeneralError]  = useState("");
+  const [emailError,    setEmailError]    = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading,       setLoading]       = useState(false);
 
   async function handleLogin({ email, password }) {
     setGeneralError("");
@@ -26,17 +30,13 @@ export default function LoginContainer({ onLogin }) {
     try {
       setLoading(true);
 
-      const result = await loginWithEmail(email, password);
-
-      console.log("Login correcto:", result);
-
-      onLogin();
+      await loginWithEmail(email, password);
+      if (onLogin) onLogin();
 
     } catch (error) {
       console.error(error);
-
       setGeneralError("Credenciales incorrectas. Intenta nuevamente.");
-      setEmailError("Correo no registrado");
+      setEmailError("Correo no registrado o incorrecto");
       setPasswordError("Contraseña incorrecta");
     } finally {
       setLoading(false);

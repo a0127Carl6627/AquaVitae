@@ -1,59 +1,56 @@
 import React, { useState } from 'react';
 import ExpandableSidebar from './components/ExpandableSidebar';
-import DashboardInicio from './pages/DashboardInicio';
-import SimulacionPage from './pages/SimulacionPage';
-import AlternativasPage from './pages/AlternativasPage';
-import LoginContainer from './components/LoginPage/LoginContainer';
-import { logout } from './lib/authService';
+import DashboardInicio   from './pages/DashboardInicio';
+import SimulacionPage    from './pages/SimulacionPage';
+import AlternativasPage  from './pages/AlternativasPage';
+import LoginContainer    from './components/LoginPage/LoginContainer';
 
 export default function App() {
   const [page, setPage] = useState('dashboard');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Inicializa leyendo localStorage para que al recargar la página
+  // el usuario no tenga que volver a iniciar sesión si ya tenía token.
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return !!localStorage.getItem('aquavitae_token');
+  });
 
   const handleNavigate = (newPage) => {
     setPage(newPage);
   };
 
-  const handleLogout = async () => {
-    await logout();
-
-    setIsAuthenticated(false);
+  const handleLogin = () => {
+    // El token ya fue guardado en localStorage por authService.js.
+    // Solo actualizamos el estado de React para mostrar el dashboard.
+    setIsAuthenticated(true);
     setPage('dashboard');
   };
 
+  const handleLogout = () => {
+    // Limpia el token del localStorage y vuelve al login.
+    localStorage.removeItem('aquavitae_token');
+    localStorage.removeItem('aquavitae_user');
+    setIsAuthenticated(false);
+  };
+
   if (!isAuthenticated) {
-    return <LoginContainer onLogin={() => setIsAuthenticated(true)} />;
+    return <LoginContainer onLogin={handleLogin} />;
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        minHeight: '100vh',
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif',
-      }}
-    >
+    <div style={{
+      display: 'flex',
+      minHeight: '100vh',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif',
+    }}>
       <ExpandableSidebar
         activePage={page}
         onNavigate={handleNavigate}
         onLogout={handleLogout}
       />
 
-      <main
-        style={{
-          flex: 1,
-          minHeight: '100vh',
-          marginLeft: 64,
-          transition: 'margin-left 0.3s ease',
-          overflowX: 'hidden',
-        }}
-      >
-        {/* Contenido dinámico según la página seleccionada */}
-        {page === 'dashboard' && <DashboardInicio />}
-        {page === 'simulacion' && <SimulacionPage />}
-        {page === 'alternativas' && <AlternativasPage />}
-      </main>
+      {page === 'dashboard'     && <DashboardInicio />}
+      {page === 'simulacion'    && <SimulacionPage />}
+      {page === 'alternativas'  && <AlternativasPage />}
     </div>
   );
 }
