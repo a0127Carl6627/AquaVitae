@@ -4,6 +4,7 @@ import DashboardInicio from './pages/DashboardInicio';
 import SimulacionPage from './pages/SimulacionPage';
 import AlternativasPage from './pages/AlternativasPage';
 import LoginContainer from './components/LoginPage/LoginContainer';
+import { logout } from './lib/authService';
 
 export default function App() {
   const [page, setPage] = useState('dashboard');
@@ -13,8 +14,11 @@ export default function App() {
     setPage(newPage);
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false); // Cierra sesión
+  const handleLogout = async () => {
+    await logout();
+
+    setIsAuthenticated(false);
+    setPage('dashboard');
   };
 
   if (!isAuthenticated) {
@@ -22,13 +26,34 @@ export default function App() {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif' }}>
-      <ExpandableSidebar activePage={page} onNavigate={handleNavigate} onLogout={handleLogout} />
-      
-      {/* Contenido dinámico según la página seleccionada */}
-      {page === 'dashboard' && <DashboardInicio />}
-      {page === 'simulacion' && <SimulacionPage />}
-      {page === 'alternativas' && <AlternativasPage />}
+    <div
+      style={{
+        display: 'flex',
+        minHeight: '100vh',
+        fontFamily:
+          '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif',
+      }}
+    >
+      <ExpandableSidebar
+        activePage={page}
+        onNavigate={handleNavigate}
+        onLogout={handleLogout}
+      />
+
+      <main
+        style={{
+          flex: 1,
+          minHeight: '100vh',
+          marginLeft: 64,
+          transition: 'margin-left 0.3s ease',
+          overflowX: 'hidden',
+        }}
+      >
+        {/* Contenido dinámico según la página seleccionada */}
+        {page === 'dashboard' && <DashboardInicio />}
+        {page === 'simulacion' && <SimulacionPage />}
+        {page === 'alternativas' && <AlternativasPage />}
+      </main>
     </div>
   );
 }

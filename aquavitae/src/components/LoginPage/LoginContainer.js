@@ -2,7 +2,7 @@ import { useState } from "react";
 import LoginPage from "./LoginPage";
 import { loginWithEmail } from "../../lib/authService";
 
-export default function LoginContainer() {
+export default function LoginContainer({ onLogin }) {
   const [generalError, setGeneralError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -30,7 +30,8 @@ export default function LoginContainer() {
 
       console.log("Login correcto:", result);
 
-      window.location.href = "/dashboard";
+      onLogin();
+
     } catch (error) {
       console.error(error);
 
