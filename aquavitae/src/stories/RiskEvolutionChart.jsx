@@ -17,7 +17,7 @@ export default function RiskEvolutionChart({ data = [] }) {
   const chartData = useMemo(
     () => data.map((d) => ({
       fecha: d.fecha,
-      porcentaje: +(d.valorPromedio * 100).toFixed(1),
+      porcentaje: +(d.valorPromedio).toFixed(1),
     })),
     [data]
   );
