@@ -239,6 +239,7 @@ export default function SimulacionPage() {
           <MapaRiesgoHidrico
             plantas={plantas}
             height={340}
+            selectedEstado={selectedPlanta?.estado ?? null}
             onSelectPlanta={p => setSelectedId(p.id ?? selectedId)}
           />
 

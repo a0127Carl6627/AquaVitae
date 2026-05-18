@@ -27,13 +27,24 @@ export default function MapaAlternativas({
 }) {
   const mapRef = useRef(null);
   const instanceRef = useRef(null);
-  const layersRef = useRef({});   // normalizedName → leaflet layer
+  const layersRef = useRef({});
+  const onSelectRef = useRef(onSelectAlternativa);
+  useEffect(() => { onSelectRef.current = onSelectAlternativa; });
+
+  const plantaActualRef = useRef(plantaActual);
+  const alternativasRef = useRef(alternativas);
+  useEffect(() => {
+    plantaActualRef.current = plantaActual;
+    alternativasRef.current = alternativas;
+  });
 
   useEffect(() => {
     if (instanceRef.current) return;
 
     import('leaflet').then(L => {
       import('leaflet/dist/leaflet.css');
+      if (!mapRef.current) return;
+      if (mapRef.current._leaflet_id) mapRef.current._leaflet_id = null;
 
       const map = L.map(mapRef.current, {
         zoomControl: true,
@@ -49,7 +60,7 @@ export default function MapaAlternativas({
         style: feature => {
           const name = feature.properties.name || feature.properties.NAME_1 || '';
           return {
-            fillColor: getStateColor(name, plantaActual, alternativas),
+            fillColor: getStateColor(name, plantaActualRef.current, alternativasRef.current),
             weight: 1.2,
             color: '#ffffff',
             fillOpacity: 0.7,
@@ -61,8 +72,8 @@ export default function MapaAlternativas({
 
           layersRef.current[gn] = layer;
 
-          const isActual = plantaActual && gn === normalize(plantaActual.estado);
-          const alt = alternativas.find(a => {
+          const isActual = plantaActualRef.current && gn === normalize(plantaActualRef.current.estado);
+          const alt = alternativasRef.current.find(a => {
             const an = normalize(a.estado);
             return gn === an || gn.startsWith(an) || an.startsWith(gn);
           });
@@ -81,7 +92,7 @@ export default function MapaAlternativas({
           layer.on({
             mouseover: e => e.target.setStyle({ weight: 2.5, color: '#1a2332', fillOpacity: 0.9 }),
             mouseout: () => {
-              const baseColor = getStateColor(name, plantaActual, alternativas);
+              const baseColor = getStateColor(name, plantaActualRef.current, alternativasRef.current);
               const isSel = selectedEstadoRef.current && (
                 gn === normalize(selectedEstadoRef.current) ||
                 gn.startsWith(normalize(selectedEstadoRef.current)) ||
@@ -94,7 +105,7 @@ export default function MapaAlternativas({
                 fillColor: isSel ? '#2563eb' : baseColor,
               });
             },
-            click: () => alt && onSelectAlternativa?.(alt),
+            click: () => alt && onSelectRef.current?.(alt),
           });
         },
       }).addTo(map);
@@ -109,7 +120,7 @@ export default function MapaAlternativas({
         layersRef.current = {};
       }
     };
-  }, [plantaActual, alternativas, onSelectAlternativa]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Ref to track current selectedEstado inside Leaflet event handlers
   const selectedEstadoRef = useRef(selectedEstado);

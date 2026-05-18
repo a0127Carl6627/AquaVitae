@@ -21,15 +21,43 @@ export default function MapaRiesgoHidrico({
   plantas = [],
   height = 380,
   onSelectPlanta,
+  selectedEstado = null,
 }) {
   const mapRef = useRef(null);
   const instanceRef = useRef(null);
+  const layersRef = useRef({});
+  const onSelectRef = useRef(onSelectPlanta);
+  useEffect(() => { onSelectRef.current = onSelectPlanta; });
+
+  const plantasRef = useRef(plantas);
+  useEffect(() => { plantasRef.current = plantas; });
+
+  const selectedEstadoRef = useRef(selectedEstado);
+
+  useEffect(() => {
+    selectedEstadoRef.current = selectedEstado;
+    if (!instanceRef.current) return;
+    const selNorm = selectedEstado ? normalize(selectedEstado) : null;
+    Object.entries(layersRef.current).forEach(([gn, layer]) => {
+      const name = layer.feature?.properties?.name || layer.feature?.properties?.NAME_1 || '';
+      const baseColor = getColor(name, plantasRef.current);
+      const isSelected = selNorm && (gn === selNorm || gn.startsWith(selNorm) || selNorm.startsWith(gn));
+      layer.setStyle({
+        fillColor: isSelected ? '#2563eb' : baseColor,
+        weight: isSelected ? 2.5 : 1.2,
+        color: isSelected ? '#1a2332' : '#ffffff',
+        fillOpacity: isSelected ? 0.95 : 0.7,
+      });
+    });
+  }, [selectedEstado]);
 
   useEffect(() => {
     if (instanceRef.current) return;
 
     import('leaflet').then(L => {
       import('leaflet/dist/leaflet.css');
+      if (!mapRef.current) return;
+      if (mapRef.current._leaflet_id) mapRef.current._leaflet_id = null;
 
       const map = L.map(mapRef.current, {
         zoomControl: true,
@@ -45,7 +73,7 @@ export default function MapaRiesgoHidrico({
         style: feature => {
           const name = feature.properties.name || feature.properties.NAME_1 || '';
           return {
-            fillColor: getColor(name, plantas),
+            fillColor: getColor(name, plantasRef.current),
             weight: 1.2,
             color: '#ffffff',
             fillOpacity: 0.7,
@@ -54,7 +82,8 @@ export default function MapaRiesgoHidrico({
         onEachFeature: (feature, layer) => {
           const name = feature.properties.name || feature.properties.NAME_1 || '';
           const n = normalize(name);
-          const planta = plantas.find(p => {
+          layersRef.current[n] = layer;
+          const planta = plantasRef.current.find(p => {
             const pn = normalize(p.estado);
             return n === pn || n.startsWith(pn) || pn.startsWith(n);
           });
@@ -68,7 +97,7 @@ export default function MapaRiesgoHidrico({
           layer.on({
             mouseover: e => e.target.setStyle({ weight: 2.5, color: '#1a2332', fillOpacity: 0.9 }),
             mouseout: e => layer.setStyle({ weight: 1.2, color: '#ffffff', fillOpacity: 0.7 }),
-            click: () => planta && onSelectPlanta?.(planta),
+            click: () => planta && onSelectRef.current?.(planta),
           });
         },
       }).addTo(map);
@@ -80,9 +109,10 @@ export default function MapaRiesgoHidrico({
       if (instanceRef.current) {
         instanceRef.current.remove();
         instanceRef.current = null;
+        layersRef.current = {};
       }
     };
-  }, [plantas, onSelectPlanta]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div style={{
