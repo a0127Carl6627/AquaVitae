@@ -45,7 +45,7 @@ export default function GraficaProyeccionHidrica({
       </div>
 
       <ResponsiveContainer width="100%" height={height}>
-        <ComposedChart data={data} margin={{ top: 8, right: 20, left: 0, bottom: 0 }}>
+        <ComposedChart data={data} margin={{ top: 8, right: 20, left: 20, bottom: 18 }}>
           <defs>
             <linearGradient id="bandGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#e23b3b" stopOpacity={0.18} />
@@ -57,12 +57,14 @@ export default function GraficaProyeccionHidrica({
             dataKey="dia" axisLine={false} tickLine={false}
             tick={{ fontSize: 10, fill: '#8a93a3' }}
             tickFormatter={v => `${v}`}
+            label={{ value: 'Días', position: 'insideBottomRight', offset: -8, fontSize: 9, fill: '#8a93a3' }}
           />
           <YAxis
             axisLine={false} tickLine={false}
             tick={{ fontSize: 10, fill: '#8a93a3' }}
             tickFormatter={v => `${v}%`}
             domain={[0, 100]}
+            label={{ value: 'Estrés hídrico (%)', angle: -90, position: 'insideLeft', dx: -2, dy: 60, fontSize: 9, fill: '#8a93a3' }}
           />
           <Tooltip content={<TooltipCustom />} cursor={{ stroke: '#1a2332', strokeWidth: 1, strokeDasharray: '4 3', opacity: 0.35 }} />
 
@@ -101,7 +103,7 @@ export default function GraficaProyeccionHidrica({
 
 function LegendItem({ color, dashed, label }) {
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11.5, color: '#5a6577' }}>
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 10, color: '#5a6577' }}>
       <span style={{
         width: 20, height: 2, background: dashed ? 'transparent' : color,
         borderTop: dashed ? `2px dashed ${color}` : 'none', display: 'inline-block',

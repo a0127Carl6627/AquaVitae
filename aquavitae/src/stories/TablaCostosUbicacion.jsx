@@ -52,7 +52,7 @@ export default function TablaCostosUbicacion({
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5 }}>
           <thead>
             <tr>
-              {['Ubicación', 'Costo de cierre', 'Tiempo de cierre', 'Costo de apertura', 'Tiempo de apertura', 'Costo TOTAL'].map(h => (
+              {['Ubicación', 'Costo de cierre', 'Tiempo de cierre', 'Costo de apertura', 'Costo TOTAL'].map(h => (
                 <th key={h} style={{
                   textAlign: 'left', fontWeight: 500, color: '#8a93a3',
                   fontSize: 11, letterSpacing: '.03em', textTransform: 'uppercase',
@@ -99,7 +99,6 @@ export default function TablaCostosUbicacion({
                   <td style={{ padding: '11px 14px', color: '#1a2332', fontVariantNumeric: 'tabular-nums' }}>{a.costoCierre}</td>
                   <td style={{ padding: '11px 14px', color: '#5a6577' }}>{a.tiempoCierre}</td>
                   <td style={{ padding: '11px 14px', color: '#1a2332', fontVariantNumeric: 'tabular-nums' }}>{a.costoApertura}</td>
-                  <td style={{ padding: '11px 14px', color: '#5a6577' }}>{a.tiempoApertura}</td>
                   <td style={{
                     padding: '11px 14px',
                     fontVariantNumeric: 'tabular-nums',

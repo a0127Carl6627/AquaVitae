@@ -1,4 +1,4 @@
-const BASE = '';
+const BASE = 'https://aquavitae-backend-1005047638592.us-central1.run.app';
 
 function formatMXN(num) {
   if (num == null) return '—';

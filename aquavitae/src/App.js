@@ -1,53 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ExpandableSidebar from './components/ExpandableSidebar';
-import DashboardInicio   from './pages/DashboardInicio';
-import SimulacionPage    from './pages/SimulacionPage';
-import AlternativasPage  from './pages/AlternativasPage';
-import LoginContainer    from './components/LoginPage/LoginContainer';
+import DashboardInicio from './pages/DashboardInicio';
+import SimulacionPage from './pages/SimulacionPage';
+import AlternativasPage from './pages/AlternativasPage';
+import LoginContainer from './components/LoginPage/LoginContainer';
+import { auth } from './lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { logout } from './lib/authService';
 
 export default function App() {
   const [page, setPage] = useState('dashboard');
+  const [user, setUser] = useState(undefined);
 
-  // Inicializa leyendo localStorage para que al recargar la página
-  // el usuario no tenga que volver a iniciar sesión si ya tenía token.
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return !!localStorage.getItem('aquavitae_token');
-  });
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, u => setUser(u ?? null));
+    return unsub;
+  }, []);
 
-  const handleNavigate = (newPage) => {
-    setPage(newPage);
-  };
-
-  const handleLogin = () => {
-    // El token ya fue guardado en localStorage por authService.js.
-    // Solo actualizamos el estado de React para mostrar el dashboard.
-    setIsAuthenticated(true);
-    setPage('dashboard');
-  };
-
-  const handleLogout = () => {
-    // Limpia el token del localStorage y vuelve al login.
-    localStorage.removeItem('aquavitae_token');
-    localStorage.removeItem('aquavitae_user');
-    setIsAuthenticated(false);
-  };
-
-  if (!isAuthenticated) {
-    return <LoginContainer onLogin={handleLogin} />;
-  }
+  if (user === undefined) return null;
+  if (user === null) return <LoginContainer />;
 
   return (
-    <div style={{
-      display: 'flex',
-      minHeight: '100vh',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif',
-    }}>
-      <ExpandableSidebar
-        activePage={page}
-        onNavigate={handleNavigate}
-        onLogout={handleLogout}
-      />
-
+    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif' }}>
+      <ExpandableSidebar activePage={page} onNavigate={setPage} onLogout={logout} />
       {page === 'dashboard'     && <DashboardInicio />}
       {page === 'simulacion'    && <SimulacionPage />}
       {page === 'alternativas'  && <AlternativasPage />}

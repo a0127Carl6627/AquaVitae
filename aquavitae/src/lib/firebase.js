@@ -1,4 +1,3 @@
-import process from "process";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
