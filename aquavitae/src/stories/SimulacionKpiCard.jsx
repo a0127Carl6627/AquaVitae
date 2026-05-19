@@ -19,37 +19,39 @@ export default function SimulacionKpiCard({
 
   return (
     <div style={{
-      background: '#fff',
-      border: `1px solid #e6eaf0`,
-      borderRadius: 12,
-      padding: '18px 20px',
+      background: '#ffffff',
+      border: '1px solid #f3f4f6',
+      borderRadius: 10,
+      padding: '16px 18px',
       display: 'flex',
       flexDirection: 'column',
       gap: 10,
-      minWidth: 180,
-      boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      fontFamily: 'Inter, sans-serif',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: 11.5, color: '#5a6577', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-          {label}
-        </span>
+      <p style={{
+        fontSize: 10,
+        fontWeight: 600,
+        letterSpacing: '0.07em',
+        textTransform: 'uppercase',
+        color: '#6b7280',
+        margin: 0,
+      }}>
+        {label}
+      </p>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         {icon && (
-          <div style={{
-            width: 28, height: 28, borderRadius: 8,
-            background: c.bg, border: `1px solid ${c.border}`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: c.text, fontSize: 14,
-          }}>
+          <div style={{ color: c.text, display: 'flex', alignItems: 'center' }}>
             {icon}
           </div>
         )}
+        <span style={{ fontSize: 32, fontWeight: 600, color: '#111827', lineHeight: 1 }}>
+          {value}
+        </span>
       </div>
-      <div style={{ fontSize: 28, fontWeight: 700, color: c.text, letterSpacing: '-0.02em', lineHeight: 1 }}>
-        {value}
-      </div>
+
       {sublabel && (
-        <span style={{ fontSize: 11.5, color: '#8a93a3' }}>{sublabel}</span>
+        <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>{sublabel}</p>
       )}
     </div>
   );

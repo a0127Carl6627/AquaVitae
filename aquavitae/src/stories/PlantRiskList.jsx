@@ -35,7 +35,7 @@ function TrendArrow({ tendencia }) {
   );
 }
 
-export default function PlantRiskList({ plants = [] }) {
+export default function PlantRiskList({ plants = [], selectedId = null, onSelectPlanta }) {
   // Estados para filtros y paginación
   const [riskFilter, setRiskFilter] = useState('TODOS');
   const [searchTerm, setSearchTerm] = useState('');
@@ -178,8 +178,18 @@ export default function PlantRiskList({ plants = [] }) {
 
                 const tendencia = plant.tendencia || 'ESTABLE';
 
+                const isSelected = plant.idPlanta === selectedId;
                 return (
-                  <tr key={plant.idPlanta} style={{ borderBottom: '1px solid #e5e7eb' }}>
+                  <tr
+                    key={plant.idPlanta}
+                    onClick={() => onSelectPlanta?.(plant)}
+                    style={{
+                      borderBottom: '1px solid #e5e7eb',
+                      borderLeft: `3px solid ${isSelected ? '#2563eb' : 'transparent'}`,
+                      background: isSelected ? '#eaf1fe' : 'transparent',
+                      cursor: 'pointer',
+                    }}
+                  >
                     <td style={{ padding: '12px 8px', fontWeight: 500 }}>
                       {plant.nombrePlanta}
                     </td>

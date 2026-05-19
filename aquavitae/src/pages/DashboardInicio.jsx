@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import StatCards          from '../stories/StatCards';
 import RiskGauge          from '../stories/RiskGauge';
+import SimulacionKpiCard  from '../stories/SimulacionKpiCard';
 import DonutChart         from '../stories/DonutChart';
 import RiskEvolutionChart from '../stories/RiskEvolutionChart';
 import MexicoRiskMap      from '../stories/MexicoRiskMap';
@@ -73,6 +74,7 @@ export default function DashboardInicio() {
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(new Date());
   const [error,      setError]      = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
 
   const fetchData = useCallback(async (isRefresh = false) => {
     isRefresh ? setRefreshing(true) : setLoading(true);
@@ -94,17 +96,29 @@ export default function DashboardInicio() {
       const evolucionData = await evolucionRes.json();
 
       // Plantas
-      const plantasTransformadas = (dashData.plantas || []).map(p => ({
-        idPlanta:        p.idPlanta,
-        nombrePlanta:    p.nombrePlanta,
-        ubicacionNombre: p.ubicacionNombre,
-        latitud:         p.latitud,
-        longitud:        p.longitud,
-        nivelRiesgo:     p.nivelRiesgo,
-        tendencia:       p.tendencia ?? 'ESTABLE',
-        indiceHidrico:   p.indiceHidrico,
-        indiceHidricoPct: Math.round((p.indiceHidrico ?? 0) * 100),
-      }));
+      const plantasTransformadas = (dashData.plantas || []).map(p => {
+        const partes = (p.ubicacionNombre ?? '').split(',');
+        const estado = partes.length > 1 ? partes[partes.length - 1].trim() : p.ubicacionNombre ?? '';
+        const nv = p.nivelRiesgo ?? '';
+        return {
+          idPlanta:        p.idPlanta,
+          nombrePlanta:    p.nombrePlanta,
+          nombre:          p.nombrePlanta,
+          ubicacionNombre: p.ubicacionNombre,
+          estado,
+          latitud:         p.latitud,
+          longitud:        p.longitud,
+          nivelRiesgo:     nv,
+          riesgo:          nv.toLowerCase() === 'alto' ? 'alta' : nv.toLowerCase() || 'bajo',
+          riesgoLabel:     nv ? nv.charAt(0).toUpperCase() + nv.slice(1).toLowerCase() : 'Sin datos',
+          tendencia:       p.tendencia ?? 'ESTABLE',
+          indiceHidrico:   p.indiceHidrico,
+          indiceHidricoPct: Math.round((p.indiceHidrico ?? 0) * 100),
+        };
+      });
+      if (plantasTransformadas.length > 0) {
+        setSelectedId(plantasTransformadas[0].idPlanta);
+      }
 
       // Resumen
       const resumenBack = dashData.resumen ?? {};
@@ -272,10 +286,19 @@ export default function DashboardInicio() {
         {/* Map + PlantRiskList */}
         <div className="dash-map-row">
           <div style={card}>
-            <MexicoRiskMap plantas={plantas} altura="340px" />
+            <MexicoRiskMap
+              plantas={plantas}
+              height={340}
+              selectedEstado={plantas.find(p => p.idPlanta === selectedId)?.estado ?? null}
+              onSelectPlanta={p => setSelectedId(p.idPlanta)}
+            />
           </div>
           <div style={card}>
-            <PlantRiskList plants={plantas} />
+            <PlantRiskList
+              plants={plantas}
+              selectedId={selectedId}
+              onSelectPlanta={p => setSelectedId(p.idPlanta)}
+            />
           </div>
         </div>
 

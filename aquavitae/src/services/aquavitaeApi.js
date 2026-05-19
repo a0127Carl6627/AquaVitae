@@ -1,4 +1,4 @@
-const BASE = 'https://aquavitae-backend-1005047638592.us-central1.run.app';
+const BASE = process.env.REACT_APP_API_BASE || '';
 
 function formatMXN(num) {
   if (num == null) return '—';
