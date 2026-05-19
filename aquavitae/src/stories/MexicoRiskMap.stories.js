@@ -2,10 +2,6 @@ import React from 'react';
 import 'leaflet/dist/leaflet.css';
 import MexicoRiskMap from './MexicoRiskMap';
 
-/**
- * El decorador importa el CSS de Leaflet una sola vez para todas las stories.
- * Sin esto el mapa se ve sin estilos en Storybook.
- */
 export default {
   title: 'Dashboard/MexicoRiskMap',
   component: MexicoRiskMap,
@@ -19,49 +15,63 @@ export default {
     ),
   ],
   argTypes: {
-    altura: { control: 'text' },
+    height: { control: { type: 'range', min: 200, max: 600, step: 20 } },
+    selectedEstado: { control: 'text' },
+    onSelectPlanta: { action: 'planta seleccionada' },
   },
 };
 
 const mockPlantas = [
-  { idPlanta: 1,  nombrePlanta: 'Planta Norte',     ubicacionNombre: 'Monterrey, NL',     latitud: 25.67, longitud: -100.31, nivelRiesgo: 'ALTO'       },
-  { idPlanta: 2,  nombrePlanta: 'Planta Centro',    ubicacionNombre: 'Querétaro, QRO',    latitud: 20.59, longitud: -100.38, nivelRiesgo: 'ALTO'       },
-  { idPlanta: 3,  nombrePlanta: 'Planta Bajo',      ubicacionNombre: 'Irapuato, GTO',     latitud: 20.67, longitud: -101.35, nivelRiesgo: 'MEDIO'      },
-  { idPlanta: 4,  nombrePlanta: 'Planta Pacífico',  ubicacionNombre: 'Culiacán, SIN',     latitud: 24.80, longitud: -107.39, nivelRiesgo: 'MEDIO'      },
-  { idPlanta: 5,  nombrePlanta: 'Planta Sureste',   ubicacionNombre: 'Villahermosa, TAB', latitud: 17.99, longitud: -92.92,  nivelRiesgo: 'MEDIO'      },
-  { idPlanta: 6,  nombrePlanta: 'Planta Noroeste',  ubicacionNombre: 'Mexicali, BC',      latitud: 32.62, longitud: -115.45, nivelRiesgo: 'BAJO'       },
-  { idPlanta: 7,  nombrePlanta: 'Planta Occidente', ubicacionNombre: 'Guadalajara, JAL',  latitud: 20.65, longitud: -103.34, nivelRiesgo: 'BAJO'       },
-  { idPlanta: 8,  nombrePlanta: 'Planta Golfo',     ubicacionNombre: 'Tampico, TAM',      latitud: 22.26, longitud: -97.86,  nivelRiesgo: 'SIN_RIESGO' },
-  { idPlanta: 9,  nombrePlanta: 'Planta Sur',       ubicacionNombre: 'Oaxaca, OAX',       latitud: 17.07, longitud: -96.72,  nivelRiesgo: 'SIN_RIESGO' },
-  { idPlanta: 10, nombrePlanta: 'Planta Bajío',     ubicacionNombre: 'León, GTO',         latitud: 21.12, longitud: -101.68, nivelRiesgo: 'SIN_RIESGO' },
-  { idPlanta: 11, nombrePlanta: 'Planta Laguna',    ubicacionNombre: 'Torreón, COAH',     latitud: 25.54, longitud: -103.43, nivelRiesgo: 'MEDIO'      },
-  { idPlanta: 12, nombrePlanta: 'Planta Yucatán',   ubicacionNombre: 'Mérida, YUC',       latitud: 20.97, longitud: -89.62,  nivelRiesgo: 'BAJO'       },
+  { idPlanta: 1,  nombre: 'Planta Norte',     nombrePlanta: 'Planta Norte',     ubicacionNombre: 'Monterrey, Nuevo León',      estado: 'Nuevo León',      latitud: 25.67, longitud: -100.31, nivelRiesgo: 'ALTO',  riesgo: 'alta',  riesgoLabel: 'Alto'  },
+  { idPlanta: 2,  nombre: 'Planta Centro',    nombrePlanta: 'Planta Centro',    ubicacionNombre: 'Querétaro, Querétaro',      estado: 'Querétaro',      latitud: 20.59, longitud: -100.38, nivelRiesgo: 'ALTO',  riesgo: 'alta',  riesgoLabel: 'Alto'  },
+  { idPlanta: 3,  nombre: 'Planta Bajío',     nombrePlanta: 'Planta Bajío',     ubicacionNombre: 'Irapuato, Guanajuato',      estado: 'Guanajuato',     latitud: 20.67, longitud: -101.35, nivelRiesgo: 'MEDIO', riesgo: 'medio', riesgoLabel: 'Medio' },
+  { idPlanta: 4,  nombre: 'Planta Pacífico',  nombrePlanta: 'Planta Pacífico',  ubicacionNombre: 'Culiacán, Sinaloa',         estado: 'Sinaloa',        latitud: 24.80, longitud: -107.39, nivelRiesgo: 'MEDIO', riesgo: 'medio', riesgoLabel: 'Medio' },
+  { idPlanta: 5,  nombre: 'Planta Sureste',   nombrePlanta: 'Planta Sureste',   ubicacionNombre: 'Villahermosa, Tabasco',     estado: 'Tabasco',        latitud: 17.99, longitud: -92.92,  nivelRiesgo: 'MEDIO', riesgo: 'medio', riesgoLabel: 'Medio' },
+  { idPlanta: 6,  nombre: 'Planta Noroeste',  nombrePlanta: 'Planta Noroeste',  ubicacionNombre: 'Mexicali, Baja California', estado: 'Baja California', latitud: 32.62, longitud: -115.45, nivelRiesgo: 'BAJO',  riesgo: 'bajo',  riesgoLabel: 'Bajo'  },
+  { idPlanta: 7,  nombre: 'Planta Occidente', nombrePlanta: 'Planta Occidente', ubicacionNombre: 'Guadalajara, Jalisco',      estado: 'Jalisco',        latitud: 20.65, longitud: -103.34, nivelRiesgo: 'BAJO',  riesgo: 'bajo',  riesgoLabel: 'Bajo'  },
+  { idPlanta: 8,  nombre: 'Planta Golfo',     nombrePlanta: 'Planta Golfo',     ubicacionNombre: 'Tampico, Tamaulipas',       estado: 'Tamaulipas',     latitud: 22.26, longitud: -97.86,  nivelRiesgo: 'BAJO',  riesgo: 'bajo',  riesgoLabel: 'Bajo'  },
 ];
 
 export const Default = {
+  name: 'Sin selección',
   args: {
     plantas: mockPlantas,
-    altura: '360px',
+    height: 360,
+    selectedEstado: null,
   },
 };
 
-export const SoloAlto = {
+export const ConEstadoSeleccionado = {
+  name: 'Con estado seleccionado',
   args: {
-    plantas: mockPlantas.map((p) => ({ ...p, nivelRiesgo: 'ALTO' })),
-    altura: '360px',
+    plantas: mockPlantas,
+    height: 360,
+    selectedEstado: 'Nuevo León',
+  },
+};
+
+export const SoloRiesgoAlto = {
+  name: 'Solo riesgo alto',
+  args: {
+    plantas: mockPlantas.map(p => ({ ...p, nivelRiesgo: 'ALTO', riesgo: 'alta', riesgoLabel: 'Alto' })),
+    height: 360,
+    selectedEstado: null,
   },
 };
 
 export const SinPlantas = {
+  name: 'Sin plantas (mapa vacío)',
   args: {
     plantas: [],
-    altura: '360px',
+    height: 360,
   },
 };
 
-export const MapaAlto = {
+export const MapaGrande = {
+  name: 'Mapa grande',
   args: {
     plantas: mockPlantas,
-    altura: '500px',
+    height: 500,
+    selectedEstado: null,
   },
 };
