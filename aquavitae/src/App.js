@@ -7,6 +7,7 @@ import LoginContainer from './components/LoginPage/LoginContainer';
 import { auth } from './lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { logout } from './lib/authService';
+import ApiAlertsPage from './components/ApiAlertsPage/ApiAlertsPage';
 
 export default function App() {
   const [page, setPage] = useState('dashboard');
@@ -23,9 +24,11 @@ export default function App() {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif' }}>
       <ExpandableSidebar activePage={page} onNavigate={setPage} onLogout={logout} />
-      {page === 'dashboard'     && <DashboardInicio />}
-      {page === 'simulacion'    && <SimulacionPage />}
-      {page === 'alternativas'  && <AlternativasPage />}
+
+      {page === 'dashboard' && <DashboardInicio />}
+      {page === 'simulacion' && <SimulacionPage />}
+      {page === 'alternativas' && <AlternativasPage />}
+      {page === 'api-alerts' && <ApiAlertsPage />}
     </div>
   );
 }
