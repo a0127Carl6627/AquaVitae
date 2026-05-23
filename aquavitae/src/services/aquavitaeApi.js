@@ -1,3 +1,4 @@
+// src/services/aquavitaeApi.js
 const BASE = process.env.REACT_APP_API_BASE || '';
 
 function formatMXN(num) {
@@ -21,6 +22,7 @@ function mapRiesgoColor(riesgo) {
   return 'green';
 }
 
+// ========== DASHBOARD Y SIMULACIÓN (existentes) ==========
 export async function fetchDashboard() {
   const res = await fetch(`${BASE}/api/dashboard`);
   if (!res.ok) throw new Error(`Dashboard error ${res.status}`);
@@ -59,7 +61,6 @@ export async function fetchProyeccion(plantaId, dias = 90) {
   if (!res.ok) throw new Error(`Proyección error ${res.status}`);
   const d = await res.json();
 
-  // Backend already returns values in 0-100 range (percentage)
   const chartData = (d.puntos || []).map((p, i) => ({
     dia: p.dia,
     valor: parseFloat(p.valor.toFixed(1)),
@@ -82,7 +83,6 @@ export async function fetchRecuperacion(plantaId, dias = 90) {
   if (!res.ok) throw new Error(`Recuperación error ${res.status}`);
   const d = await res.json();
 
-  // Backend already returns values in 0-100 range (percentage)
   return (d.conIntervencion || []).map((p, i) => ({
     dia: p.dia,
     conIntervencion: parseFloat(p.valor.toFixed(1)),
@@ -111,7 +111,6 @@ export async function fetchAlternativas(plantaId) {
   const data = await res.json();
   return (data || []).map(a => ({
     nombre: a.nombre,
-    // a.estado from backend is full "Ciudad, Estado" — extract just the state
     estado: extractEstado(a.estado),
     riesgo: mapRiesgoColor(a.riesgo),
     riesgoLabel: a.riesgoLabel,
@@ -136,4 +135,63 @@ export async function fetchFactores(plantaId) {
   }));
 }
 
+// ========== ADMINISTRACIÓN DE USUARIOS Y ROLES (nuevos) ==========
+export async function fetchResumen() {
+  const res = await fetch(`${BASE}/api/usuarios/resumen`);
+  if (!res.ok) throw new Error('Error al obtener resumen de usuarios');
+  return res.json();
+}
+
+export async function fetchUsuarios(page = 0, size = 1000) {
+  const res = await fetch(`${BASE}/api/usuarios?page=${page}&size=${size}`);
+  if (!res.ok) throw new Error('Error al listar usuarios');
+  return res.json();
+}
+
+export async function fetchRoles() {
+  const res = await fetch(`${BASE}/api/usuarios/roles`);
+  if (!res.ok) throw new Error('Error al obtener roles');
+  return res.json();
+}
+
+export async function fetchRolConPermisos(rolId) {
+  const res = await fetch(`${BASE}/api/usuarios/roles/${rolId}`);
+  if (!res.ok) throw new Error('Error al obtener permisos del rol');
+  return res.json();
+}
+
+export async function fetchEmpresas() {
+  const res = await fetch(`${BASE}/api/usuarios/empresas`);
+  if (!res.ok) throw new Error('Error al obtener empresas');
+  return res.json();
+}
+
+export async function generarContrasena() {
+  const res = await fetch(`${BASE}/api/usuarios/generar-contrasena`);
+  if (!res.ok) throw new Error('Error al generar contraseña temporal');
+  return res.json(); // { contrasena: "..." }
+}
+
+export async function crearUsuario(dto) {
+  const res = await fetch(`${BASE}/api/usuarios`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(dto),
+  });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({ mensaje: 'Error desconocido' }));
+    throw new Error(error.mensaje || 'Error al crear usuario');
+  }
+  return res.json();
+}
+
+export async function eliminarUsuario(id) {
+  const res = await fetch(`${BASE}/api/usuarios/${id}`, { method: 'DELETE' });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({ mensaje: 'Error desconocido' }));
+    throw new Error(error.mensaje || 'Error al eliminar usuario');
+  }
+}
+
+// Re-export utilidades si se necesitan en otros componentes
 export { formatMXN, extractEstado };
