@@ -5,6 +5,7 @@ import RolesHighlight from '../components/Admin/stories/RolesHighlight';
 import PermissionsMatrix from '../components/Admin/stories/PermissionsMatrix';
 import DataAccessPolicy from '../components/Admin/stories/DataAccessPolicy';
 import ModalDeleteUser from '../components/Admin/stories/ModalDeleteUser';
+import EditUserModal from '../stories/EditUserModal';
 import { api } from '../services/aquavitaeApi';
 
 export default function GestionUsuariosPage() {
@@ -21,6 +22,10 @@ export default function GestionUsuariosPage() {
 
   // Modal eliminación
   const [userToDelete, setUserToDelete] = useState(null);
+
+  // Modal edición
+  const [usuarioEditar, setUsuarioEditar] = useState(null);
+  const [plantas, setPlantas] = useState([]);
 
   // Fecha/hora para topbar
   const [now, setNow] = useState(new Date());
@@ -82,7 +87,20 @@ export default function GestionUsuariosPage() {
         permissions: permsMap,
       });
 
-      // 5. Política de acceso a datos (mapeo fijo según nombres de rol)
+      // 5. Plantas (para modal de edición)
+      try {
+        const plantasData = await api.getPlantas();
+        setPlantas(
+          Array.isArray(plantasData)
+            ? plantasData.map(p => ({ id: p.idPlanta ?? p.id, nombre: p.nombrePlanta ?? p.nombre }))
+            : []
+        );
+      } catch {
+        // No es crítico si falla
+        setPlantas([]);
+      }
+
+      // 6. Política de acceso a datos (mapeo fijo según nombres de rol)
       const politicaPorRol = {
         Administrador: 'Todas las regiones y plantas',
         Director: 'Todas las regiones y plantas',
@@ -133,9 +151,14 @@ export default function GestionUsuariosPage() {
     console.log('Agregar usuario - por implementar');
   };
 
-  // Editar usuario (pendiente)
+  // Editar usuario
   const handleEditUser = (user) => {
-    console.log('Editar usuario', user);
+    setUsuarioEditar(user);
+  };
+
+  const handleSaveEdit = () => {
+    fetchAllData(usuarios.page, usuarios.size);
+    setUsuarioEditar(null);
   };
 
   // Formato de fecha para topbar
@@ -226,6 +249,18 @@ export default function GestionUsuariosPage() {
           user={userToDelete}
           onConfirm={confirmDelete}
           onCancel={() => setUserToDelete(null)}
+        />
+      )}
+
+      {/* Modal de edición de usuario */}
+      {usuarioEditar && (
+        <EditUserModal
+          isOpen={!!usuarioEditar}
+          usuario={usuarioEditar}
+          roles={rolesDestacados}
+          plantas={plantas}
+          onClose={() => setUsuarioEditar(null)}
+          onSave={handleSaveEdit}
         />
       )}
 
