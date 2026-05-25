@@ -126,6 +126,7 @@ export default function App() {
         appUser?.rol === 'Administrador' && (
           <ApiAlertsPage />
         )}
+
     </div>
   );
 }

@@ -6,6 +6,7 @@ import PermissionsMatrix from '../components/Admin/stories/PermissionsMatrix';
 import DataAccessPolicy from '../components/Admin/stories/DataAccessPolicy';
 import ModalDeleteUser from '../components/Admin/stories/ModalDeleteUser';
 import EditUserModal from '../stories/EditUserModal';
+import NewUserModal from '../stories/NewUserModal';
 import { api } from '../services/aquavitaeApi';
 
 export default function GestionUsuariosPage() {
@@ -26,6 +27,9 @@ export default function GestionUsuariosPage() {
   // Modal edición
   const [usuarioEditar, setUsuarioEditar] = useState(null);
   const [plantas, setPlantas] = useState([]);
+
+  // Modal agregar nuevo usuario
+  const [mostrarAgregar, setMostrarAgregar] = useState(false);
 
   // Fecha/hora para topbar
   const [now, setNow] = useState(new Date());
@@ -145,10 +149,14 @@ export default function GestionUsuariosPage() {
     }
   };
 
-  // Crear usuario (pendiente de implementar, puedes abrir un modal)
+  // Crear usuario
   const handleAddUser = () => {
-    // Aquí puedes abrir un modal de creación de usuario
-    console.log('Agregar usuario - por implementar');
+    setMostrarAgregar(true);
+  };
+
+  const handleSaveNew = () => {
+    fetchAllData(0, usuarios.size);
+    setMostrarAgregar(false);
   };
 
   // Editar usuario
@@ -261,6 +269,18 @@ export default function GestionUsuariosPage() {
           plantas={plantas}
           onClose={() => setUsuarioEditar(null)}
           onSave={handleSaveEdit}
+        />
+      )}
+
+      {/* Modal de creación de usuario */}
+      {mostrarAgregar && (
+        <NewUserModal
+          isOpen={mostrarAgregar}
+          roles={rolesDestacados}
+          plantas={plantas}
+          idEmpresa={1}
+          onClose={() => setMostrarAgregar(false)}
+          onSave={handleSaveNew}
         />
       )}
 
