@@ -19,7 +19,6 @@ const styles = {
     zIndex: 1000,
     boxSizing: 'border-box',
   },
-
   logo: {
     width: 36,
     height: 36,
@@ -33,7 +32,6 @@ const styles = {
     fontSize: 14,
     flexShrink: 0,
   },
-
   toggleBtn: {
     width: '100%',
     height: 40,
@@ -50,7 +48,6 @@ const styles = {
     fontSize: 18,
     flexShrink: 0,
   },
-
   navContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -60,7 +57,6 @@ const styles = {
     overflowX: 'hidden',
     minHeight: 0,
   },
-
   navItem: {
     width: '100%',
     height: 40,
@@ -79,31 +75,26 @@ const styles = {
     whiteSpace: 'nowrap',
     flexShrink: 0,
   },
-
   navItemActive: {
     background: '#eaf1fe',
     color: '#1d4ed8',
   },
-
   icon: {
     width: 20,
     height: 20,
     flexShrink: 0,
   },
-
   label: {
     fontSize: 14,
     fontWeight: 500,
     whiteSpace: 'nowrap',
   },
-
   divider: {
     height: '1px',
     background: '#e6eaf0',
     margin: '8px 0',
     flexShrink: 0,
   },
-
   footer: {
     marginTop: 'auto',
     display: 'flex',
@@ -111,7 +102,6 @@ const styles = {
     gap: 8,
     flexShrink: 0,
   },
-
   logoutBtn: {
     width: '100%',
     height: 40,
@@ -131,70 +121,74 @@ const styles = {
   },
 };
 
-// Definición de íconos (mismos que antes)
-const DashboardIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="3" width="7" height="7" />
-    <rect x="14" y="3" width="7" height="7" />
-    <rect x="14" y="14" width="7" height="7" />
-    <rect x="3" y="14" width="7" height="7" />
-  </svg>
-);
-
-const AlternativasIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" />
-    <circle cx="12" cy="10" r="3" />
-  </svg>
-);
-
-const SimulacionIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M3 17l5-5 4 4 8-9" />
-    <path d="M14 7h6v6" />
-  </svg>
-);
-
-const UsuariosIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-    <circle cx="9" cy="7" r="4" />
-    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-  </svg>
-);
-
-// Mapeo de ítems por rol
-const directorItems = [
-  { key: 'dashboard', label: 'Dashboard', icon: DashboardIcon },
-  { key: 'alternativas', label: 'Alternativas', icon: AlternativasIcon },
-  { key: 'simulacion', label: 'Simulación', icon: SimulacionIcon },
-];
-
-const adminItems = [
-  { key: 'usuarios', label: 'Usuarios y roles', icon: UsuariosIcon },
+const NAVIGATION_ITEMS = [
+  {
+    key: 'dashboard',
+    label: 'Dashboard',
+    roles: ['Director'],
+    icon: (size) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="7" height="7" />
+        <rect x="14" y="3" width="7" height="7" />
+        <rect x="14" y="14" width="7" height="7" />
+        <rect x="3" y="14" width="7" height="7" />
+      </svg>
+    ),
+  },
+  {
+    key: 'alternativas',
+    label: 'Alternativas',
+    roles: ['Director'],
+    icon: (size) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" />
+        <circle cx="12" cy="10" r="3" />
+      </svg>
+    ),
+  },
+  {
+    key: 'simulacion',
+    label: 'Simulación',
+    roles: ['Director'],
+    icon: (size) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 17l5-5 4 4 8-9" />
+        <path d="M14 7h6v6" />
+      </svg>
+    ),
+  },
+  {
+    key: 'api-alerts',
+    label: 'Alertas API',
+    roles: ['Administrador'],
+    icon: (size) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+        <line x1="12" y1="9" x2="12" y2="13" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </svg>
+    ),
+  },
 ];
 
 export default function ExpandableSidebar({
-  userRole,         // 'Director' o 'Administrador'
+  userRole,
   activePage = 'dashboard',
   onNavigate,
   onLogout,
+  user,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const sidebarWidth = isExpanded ? 220 : 64;
 
-  // Determinar qué ítems mostrar según el rol
-  const navItems = userRole === 'Administrador' ? adminItems : directorItems;
+  const role = userRole || user?.rol;
+
+  const visibleItems = NAVIGATION_ITEMS.filter((item) =>
+    item.roles.includes(role)
+  );
 
   return (
-    <aside
-      style={{
-        ...styles.sidebar,
-        width: sidebarWidth,
-      }}
-    >
-      {/* Logo */}
+    <aside style={{ ...styles.sidebar, width: sidebarWidth }}>
       <div style={styles.logo}>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
           <path
@@ -205,7 +199,6 @@ export default function ExpandableSidebar({
         </svg>
       </div>
 
-      {/* Botón expandir/contraer */}
       <button
         style={styles.toggleBtn}
         onClick={() => setIsExpanded(!isExpanded)}
@@ -224,10 +217,10 @@ export default function ExpandableSidebar({
 
       <div style={styles.divider} />
 
-      {/* Navegación dinámica según rol */}
       <div style={styles.navContainer}>
-        {navItems.map(({ key, label, icon: IconComponent }) => {
+        {visibleItems.map(({ key, label, icon }) => {
           const isActive = activePage === key;
+
           return (
             <button
               key={key}
@@ -238,39 +231,25 @@ export default function ExpandableSidebar({
               onClick={() => onNavigate(key)}
               title={label}
             >
-              <span style={styles.icon}>
-                <IconComponent />
-              </span>
+              <span style={styles.icon}>{icon(20)}</span>
               {isExpanded && <span style={styles.label}>{label}</span>}
             </button>
           );
         })}
       </div>
 
-      {/* Footer con botón de salir */}
       <div style={styles.footer}>
         <div style={styles.divider} />
-        <button
-          style={styles.logoutBtn}
-          onClick={onLogout}
-          title="Salir"
-        >
+
+        <button style={styles.logoutBtn} onClick={onLogout} title="Salir">
           <span style={styles.icon}>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
               <polyline points="16 17 21 12 16 7" />
               <line x1="21" y1="12" x2="9" y2="12" />
             </svg>
           </span>
+
           {isExpanded && <span style={styles.label}>Salir</span>}
         </button>
       </div>
