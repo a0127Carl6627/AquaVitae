@@ -193,5 +193,45 @@ export async function eliminarUsuario(id) {
   }
 }
 
+export async function editarUsuario(id, dto) {
+  const res = await fetch(`${BASE}/api/usuarios/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(dto),
+  });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error.mensaje || 'Error al editar usuario');
+  }
+  return res.json();
+}
+
+export async function fetchPlantas() {
+  const res = await fetch(`${BASE}/api/plantas`);
+  if (!res.ok) throw new Error('Error al obtener plantas');
+  return res.json();
+}
+
+// Objeto api para uso conveniente en páginas
+export const api = {
+  getDashboard: fetchDashboard,
+  getKpis: fetchKpis,
+  getProyeccion: fetchProyeccion,
+  getRecuperacion: fetchRecuperacion,
+  getAlerta: fetchAlerta,
+  getAlternativas: fetchAlternativas,
+  getFactores: fetchFactores,
+  getResumen: fetchResumen,
+  getUsuarios: fetchUsuarios,
+  getRoles: fetchRoles,
+  getRolConPermisos: fetchRolConPermisos,
+  getEmpresas: fetchEmpresas,
+  generarContrasena,
+  crearUsuario,
+  eliminarUsuario,
+  editarUsuario,
+  getPlantas: fetchPlantas,
+};
+
 // Re-export utilidades si se necesitan en otros componentes
 export { formatMXN, extractEstado };
