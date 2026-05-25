@@ -3,6 +3,7 @@ import ExpandableSidebar from './components/ExpandableSidebar';
 import DashboardInicio from './pages/DashboardInicio';
 import SimulacionPage from './pages/SimulacionPage';
 import AlternativasPage from './pages/AlternativasPage';
+import GestionUsuariosPage from './pages/GestionUsuariosPage';
 import LoginContainer from './components/LoginPage/LoginContainer';
 import { auth } from './lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -22,10 +23,11 @@ export default function App() {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif' }}>
-      <ExpandableSidebar activePage={page} onNavigate={setPage} onLogout={logout} />
+      <ExpandableSidebar activePage={page} onNavigate={setPage} onLogout={logout} userRole="Administrador" />
       {page === 'dashboard'     && <DashboardInicio />}
       {page === 'simulacion'    && <SimulacionPage />}
       {page === 'alternativas'  && <AlternativasPage />}
+      {page === 'usuarios'      && <GestionUsuariosPage />}
     </div>
   );
 }
