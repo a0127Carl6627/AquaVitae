@@ -1,12 +1,5 @@
 // src/services/aquavitaeApi.js
-import { auth } from '../lib/firebase';
-
 const BASE = process.env.REACT_APP_API_BASE || '';
-
-async function getAuthHeaders() {
-  const token = auth.currentUser ? await auth.currentUser.getIdToken() : null;
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
 
 function formatMXN(num) {
   if (num == null) return '—';
@@ -144,52 +137,45 @@ export async function fetchFactores(plantaId) {
 
 // ========== ADMINISTRACIÓN DE USUARIOS Y ROLES (nuevos) ==========
 export async function fetchResumen() {
-  const headers = await getAuthHeaders();
-  const res = await fetch(`${BASE}/api/usuarios/resumen`, { headers });
+  const res = await fetch(`${BASE}/api/usuarios/resumen`);
   if (!res.ok) throw new Error('Error al obtener resumen de usuarios');
   return res.json();
 }
 
 export async function fetchUsuarios(page = 0, size = 1000) {
-  const headers = await getAuthHeaders();
-  const res = await fetch(`${BASE}/api/usuarios?page=${page}&size=${size}`, { headers });
+  const res = await fetch(`${BASE}/api/usuarios?page=${page}&size=${size}`);
   if (!res.ok) throw new Error('Error al listar usuarios');
   return res.json();
 }
 
 export async function fetchRoles() {
-  const headers = await getAuthHeaders();
-  const res = await fetch(`${BASE}/api/usuarios/roles`, { headers });
+  const res = await fetch(`${BASE}/api/usuarios/roles`);
   if (!res.ok) throw new Error('Error al obtener roles');
   return res.json();
 }
 
 export async function fetchRolConPermisos(rolId) {
-  const headers = await getAuthHeaders();
-  const res = await fetch(`${BASE}/api/usuarios/roles/${rolId}`, { headers });
+  const res = await fetch(`${BASE}/api/usuarios/roles/${rolId}`);
   if (!res.ok) throw new Error('Error al obtener permisos del rol');
   return res.json();
 }
 
 export async function fetchEmpresas() {
-  const headers = await getAuthHeaders();
-  const res = await fetch(`${BASE}/api/usuarios/empresas`, { headers });
+  const res = await fetch(`${BASE}/api/usuarios/empresas`);
   if (!res.ok) throw new Error('Error al obtener empresas');
   return res.json();
 }
 
 export async function generarContrasena() {
-  const headers = await getAuthHeaders();
-  const res = await fetch(`${BASE}/api/usuarios/generar-contrasena`, { headers });
+  const res = await fetch(`${BASE}/api/usuarios/generar-contrasena`);
   if (!res.ok) throw new Error('Error al generar contraseña temporal');
-  return res.json();
+  return res.json(); // { contrasena: "..." }
 }
 
 export async function crearUsuario(dto) {
-  const headers = await getAuthHeaders();
   const res = await fetch(`${BASE}/api/usuarios`, {
     method: 'POST',
-    headers: { ...headers, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(dto),
   });
   if (!res.ok) {
@@ -200,8 +186,7 @@ export async function crearUsuario(dto) {
 }
 
 export async function eliminarUsuario(id) {
-  const headers = await getAuthHeaders();
-  const res = await fetch(`${BASE}/api/usuarios/${id}`, { method: 'DELETE', headers });
+  const res = await fetch(`${BASE}/api/usuarios/${id}`, { method: 'DELETE' });
   if (!res.ok) {
     const error = await res.json().catch(() => ({ mensaje: 'Error desconocido' }));
     throw new Error(error.mensaje || 'Error al eliminar usuario');
@@ -209,10 +194,9 @@ export async function eliminarUsuario(id) {
 }
 
 export async function editarUsuario(id, dto) {
-  const headers = await getAuthHeaders();
   const res = await fetch(`${BASE}/api/usuarios/${id}`, {
     method: 'PUT',
-    headers: { ...headers, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(dto),
   });
   if (!res.ok) {
