@@ -44,7 +44,7 @@ export default function LoginPage({
 
         <div className="login-title">
           <h2>Inicio de sesión</h2>
-          <p>Accede con tus credenciales de directivo</p>
+          <p>Accede con tus credenciales de AquaVitae</p>
         </div>
 
         <form onSubmit={handleSubmit}>

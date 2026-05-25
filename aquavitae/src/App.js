@@ -15,7 +15,7 @@ export default function App() {
   const [appUser, setAppUser] = useState(null);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, u => {
+    const unsub = onAuthStateChanged(auth, (u) => {
       setUser(u ?? null);
 
       if (u) {
@@ -27,6 +27,18 @@ export default function App() {
 
     return unsub;
   }, []);
+
+  useEffect(() => {
+    if (!appUser) return;
+
+    if (appUser.rol === 'Administrador') {
+      setPage('api-alerts');
+    }
+
+    if (appUser.rol === 'Director') {
+      setPage('dashboard');
+    }
+  }, [appUser]);
 
   const handleNavigate = (newPage) => {
     if (appUser?.rol === 'Director' && newPage === 'api-alerts') {
@@ -44,19 +56,32 @@ export default function App() {
   };
 
   if (user === undefined) return null;
+
   if (user === null) {
-  return (
-    <LoginContainer
-      onLogin={(backendUser) => {
-        setAppUser(backendUser);
-        setPage('dashboard');
-      }}
-    />
-  );
-}
+    return (
+      <LoginContainer
+        onLogin={(backendUser) => {
+          setAppUser(backendUser);
+
+          if (backendUser?.rol === 'Administrador') {
+            setPage('api-alerts');
+          } else {
+            setPage('dashboard');
+          }
+        }}
+      />
+    );
+  }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif' }}>
+    <div
+      style={{
+        display: 'flex',
+        minHeight: '100vh',
+        fontFamily:
+          '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif',
+      }}
+    >
       <ExpandableSidebar
         activePage={page}
         onNavigate={handleNavigate}
@@ -65,9 +90,15 @@ export default function App() {
       />
 
       {page === 'dashboard' && <DashboardInicio />}
+
       {page === 'simulacion' && <SimulacionPage />}
+
       {page === 'alternativas' && <AlternativasPage />}
-      {page === 'api-alerts' && appUser?.rol === 'Administrador' && <ApiAlertsPage />}
+
+      {page === 'api-alerts' &&
+        appUser?.rol === 'Administrador' && (
+          <ApiAlertsPage />
+        )}
     </div>
   );
 }
