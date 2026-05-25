@@ -2,7 +2,7 @@ import { useState } from "react";
 import LoginPage from "./LoginPage";
 import { loginWithEmail } from "../../lib/authService";
 
-export default function LoginContainer() {
+export default function LoginContainer({ onLogin }) {
   const [generalError, setGeneralError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -26,13 +26,15 @@ export default function LoginContainer() {
     try {
       setLoading(true);
 
-      await loginWithEmail(email, password);
+      const result = await loginWithEmail(email, password);
+
+      onLogin?.(result.backendUser);
     } catch (error) {
       console.error(error);
 
-      setGeneralError("Credenciales incorrectas. Intenta nuevamente.");
-      setEmailError("Correo no registrado");
-      setPasswordError("Contraseña incorrecta");
+      setGeneralError("Credenciales incorrectas o usuario sin rol asignado.");
+      setEmailError("");
+      setPasswordError("");
     } finally {
       setLoading(false);
     }

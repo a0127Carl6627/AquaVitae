@@ -136,16 +136,7 @@ const NAVIGATION_ITEMS = [
     key: 'dashboard',
     label: 'Dashboard',
     icon: (size) => (
-      <svg
-        width={size}
-        height={size}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="3" width="7" height="7" />
         <rect x="14" y="3" width="7" height="7" />
         <rect x="14" y="14" width="7" height="7" />
@@ -153,61 +144,31 @@ const NAVIGATION_ITEMS = [
       </svg>
     ),
   },
-
   {
     key: 'alternativas',
     label: 'Alternativas',
     icon: (size) => (
-      <svg
-        width={size}
-        height={size}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" />
         <circle cx="12" cy="10" r="3" />
       </svg>
     ),
   },
-
   {
     key: 'simulacion',
     label: 'Simulación',
     icon: (size) => (
-      <svg
-        width={size}
-        height={size}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M3 17l5-5 4 4 8-9" />
         <path d="M14 7h6v6" />
       </svg>
     ),
   },
-
   {
     key: 'api-alerts',
     label: 'Alertas API',
     icon: (size) => (
-      <svg
-        width={size}
-        height={size}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
         <line x1="12" y1="9" x2="12" y2="13" />
         <line x1="12" y1="17" x2="12.01" y2="17" />
@@ -220,18 +181,27 @@ export default function ExpandableSidebar({
   activePage = 'dashboard',
   onNavigate,
   onLogout,
+  user,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const sidebarWidth = isExpanded ? 220 : 64;
+  const role = user?.rol;
+
+  const visibleItems = NAVIGATION_ITEMS.filter((item) => {
+    if (role === 'Administrador') {
+      return item.key === 'api-alerts';
+    }
+
+    if (role === 'Director') {
+      return ['dashboard', 'alternativas', 'simulacion'].includes(item.key);
+    }
+
+    return item.key === 'dashboard';
+  });
 
   return (
-    <aside
-      style={{
-        ...styles.sidebar,
-        width: sidebarWidth,
-      }}
-    >
+    <aside style={{ ...styles.sidebar, width: sidebarWidth }}>
       <div style={styles.logo}>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
           <path
@@ -248,25 +218,11 @@ export default function ExpandableSidebar({
         title={isExpanded ? 'Contraer' : 'Expandir'}
       >
         {isExpanded ? (
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <polyline points="15 18 9 12 15 6" />
           </svg>
         ) : (
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <polyline points="9 18 15 12 9 6" />
           </svg>
         )}
@@ -275,7 +231,7 @@ export default function ExpandableSidebar({
       <div style={styles.divider} />
 
       <div style={styles.navContainer}>
-        {NAVIGATION_ITEMS.map(({ key, label, icon }) => {
+        {visibleItems.map(({ key, label, icon }) => {
           const isActive = activePage === key;
 
           return (
@@ -289,12 +245,7 @@ export default function ExpandableSidebar({
               title={label}
             >
               <span style={styles.icon}>{icon(20)}</span>
-
-              {isExpanded && (
-                <span style={styles.label}>
-                  {label}
-                </span>
-              )}
+              {isExpanded && <span style={styles.label}>{label}</span>}
             </button>
           );
         })}
@@ -303,33 +254,16 @@ export default function ExpandableSidebar({
       <div style={styles.footer}>
         <div style={styles.divider} />
 
-        <button
-          style={styles.logoutBtn}
-          onClick={onLogout}
-          title="Salir"
-        >
+        <button style={styles.logoutBtn} onClick={onLogout} title="Salir">
           <span style={styles.icon}>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
               <polyline points="16 17 21 12 16 7" />
               <line x1="21" y1="12" x2="9" y2="12" />
             </svg>
           </span>
 
-          {isExpanded && (
-            <span style={styles.label}>
-              Salir
-            </span>
-          )}
+          {isExpanded && <span style={styles.label}>Salir</span>}
         </button>
       </div>
     </aside>
