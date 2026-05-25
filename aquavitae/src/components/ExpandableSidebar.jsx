@@ -19,6 +19,7 @@ const styles = {
     zIndex: 1000,
     boxSizing: 'border-box',
   },
+
   logo: {
     width: 36,
     height: 36,
@@ -32,6 +33,7 @@ const styles = {
     fontSize: 14,
     flexShrink: 0,
   },
+
   toggleBtn: {
     width: '100%',
     height: 40,
@@ -48,6 +50,7 @@ const styles = {
     fontSize: 18,
     flexShrink: 0,
   },
+
   navContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -57,6 +60,7 @@ const styles = {
     overflowX: 'hidden',
     minHeight: 0,
   },
+
   navItem: {
     width: '100%',
     height: 40,
@@ -75,26 +79,31 @@ const styles = {
     whiteSpace: 'nowrap',
     flexShrink: 0,
   },
+
   navItemActive: {
     background: '#eaf1fe',
     color: '#1d4ed8',
   },
+
   icon: {
     width: 20,
     height: 20,
     flexShrink: 0,
   },
+
   label: {
     fontSize: 14,
     fontWeight: 500,
     whiteSpace: 'nowrap',
   },
+
   divider: {
     height: '1px',
     background: '#e6eaf0',
     margin: '8px 0',
     flexShrink: 0,
   },
+
   footer: {
     marginTop: 'auto',
     display: 'flex',
@@ -102,6 +111,7 @@ const styles = {
     gap: 8,
     flexShrink: 0,
   },
+
   logoutBtn: {
     width: '100%',
     height: 40,
@@ -135,6 +145,7 @@ const NAVIGATION_ITEMS = [
       </svg>
     ),
   },
+
   {
     key: 'alternativas',
     label: 'Alternativas',
@@ -146,6 +157,7 @@ const NAVIGATION_ITEMS = [
       </svg>
     ),
   },
+
   {
     key: 'simulacion',
     label: 'Simulación',
@@ -157,6 +169,21 @@ const NAVIGATION_ITEMS = [
       </svg>
     ),
   },
+
+  {
+    key: 'gestion-usuarios',
+    label: 'Gestión Usuarios',
+    roles: ['Administrador'],
+    icon: (size) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 00-3-3.87" />
+        <path d="M16 3.13a4 4 0 010 7.75" />
+      </svg>
+    ),
+  },
+
   {
     key: 'api-alerts',
     label: 'Alertas API',
@@ -179,6 +206,7 @@ export default function ExpandableSidebar({
   user,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
+
   const sidebarWidth = isExpanded ? 220 : 64;
 
   const role = userRole || user?.rol;
@@ -232,7 +260,12 @@ export default function ExpandableSidebar({
               title={label}
             >
               <span style={styles.icon}>{icon(20)}</span>
-              {isExpanded && <span style={styles.label}>{label}</span>}
+
+              {isExpanded && (
+                <span style={styles.label}>
+                  {label}
+                </span>
+              )}
             </button>
           );
         })}
@@ -241,7 +274,11 @@ export default function ExpandableSidebar({
       <div style={styles.footer}>
         <div style={styles.divider} />
 
-        <button style={styles.logoutBtn} onClick={onLogout} title="Salir">
+        <button
+          style={styles.logoutBtn}
+          onClick={onLogout}
+          title="Salir"
+        >
           <span style={styles.icon}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
@@ -250,7 +287,11 @@ export default function ExpandableSidebar({
             </svg>
           </span>
 
-          {isExpanded && <span style={styles.label}>Salir</span>}
+          {isExpanded && (
+            <span style={styles.label}>
+              Salir
+            </span>
+          )}
         </button>
       </div>
     </aside>

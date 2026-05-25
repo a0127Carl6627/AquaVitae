@@ -3,11 +3,13 @@ import ExpandableSidebar from './components/ExpandableSidebar';
 import DashboardInicio from './pages/DashboardInicio';
 import SimulacionPage from './pages/SimulacionPage';
 import AlternativasPage from './pages/AlternativasPage';
+import GestionUsuariosPage from './pages/GestionUsuariosPage';
 import LoginContainer from './components/LoginPage/LoginContainer';
+import ApiAlertsPage from './components/ApiAlertsPage/ApiAlertsPage';
+
 import { auth } from './lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { logout, getStoredUser } from './lib/authService';
-import ApiAlertsPage from './components/ApiAlertsPage/ApiAlertsPage';
 
 export default function App() {
   const [page, setPage] = useState('dashboard');
@@ -32,7 +34,7 @@ export default function App() {
     if (!appUser) return;
 
     if (appUser.rol === 'Administrador') {
-      setPage('api-alerts');
+      setPage('gestion-usuarios');
     }
 
     if (appUser.rol === 'Director') {
@@ -41,7 +43,18 @@ export default function App() {
   }, [appUser]);
 
   const handleNavigate = (newPage) => {
-    if (appUser?.rol === 'Director' && newPage === 'api-alerts') {
+    if (
+      appUser?.rol === 'Administrador' &&
+      !['gestion-usuarios', 'api-alerts'].includes(newPage)
+    ) {
+      setPage('gestion-usuarios');
+      return;
+    }
+
+    if (
+      appUser?.rol === 'Director' &&
+      !['dashboard', 'alternativas', 'simulacion'].includes(newPage)
+    ) {
       setPage('dashboard');
       return;
     }
@@ -64,7 +77,7 @@ export default function App() {
           setAppUser(backendUser);
 
           if (backendUser?.rol === 'Administrador') {
-            setPage('api-alerts');
+            setPage('gestion-usuarios');
           } else {
             setPage('dashboard');
           }
@@ -89,11 +102,25 @@ export default function App() {
         user={appUser}
       />
 
-      {page === 'dashboard' && <DashboardInicio />}
+      {page === 'dashboard' &&
+        appUser?.rol === 'Director' && (
+          <DashboardInicio />
+        )}
 
-      {page === 'simulacion' && <SimulacionPage />}
+      {page === 'simulacion' &&
+        appUser?.rol === 'Director' && (
+          <SimulacionPage />
+        )}
 
-      {page === 'alternativas' && <AlternativasPage />}
+      {page === 'alternativas' &&
+        appUser?.rol === 'Director' && (
+          <AlternativasPage />
+        )}
+
+      {page === 'gestion-usuarios' &&
+        appUser?.rol === 'Administrador' && (
+          <GestionUsuariosPage />
+        )}
 
       {page === 'api-alerts' &&
         appUser?.rol === 'Administrador' && (
