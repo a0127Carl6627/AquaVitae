@@ -1,6 +1,11 @@
 // src/services/aquavitaeApi.js
 const BASE = process.env.REACT_APP_API_BASE || '';
 
+function authHeaders() {
+  const token = localStorage.getItem('aquavitae_token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
 function formatMXN(num) {
   if (num == null) return '—';
   const n = typeof num === 'object' ? parseFloat(String(num)) : Number(num);
@@ -137,45 +142,52 @@ export async function fetchFactores(plantaId) {
 
 // ========== ADMINISTRACIÓN DE USUARIOS Y ROLES (nuevos) ==========
 export async function fetchResumen() {
-  const res = await fetch(`${BASE}/api/usuarios/resumen`);
+  const res = await fetch(`${BASE}/api/usuarios/resumen`, { headers: authHeaders() });
   if (!res.ok) throw new Error('Error al obtener resumen de usuarios');
   return res.json();
 }
 
 export async function fetchUsuarios(page = 0, size = 1000) {
-  const res = await fetch(`${BASE}/api/usuarios?page=${page}&size=${size}`);
+  const res = await fetch(`${BASE}/api/usuarios?page=${page}&size=${size}`, { headers: authHeaders() });
   if (!res.ok) throw new Error('Error al listar usuarios');
-  return res.json();
+  const data = await res.json();
+  return {
+    content: data.content ?? data.items ?? [],
+    totalElements: data.totalElements ?? data.total ?? 0,
+    page: data.page ?? 0,
+    size: data.size ?? size,
+    totalPages: data.totalPages ?? 1,
+  };
 }
 
 export async function fetchRoles() {
-  const res = await fetch(`${BASE}/api/usuarios/roles`);
+  const res = await fetch(`${BASE}/api/usuarios/roles`, { headers: authHeaders() });
   if (!res.ok) throw new Error('Error al obtener roles');
   return res.json();
 }
 
 export async function fetchRolConPermisos(rolId) {
-  const res = await fetch(`${BASE}/api/usuarios/roles/${rolId}`);
+  const res = await fetch(`${BASE}/api/usuarios/roles/${rolId}`, { headers: authHeaders() });
   if (!res.ok) throw new Error('Error al obtener permisos del rol');
   return res.json();
 }
 
 export async function fetchEmpresas() {
-  const res = await fetch(`${BASE}/api/usuarios/empresas`);
+  const res = await fetch(`${BASE}/api/usuarios/empresas`, { headers: authHeaders() });
   if (!res.ok) throw new Error('Error al obtener empresas');
   return res.json();
 }
 
 export async function generarContrasena() {
-  const res = await fetch(`${BASE}/api/usuarios/generar-contrasena`);
+  const res = await fetch(`${BASE}/api/usuarios/generar-contrasena`, { headers: authHeaders() });
   if (!res.ok) throw new Error('Error al generar contraseña temporal');
-  return res.json(); // { contrasena: "..." }
+  return res.json();
 }
 
 export async function crearUsuario(dto) {
   const res = await fetch(`${BASE}/api/usuarios`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
     body: JSON.stringify(dto),
   });
   if (!res.ok) {
@@ -186,7 +198,7 @@ export async function crearUsuario(dto) {
 }
 
 export async function eliminarUsuario(id) {
-  const res = await fetch(`${BASE}/api/usuarios/${id}`, { method: 'DELETE' });
+  const res = await fetch(`${BASE}/api/usuarios/${id}`, { method: 'DELETE', headers: authHeaders() });
   if (!res.ok) {
     const error = await res.json().catch(() => ({ mensaje: 'Error desconocido' }));
     throw new Error(error.mensaje || 'Error al eliminar usuario');
@@ -196,7 +208,7 @@ export async function eliminarUsuario(id) {
 export async function editarUsuario(id, dto) {
   const res = await fetch(`${BASE}/api/usuarios/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
     body: JSON.stringify(dto),
   });
   if (!res.ok) {
@@ -207,7 +219,7 @@ export async function editarUsuario(id, dto) {
 }
 
 export async function fetchPlantas() {
-  const res = await fetch(`${BASE}/api/plantas`);
+  const res = await fetch(`${BASE}/api/plantas`, { headers: authHeaders() });
   if (!res.ok) throw new Error('Error al obtener plantas');
   return res.json();
 }

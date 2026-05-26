@@ -4,9 +4,9 @@ module.exports = function(app) {
   app.use(
     '/api',
     createProxyMiddleware({
-      target: 'https://aquavitae-backend-1005047638592.us-central1.run.app',
+      target: 'http://localhost:8080',
       changeOrigin: true,
-      secure: true,
+      secure: false,
     })
   );
 };

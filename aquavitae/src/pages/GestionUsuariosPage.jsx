@@ -125,6 +125,9 @@ export default function GestionUsuariosPage() {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { fetchAllData(0, 5); }, []);
+
   // Cambio de página (desde tabla)
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < usuarios.totalPages) {
