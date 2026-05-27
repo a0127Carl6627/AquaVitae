@@ -39,12 +39,6 @@ const MODULOS_PERMISO = [
   'Configuración',
 ];
 
-// Alcances posibles
-const ALCANCES = [
-  { value: 'PLANTA', label: 'Por planta', desc: 'El usuario solo podrá ver y gestionar los datos de la planta asignada.' },
-  { value: 'REGION', label: 'Por región', desc: 'El usuario podrá ver y gestionar todos los datos de la región asignada.' },
-  { value: 'GLOBAL', label: 'Todas las regiones y plantas', desc: 'El usuario podrá ver y gestionar todos los datos de la plataforma.' },
-];
 
 function Campo({ label, required, children }) {
   return (
@@ -65,8 +59,6 @@ export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpre
     telefono: '',
     contrasenaTemp: '',
     idRol: '',
-    alcanceDatos: 'PLANTA',
-    idPlantaAsignada: '',
   });
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
   const [guardando, setGuardando] = useState(false);
@@ -113,6 +105,7 @@ export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpre
     if (!form.nombreCompleto.trim()) { setErrorMsg('El nombre completo es requerido.'); return; }
     if (!form.correo.trim()) { setErrorMsg('El correo electrónico es requerido.'); return; }
     if (!form.contrasenaTemp.trim()) { setErrorMsg('La contraseña temporal es requerida.'); return; }
+    if (form.contrasenaTemp.trim().length < 8) { setErrorMsg('La contraseña debe tener al menos 8 caracteres.'); return; }
     if (!form.idRol) { setErrorMsg('Debe seleccionar un rol.'); return; }
 
     setGuardando(true);
@@ -400,58 +393,6 @@ export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpre
                     </p>
                   </div>
                 )}
-              </div>
-
-              {/* Columna central: Alcance de datos */}
-              <div>
-                <p style={{ fontSize: '13px', fontWeight: '500', color: '#1a2332', margin: '0 0 12px' }}>
-                  Alcance de datos <span style={{ color: '#e23b3b', marginLeft: 2 }}>*</span>
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {ALCANCES.map(alcance => (
-                    <div key={alcance.value}>
-                      <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: 'pointer' }}>
-                        <input
-                          type="radio"
-                          name="alcanceDatos"
-                          value={alcance.value}
-                          checked={form.alcanceDatos === alcance.value}
-                          onChange={() => handleChange('alcanceDatos', alcance.value)}
-                          style={{ marginTop: '2px', accentColor: '#3b7dd8', flexShrink: 0 }}
-                        />
-                        <div>
-                          <span style={{ fontSize: '13px', fontWeight: '500', color: '#1a2332' }}>
-                            {alcance.label}
-                          </span>
-                          <p style={{ fontSize: '11.5px', color: '#5a6577', margin: '2px 0 0', lineHeight: '1.4' }}>
-                            {alcance.desc}
-                          </p>
-                        </div>
-                      </label>
-                      {/* Selector de planta cuando alcance es PLANTA */}
-                      {alcance.value === 'PLANTA' && form.alcanceDatos === 'PLANTA' && (
-                        <div style={{ marginTop: '8px', marginLeft: '24px' }}>
-                          <div style={{ position: 'relative' }}>
-                            <select
-                              value={form.idPlantaAsignada}
-                              onChange={e => handleChange('idPlantaAsignada', e.target.value)}
-                              style={{ ...estiloInput, appearance: 'none', paddingRight: '32px', fontSize: '13px' }}
-                            >
-                              <option value="">Selecciona planta</option>
-                              {plantas.map(p => (
-                                <option key={p.id} value={String(p.id)}>{p.nombre}</option>
-                              ))}
-                            </select>
-                            <span style={{
-                              position: 'absolute', right: '10px', top: '50%',
-                              transform: 'translateY(-50%)', pointerEvents: 'none', color: '#94a3b8',
-                            }}>▾</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
               </div>
 
               {/* Columna derecha: Permisos del rol */}

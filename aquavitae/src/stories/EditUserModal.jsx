@@ -39,12 +39,6 @@ const MODULOS_PERMISO = [
   'Configuración',
 ];
 
-// Alcances posibles
-const ALCANCES = [
-  { value: 'PLANTA', label: 'Por planta', desc: 'El usuario solo podrá ver y gestionar los datos de la planta asignada.' },
-  { value: 'REGION', label: 'Por región', desc: 'El usuario podrá ver y gestionar todos los datos de la región asignada.' },
-  { value: 'GLOBAL', label: 'Todas las regiones y plantas', desc: 'El usuario podrá ver y gestionar todos los datos de la plataforma.' },
-];
 
 function Campo({ label, required, children }) {
   return (
@@ -66,8 +60,6 @@ export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [
     telefono: '',
     activo: true,
     idRol: '',
-    alcanceDatos: 'PLANTA',
-    idPlantaAsignada: '',
     contrasena: '',
   });
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
@@ -85,8 +77,6 @@ export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [
         telefono: usuario.telefono || '',
         activo: usuario.activo !== undefined ? usuario.activo : true,
         idRol: usuario.idRol ? String(usuario.idRol) : '',
-        alcanceDatos: usuario.alcanceDatos || 'PLANTA',
-        idPlantaAsignada: usuario.idPlantaAsignada ? String(usuario.idPlantaAsignada) : '',
         contrasena: '',
       });
       setMostrarContrasena(false);
@@ -116,10 +106,6 @@ export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [
         telefono: form.telefono,
         activo: form.activo,
         idRol: form.idRol ? Number(form.idRol) : null,
-        alcanceDatos: form.alcanceDatos,
-        idPlantaAsignada: form.alcanceDatos === 'PLANTA' && form.idPlantaAsignada
-          ? Number(form.idPlantaAsignada)
-          : null,
       };
       if (mostrarContrasena && form.contrasena) {
         dto.contrasena = form.contrasena;
@@ -390,58 +376,6 @@ export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [
                     </p>
                   </div>
                 )}
-              </div>
-
-              {/* Columna central: Alcance de datos */}
-              <div>
-                <p style={{ fontSize: '13px', fontWeight: '500', color: '#1a2332', margin: '0 0 12px' }}>
-                  Alcance de datos
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {ALCANCES.map(alcance => (
-                    <div key={alcance.value}>
-                      <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: 'pointer' }}>
-                        <input
-                          type="radio"
-                          name="alcanceDatos"
-                          value={alcance.value}
-                          checked={form.alcanceDatos === alcance.value}
-                          onChange={() => handleChange('alcanceDatos', alcance.value)}
-                          style={{ marginTop: '2px', accentColor: '#3b7dd8', flexShrink: 0 }}
-                        />
-                        <div>
-                          <span style={{ fontSize: '13px', fontWeight: '500', color: '#1a2332' }}>
-                            {alcance.label}
-                          </span>
-                          <p style={{ fontSize: '11.5px', color: '#5a6577', margin: '2px 0 0', lineHeight: '1.4' }}>
-                            {alcance.desc}
-                          </p>
-                        </div>
-                      </label>
-                      {/* Selector de planta cuando alcance es PLANTA */}
-                      {alcance.value === 'PLANTA' && form.alcanceDatos === 'PLANTA' && (
-                        <div style={{ marginTop: '8px', marginLeft: '24px' }}>
-                          <div style={{ position: 'relative' }}>
-                            <select
-                              value={form.idPlantaAsignada}
-                              onChange={e => handleChange('idPlantaAsignada', e.target.value)}
-                              style={{ ...estiloInput, appearance: 'none', paddingRight: '32px', fontSize: '13px' }}
-                            >
-                              <option value="">Selecciona planta</option>
-                              {plantas.map(p => (
-                                <option key={p.id} value={String(p.id)}>{p.nombre}</option>
-                              ))}
-                            </select>
-                            <span style={{
-                              position: 'absolute', right: '10px', top: '50%',
-                              transform: 'translateY(-50%)', pointerEvents: 'none', color: '#94a3b8',
-                            }}>▾</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
               </div>
 
               {/* Columna derecha: Permisos del rol */}

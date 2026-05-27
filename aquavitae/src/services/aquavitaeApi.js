@@ -53,15 +53,14 @@ export async function fetchDashboard() {
 }
 
 export async function fetchKpis(plantaId) {
-  const params = plantaId != null ? `?plantaId=${plantaId}` : '';
-  const res = await fetch(`${BASE}/api/simulacion/kpis${params}`);
+  const pid = plantaId ?? 1;
+  const res = await fetch(`${BASE}/api/simulacion/kpis?plantaId=${pid}`);
   if (!res.ok) throw new Error(`KPIs error ${res.status}`);
   return res.json();
 }
 
 export async function fetchProyeccion(plantaId, dias = 90) {
-  const params = new URLSearchParams({ dias: String(dias) });
-  if (plantaId != null) params.set('plantaId', String(plantaId));
+  const params = new URLSearchParams({ dias: String(dias), plantaId: String(plantaId ?? 1) });
   const res = await fetch(`${BASE}/api/simulacion/proyeccion?${params}`);
   if (!res.ok) throw new Error(`Proyección error ${res.status}`);
   const d = await res.json();
@@ -82,8 +81,7 @@ export async function fetchProyeccion(plantaId, dias = 90) {
 }
 
 export async function fetchRecuperacion(plantaId, dias = 90) {
-  const params = new URLSearchParams({ dias: String(dias) });
-  if (plantaId != null) params.set('plantaId', String(plantaId));
+  const params = new URLSearchParams({ dias: String(dias), plantaId: String(plantaId ?? 1) });
   const res = await fetch(`${BASE}/api/simulacion/recuperacion?${params}`);
   if (!res.ok) throw new Error(`Recuperación error ${res.status}`);
   const d = await res.json();
