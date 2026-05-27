@@ -1,0 +1,74 @@
+.auditoria-kpis-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.auditoria-kpi-card {
+  background: #ffffff;
+  border: 1px solid #e8edf5;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+.auditoria-kpi-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.auditoria-kpi-icon.blue {
+  background: #eaf2ff;
+  color: #2563eb;
+}
+
+.auditoria-kpi-icon.green {
+  background: #eafbf1;
+  color: #16a34a;
+}
+
+.auditoria-kpi-icon.purple {
+  background: #f3e8ff;
+  color: #7c3aed;
+}
+
+.auditoria-kpi-icon.orange {
+  background: #fff4df;
+  color: #f59e0b;
+}
+
+.auditoria-kpi-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.auditoria-kpi-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  margin: 0 0 6px 0;
+}
+
+.auditoria-kpi-value {
+  font-size: 30px;
+  font-weight: 800;
+  color: #172033;
+  margin: 0;
+  line-height: 1;
+}
+
+.auditoria-kpi-subtitle {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 6px;
+}

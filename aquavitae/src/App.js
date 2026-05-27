@@ -6,6 +6,7 @@ import AlternativasPage from './pages/AlternativasPage';
 import GestionUsuariosPage from './pages/GestionUsuariosPage';
 import LoginContainer from './components/LoginPage/LoginContainer';
 import ApiAlertsPage from './components/ApiAlertsPage/ApiAlertsPage';
+import AdminAuditoriaPage from './components/Auditoria/AdminAuditoriaPage';
 
 import { auth } from './lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -45,7 +46,7 @@ export default function App() {
   const handleNavigate = (newPage) => {
     if (
       appUser?.rol === 'Administrador' &&
-      !['gestion-usuarios', 'api-alerts'].includes(newPage)
+      !['gestion-usuarios', 'api-alerts', 'auditoria'].includes(newPage)
     ) {
       setPage('gestion-usuarios');
       return;
@@ -102,31 +103,13 @@ export default function App() {
         user={appUser}
       />
 
-      {page === 'dashboard' &&
-        appUser?.rol === 'Director' && (
-          <DashboardInicio />
-        )}
+      {page === 'dashboard' && appUser?.rol === 'Director' && <DashboardInicio />}
+      {page === 'simulacion' && appUser?.rol === 'Director' && <SimulacionPage />}
+      {page === 'alternativas' && appUser?.rol === 'Director' && <AlternativasPage />}
 
-      {page === 'simulacion' &&
-        appUser?.rol === 'Director' && (
-          <SimulacionPage />
-        )}
-
-      {page === 'alternativas' &&
-        appUser?.rol === 'Director' && (
-          <AlternativasPage />
-        )}
-
-      {page === 'gestion-usuarios' &&
-        appUser?.rol === 'Administrador' && (
-          <GestionUsuariosPage />
-        )}
-
-      {page === 'api-alerts' &&
-        appUser?.rol === 'Administrador' && (
-          <ApiAlertsPage />
-        )}
-
+      {page === 'gestion-usuarios' && appUser?.rol === 'Administrador' && <GestionUsuariosPage />}
+      {page === 'api-alerts' && appUser?.rol === 'Administrador' && <ApiAlertsPage />}
+      {page === 'auditoria' && appUser?.rol === 'Administrador' && <AdminAuditoriaPage />}
     </div>
   );
 }
