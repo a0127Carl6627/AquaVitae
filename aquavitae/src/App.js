@@ -17,11 +17,34 @@ export default function App() {
   const [appUser, setAppUser] = useState(null);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
+    const unsub = onAuthStateChanged(auth, async (u) => {
       setUser(u ?? null);
 
       if (u) {
-        setAppUser(getStoredUser());
+        const stored = getStoredUser();
+        if (stored) {
+          setAppUser(stored);
+        } else {
+          try {
+            const token = await u.getIdToken();
+            const API_URL = process.env.REACT_APP_API_URL || '';
+            const res = await fetch(`${API_URL}/auth/me`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (res.ok) {
+              const backendUser = await res.json();
+              localStorage.setItem('aquavitae_token', token);
+              localStorage.setItem('aquavitae_user', JSON.stringify(backendUser));
+              setAppUser(backendUser);
+            } else {
+              await logout();
+              setUser(null);
+            }
+          } catch {
+            await logout();
+            setUser(null);
+          }
+        }
       } else {
         setAppUser(null);
       }

@@ -1,13 +1,12 @@
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "./firebase";
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8080";
-
 export async function loginWithEmail(email, password) {
   const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
   const token = await userCredential.user.getIdToken();
 
+  const API_URL = process.env.REACT_APP_API_URL || '';
   const response = await fetch(`${API_URL}/auth/me`, {
     method: "GET",
     headers: {
