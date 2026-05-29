@@ -13,30 +13,23 @@ import {
 const RIESGO_COLOR = { ALTO: '#e23b3b', MEDIO: '#e89923', BAJO: '#2ea36b' };
 const RIESGO_BG   = { ALTO: '#fde8e8', MEDIO: '#fdf2dd', BAJO: '#e3f4ea' };
 
-function kpiColor(indice) {
-  if (indice >= 0.70) return 'red';
-  if (indice >= 0.45) return 'amber';
-  return 'green';
-}
-
-function diasColor(dias) {
-  if (dias <= 14) return 'red';
-  if (dias <= 30) return 'amber';
-  return 'blue';
-}
-
-function probColor(prob) {
-  if (prob >= 0.70) return 'red';
-  if (prob >= 0.40) return 'amber';
-  return 'green';
-}
-
+function kpiColor(indice) { if (indice >= 0.70) return 'red'; if (indice >= 0.45) return 'amber'; return 'green'; }
+function diasColor(dias) { if (dias <= 14) return 'red'; if (dias <= 30) return 'amber'; return 'blue'; }
+function probColor(prob) { if (prob >= 0.70) return 'red'; if (prob >= 0.40) return 'amber'; return 'green'; }
 function formatMillon(num) {
   if (num == null) return '—';
+
   const n = Number(num);
-  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1)} MM`;
-  if (n >= 1_000_000) return `$${Math.round(n / 1_000_000)} M`;
-  return `$${n.toLocaleString('es-MX')}`;
+
+  if (n >= 1_000_000_000) {
+    return `${(n / 1_000_000_000).toFixed(1)} MM`;
+  }
+
+  if (n >= 1_000_000) {
+    return `${Math.round(n / 1_000_000)} M`;
+  }
+
+  return n.toLocaleString('es-MX');
 }
 
 const WaterIcon = () => (
