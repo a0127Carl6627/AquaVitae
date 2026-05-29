@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useResumenUsuarios, useUsuarios, useRoles, usePlantas, useCrearUsuario, useEditarUsuario, useEliminarUsuario } from '../hooks/useAquavitaeQueries';
-import StatsGrid from '../components/Admin/stories/StatsGrid';
-import UsersTable from '../components/Admin/stories/UsersTable';
-import RolesHighlight from '../components/Admin/stories/RolesHighlight';
-import PermissionsMatrix from '../components/Admin/stories/PermissionsMatrix';
-import DataAccessPolicy from '../components/Admin/stories/DataAccessPolicy';
-import ModalDeleteUser from '../components/Admin/stories/ModalDeleteUser';
-import EditUserModal from '../stories/EditUserModal';
-import NewUserModal from '../stories/NewUserModal';
+import StatsGrid from '../components/admin/StatsGrid';
+import UsersTable from '../components/admin/UsersTable';
+import RolesHighlight from '../components/admin/RolesHighlight';
+import PermissionsMatrix from '../components/admin/PermissionsMatrix';
+import DataAccessPolicy from '../components/admin/DataAccessPolicy';
+import ModalDeleteUser from '../components/admin/ModalDeleteUser';
+import EditUserModal from '../components/admin/EditUserModal';
+import NewUserModal from '../components/admin/NewUserModal';
 
 export default function GestionUsuariosPage() {
   const [userToDelete, setUserToDelete] = useState(null);
@@ -38,12 +38,12 @@ export default function GestionUsuariosPage() {
 
   useEffect(() => {
     if (!roles || roles.length === 0) return;
-    const modules = ['Resumen', 'Plantas', 'Fuentes de agua', 'Riesgos', 'Alertas', 'Simulaciones', 'Reportes', 'Configuración'];
+    const modules = ['Resumen', 'Plantas', 'Fuentes de agua', 'Riesgos', 'Alertas', 'Simulaciones', 'Reportes'];
     const permsMap = {
-      Director:          { Resumen: true,  Plantas: true,  'Fuentes de agua': true,  Riesgos: true,  Alertas: true,  Simulaciones: true,  Reportes: true,  Configuración: true  },
-      'Gerente de Planta': { Resumen: true,  Plantas: true,  'Fuentes de agua': false, Riesgos: true,  Alertas: true,  Simulaciones: false, Reportes: true,  Configuración: true  },
-      Analista:          { Resumen: true,  Plantas: true,  'Fuentes de agua': false, Riesgos: true,  Alertas: true,  Simulaciones: false, Reportes: true,  Configuración: false },
-      Operador:          { Resumen: true,  Plantas: true,  'Fuentes de agua': false, Riesgos: true,  Alertas: true,  Simulaciones: false, Reportes: false, Configuración: false },
+      Director:          { Resumen: true,  Plantas: true,  'Fuentes de agua': true,  Riesgos: true,  Alertas: true,  Simulaciones: true,  Reportes: true},
+      'Gerente de Planta': { Resumen: true,  Plantas: true,  'Fuentes de agua': false, Riesgos: true,  Alertas: true,  Simulaciones: false, Reportes: true},
+      Analista:          { Resumen: true,  Plantas: true,  'Fuentes de agua': false, Riesgos: true,  Alertas: true,  Simulaciones: false, Reportes: true},
+      Operador:          { Resumen: true,  Plantas: true,  'Fuentes de agua': false, Riesgos: true,  Alertas: true,  Simulaciones: false, Reportes: false},
     };
     setMatrizPermisos({ modules, roles: roles.map(r => r.nombre).filter(r => r !== 'Administrador'), permissions: permsMap });
   }, [roles]);
@@ -69,7 +69,7 @@ export default function GestionUsuariosPage() {
   const editarMutation = useEditarUsuario();
   const eliminarMutation = useEliminarUsuario();
 
-  const handlePageChange = (newPage) => { setPage(newPage); refetchUsuarios(); };
+  const handlePageChange = (newPage) => { setPage(newPage); };
   const handleDeleteClick = (user) => setUserToDelete(user);
   const confirmDelete = async (user) => { await eliminarMutation.mutateAsync(user.id); setUserToDelete(null); };
   const handleAddUser = () => setMostrarAgregar(true);

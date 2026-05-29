@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useDashboard, useAlertas, useEvolucion } from '../hooks/useAquavitaeQueries';
-import StatCards from '../stories/StatCards';
-import RiskGauge from '../stories/RiskGauge';
-import DonutChart from '../stories/DonutChart';
-import RiskEvolutionChart from '../stories/RiskEvolutionChart';
-import MexicoRiskMap from '../stories/MexicoRiskMap';
-import AlertsList from '../stories/AlertsList';
-import LastUpdated from '../stories/LastUpdated';
-import PlantRiskList from '../stories/PlantRiskList';
+import StatCards from '../components/dashboard/StatCards';
+import RiskGauge from '../components/charts/RiskGauge';
+import DonutChart from '../components/charts/DonutChart';
+import RiskEvolutionChart from '../components/charts/RiskEvolutionChart';
+import MexicoRiskMap from '../components/maps/MexicoRiskMap';
+import AlertsList from '../components/dashboard/AlertsList';
+import LastUpdated from '../components/ui/LastUpdated';
+import PlantRiskList from '../components/dashboard/PlantRiskList';
 
 function formatHora(isoString) {
   if (!isoString) return '';

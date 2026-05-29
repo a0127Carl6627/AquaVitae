@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDashboard, useKpis, useProyeccion, useRecuperacion } from '../hooks/useAquavitaeQueries';
-import SimulacionKpiCard from '../stories/SimulacionKpiCard';
-import MapaRiesgoHidrico from '../stories/MapaRiesgoHidrico';
-import GraficaProyeccionHidrica from '../stories/GraficaProyeccionHidrica';
-import GraficaRecuperacionHidrica from '../stories/GraficaRecuperacionHidrica';
+import SimulacionKpiCard from '../components/simulacion/SimulacionKpiCard';
+import MapaRiesgoHidrico from '../components/maps/MapaRiesgoHidrico';
+import GraficaProyeccionHidrica from '../components/charts/GraficaProyeccionHidrica';
+import GraficaRecuperacionHidrica from '../components/charts/GraficaRecuperacionHidrica';
 
 const RIESGO_COLOR = { ALTO: '#e23b3b', MEDIO: '#e89923', BAJO: '#2ea36b' };
 const RIESGO_BG   = { ALTO: '#fde8e8', MEDIO: '#fdf2dd', BAJO: '#e3f4ea' };

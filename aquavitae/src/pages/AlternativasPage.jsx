@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useDashboard, useAlerta, useAlternativas, useFactores, useProyeccion, useKpis } from '../hooks/useAquavitaeQueries';
-import AlertaBannerHidrico from '../stories/AlertaBannerHidrico';
-import MapaAlternativas from '../stories/MapaAlternativas';
-import GraficaDisponibilidadOperativa from '../stories/GraficaDisponibilidadOperativa';
-import TablaCostosUbicacion from '../stories/TablaCostosUbicacion';
-import FactoresClave from '../stories/FactoresClave';
+import AlertaBannerHidrico from '../components/ui/AlertaBannerHidrico';
+import MapaAlternativas from '../components/maps/MapaAlternativas';
+import GraficaDisponibilidadOperativa from '../components/charts/GraficaDisponibilidadOperativa';
+import TablaCostosUbicacion from '../components/simulacion/TablaCostosUbicacion';
+import FactoresClave from '../components/ui/FactoresClave';
 import { formatMXN } from '../services/aquavitaeApi';
 
 export default function AlternativasPage() {
