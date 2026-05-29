@@ -1,59 +1,46 @@
-import { useEffect, useState } from 'react';
-
+import { useState, useEffect } from 'react';
+import { useAuditoriaResumen, useAuditoriaLogs, useAuditoriaDetail } from '../../hooks/useAquavitaeQueries';
 import AuditoriaKpis from './AuditoriaKpis';
 import AuditoriaTable from './AuditoriaTable';
 import AuditoriaDetailPanel from './AuditoriaDetailPanel';
 import AuditoriaFilters from './AuditoriaFilters';
-
-import {
-  fetchAuditoriaResumen,
-  fetchAuditoriaLogs,
-  fetchAuditoriaDetail,
-} from '../../services/auditoriaApi';
-
 import './AdminAuditoriaPage.css';
 
 function AdminAuditoriaPage() {
-  const [resumen, setResumen] = useState({});
-  const [logs, setLogs] = useState([]);
+  const [filters, setFilters] = useState({ accion: '', modulo: '', severidad: '' });
   const [selectedLog, setSelectedLog] = useState(null);
 
-  const [filters, setFilters] = useState({
-    accion: '',
-    modulo: '',
-    severidad: '',
+  // Resumen (no depende de filtros)
+  const { data: resumen = {}, isLoading: loadingResumen } = useAuditoriaResumen();
+
+  // Logs (depende de filtros)
+  const { data: logs = [], isLoading: loadingLogs, refetch: refetchLogs } = useAuditoriaLogs({
+    limit: 50,
+    ...filters,
   });
 
-  async function loadData() {
-    try {
-      const [resumenData, logsData] = await Promise.all([
-        fetchAuditoriaResumen(),
-        fetchAuditoriaLogs({
-          limit: 50,
-          ...filters,
-        }),
-      ]);
+  // Detalle del log seleccionado
+  const { data: detailLog } = useAuditoriaDetail(selectedLog?.id);
 
-      setResumen(resumenData);
-      setLogs(logsData);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async function handleSelectLog(log) {
-    try {
-      const detail = await fetchAuditoriaDetail(log.id);
-      setSelectedLog(detail);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
+  // Cuando cambia el detalle, actualizamos el estado local
   useEffect(() => {
-    loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (detailLog) setSelectedLog(detailLog);
+  }, [detailLog]);
+
+  const handleSelectLog = (log) => {
+    setSelectedLog(log); // se dispara el useAuditoriaDetail automáticamente
+  };
+
+  const handleSearch = () => {
+    refetchLogs();
+    setSelectedLog(null); // limpia el panel de detalle
+  };
+
+  const loading = loadingResumen || loadingLogs;
+
+  if (loading && logs.length === 0) {
+    return <div className="admin-auditoria-page">Cargando auditoría...</div>;
+  }
 
   return (
     <div className="admin-auditoria-page">
@@ -69,7 +56,7 @@ function AdminAuditoriaPage() {
       <AuditoriaFilters
         filters={filters}
         onChange={setFilters}
-        onSearch={loadData}
+        onSearch={handleSearch}
       />
 
       <div className="admin-auditoria-layout">
@@ -80,7 +67,6 @@ function AdminAuditoriaPage() {
             onSelectLog={handleSelectLog}
           />
         </div>
-
         <div className="admin-auditoria-detail">
           <AuditoriaDetailPanel log={selectedLog} />
         </div>
