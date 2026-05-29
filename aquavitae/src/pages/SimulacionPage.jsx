@@ -11,7 +11,21 @@ const RIESGO_BG   = { ALTO: '#fde8e8', MEDIO: '#fdf2dd', BAJO: '#e3f4ea' };
 function kpiColor(indice) { if (indice >= 0.70) return 'red'; if (indice >= 0.45) return 'amber'; return 'green'; }
 function diasColor(dias) { if (dias <= 14) return 'red'; if (dias <= 30) return 'amber'; return 'blue'; }
 function probColor(prob) { if (prob >= 0.70) return 'red'; if (prob >= 0.40) return 'amber'; return 'green'; }
-function formatMillon(num) { if (num == null) return '—'; const n = Number(num); if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1)} MM`; if (n >= 1_000_000) return `$${Math.round(n / 1_000_000)} M`; return `$${n.toLocaleString('es-MX')}`; }
+function formatMillon(num) {
+  if (num == null) return '—';
+
+  const n = Number(num);
+
+  if (n >= 1_000_000_000) {
+    return `${(n / 1_000_000_000).toFixed(1)} MM`;
+  }
+
+  if (n >= 1_000_000) {
+    return `${Math.round(n / 1_000_000)} M`;
+  }
+
+  return n.toLocaleString('es-MX');
+}
 
 const WaterIcon = () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2C12 2 5 10 5 15a7 7 0 0 0 14 0c0-5-7-13-7-13Z"/></svg>;
 const ClockIcon = () => <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>;
