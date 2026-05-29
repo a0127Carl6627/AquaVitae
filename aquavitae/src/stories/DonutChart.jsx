@@ -6,7 +6,6 @@ const COLORS = {
   BAJO:  '#22c55e',
 };
 
-
 function describeArc(cx, cy, r, startDeg, endDeg, thickness = 22) {
   const toRad = (d) => ((d - 90) * Math.PI) / 180;
   const inner = r - thickness;
@@ -39,7 +38,6 @@ export default function DonutChart({ alto = 2, medio = 4, bajo = 6 }) {
     { key: 'BAJO',  value: bajo,  label: 'Bajo'  },
   ];
 
-  // Calcular ángulos acumulados con un pequeño gap entre segmentos
   const GAP = 2;
   let cursor = 0;
   const arcs = segments.map((seg) => {
@@ -51,50 +49,53 @@ export default function DonutChart({ alto = 2, medio = 4, bajo = 6 }) {
   });
 
   return (
-    <div style={{ fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ fontFamily: 'Inter, sans-serif', width: '100%' }}>
       <h3 style={{ fontSize: 15, fontWeight: 500, color: '#111827', margin: '0 0 16px' }}>
         Distribución de plantas por nivel de riesgo
       </h3>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-        {/* Dona SVG */}
-        <svg viewBox="0 0 140 140" width="140" height="140" aria-label="Distribución de plantas">
+      {/* Dona centrada y más grande */}
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+        <svg viewBox="0 0 200 200" width="200" height="200" aria-label="Distribución de plantas">
           {arcs.map((arc) => (
             <path
               key={arc.key}
-              d={describeArc(70, 70, 60, arc.start, arc.end, 24)}
+              d={describeArc(100, 100, 85, arc.start, arc.end, 30)}
               fill={COLORS[arc.key]}
             />
           ))}
-          {/* Texto central */}
-          <text x="70" y="65" textAnchor="middle" fontSize="26" fontWeight="600" fill="#111827">
+          {/* Texto central con el total, opcional */}
+          <text x="100" y="95" textAnchor="middle" fontSize="32" fontWeight="600" fill="#111827">
             {total}
           </text>
-          <text x="70" y="82" textAnchor="middle" fontSize="11" fill="#9ca3af">
+          <text x="100" y="115" textAnchor="middle" fontSize="13" fill="#9ca3af">
             Total
           </text>
         </svg>
+      </div>
 
-        {/* Leyenda */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {segments.map((seg) => {
-            const pct = total > 0 ? ((seg.value / total) * 100).toFixed(1) : '0.0';
-            return (
-              <div key={seg.key} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{
-                  width: 10, height: 10, borderRadius: '50%',
-                  background: COLORS[seg.key], flexShrink: 0,
-                }} />
-                <span style={{ fontSize: 13, color: '#374151' }}>
-                  {seg.label}
-                </span>
-                <span style={{ fontSize: 13, color: '#6b7280', marginLeft: 4 }}>
-                  {seg.value} ({pct}%)
-                </span>
-              </div>
-            );
-          })}
-        </div>
+      {/* Leyenda debajo de la dona */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap' }}>
+        {segments.map((seg) => {
+          const pct = total > 0 ? ((seg.value / total) * 100).toFixed(1) : '0.0';
+          return (
+            <div key={seg.key} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span
+                style={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: '50%',
+                  background: COLORS[seg.key],
+                  flexShrink: 0,
+                }}
+              />
+              <span style={{ fontSize: 13, color: '#374151' }}>{seg.label}</span>
+              <span style={{ fontSize: 13, color: '#6b7280', marginLeft: 4 }}>
+                {seg.value} ({pct}%)
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

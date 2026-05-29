@@ -1,0 +1,36 @@
+.admin-auditoria-page {
+  padding: 24px;
+  margin-left: 80px;
+  width: calc(100% - 80px);
+}
+
+.admin-auditoria-header {
+  margin-bottom: 24px;
+}
+
+.admin-auditoria-header h1 {
+  margin: 0;
+  font-size: 32px;
+  color: #172033;
+}
+
+.admin-auditoria-header p {
+  margin-top: 8px;
+  color: #64748b;
+}
+
+.admin-auditoria-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.admin-auditoria-table {
+  min-width: 0;
+}
+
+.admin-auditoria-detail {
+  position: sticky;
+  top: 24px;
+}

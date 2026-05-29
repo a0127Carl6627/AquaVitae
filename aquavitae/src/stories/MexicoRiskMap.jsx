@@ -1,188 +1,156 @@
-import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, GeoJSON, CircleMarker, Tooltip, useMap } from 'react-leaflet';
+import React, { useEffect, useRef } from 'react';
+import mexicoGeoJson from './assets/mexico-geojson.json';
 
-const RISK_COLORS = {
-  ALTO: '#ef4444',
-  MEDIO: '#f97316',
-  BAJO: '#22c55e',
-  SIN_RIESGO: '#22c55e',
-};
+const RISK_COLOR = { alta: '#e23b3b', medio: '#e89923', bajo: '#2ea36b' };
 
-const LEGEND_ITEMS = [
-  { key: 'ALTO', label: 'Riesgo alto' },
-  { key: 'MEDIO', label: 'Riesgo medio' },
-  { key: 'BAJO', label: 'Riesgo bajo / Sin riesgo' },
-];
-
-function ZoomControls() {
-  const map = useMap();
-  return (
-    <div style={{
-      position: 'absolute',
-      bottom: 12,
-      left: 12,
-      zIndex: 1000,
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 2,
-    }}>
-      <button
-        onClick={() => map.zoomIn()}
-        aria-label="Acercar"
-        style={{
-          width: 28,
-          height: 28,
-          background: 'white',
-          border: '1px solid #e5e7eb',
-          borderRadius: 4,
-          fontSize: 16,
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#374151',
-        }}
-      >
-        +
-      </button>
-      <button
-        onClick={() => map.zoomOut()}
-        aria-label="Alejar"
-        style={{
-          width: 28,
-          height: 28,
-          background: 'white',
-          border: '1px solid #e5e7eb',
-          borderRadius: 4,
-          fontSize: 16,
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#374151',
-        }}
-      >
-        −
-      </button>
-    </div>
-  );
+function normalize(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
 }
 
-export default function MexicoRiskMap({ plantas = [] }) {
-  const [geoData, setGeoData] = useState(null);
+function getColor(stateName, plantas) {
+  const n = normalize(stateName);
+  const planta = plantas.find(p => {
+    const pn = normalize(p.estado ?? '');
+    return n === pn || n.startsWith(pn) || pn.startsWith(n);
+  });
+  if (!planta) return '#dde3ec';
+  return RISK_COLOR[planta.riesgo] || '#dde3ec';
+}
+
+export default function MexicoRiskMap({ plantas = [], height = 340, selectedEstado = null, onSelectPlanta }) {
+  const mapRef = useRef(null);
+  const instanceRef = useRef(null);
+  const layersRef = useRef({});
+  const plantasRef = useRef(plantas);
+  const onSelectRef = useRef(onSelectPlanta);
+  const selectedEstadoRef = useRef(selectedEstado);
+
+  useEffect(() => { plantasRef.current = plantas; });
+  useEffect(() => { onSelectRef.current = onSelectPlanta; });
 
   useEffect(() => {
-    fetch('/mexico-states.json')
-      .then((res) => res.json())
-      .then((data) => setGeoData(data))
-      .catch((err) => console.error('Error loading Mexico GeoJSON:', err));
-  }, []);
-
-  const counts = plantas.reduce((acc, p) => {
-    acc[p.nivelRiesgo] = (acc[p.nivelRiesgo] ?? 0) + 1;
-    return acc;
-  }, {});
-
-  const bajoCount = (counts['BAJO'] ?? 0) + (counts['SIN_RIESGO'] ?? 0);
-  const leyendaConteos = {
-    ALTO: counts['ALTO'] ?? 0,
-    MEDIO: counts['MEDIO'] ?? 0,
-    BAJO: bajoCount,
-  };
-
-  const geoStyle = {
-    fillColor: '#d1d5db',
-    weight: 0.5,
-    color: '#ffffff',
-    fillOpacity: 1,
-  };
-
-  const onEachState = (feature, layer) => {
-    layer.on({
-      mouseover: (e) => {
-        e.target.setStyle({ fillColor: '#c4c9d2' });
-      },
-      mouseout: (e) => {
-        e.target.setStyle({ fillColor: '#d1d5db' });
-      },
+    selectedEstadoRef.current = selectedEstado;
+    if (!instanceRef.current) return;
+    const selNorm = selectedEstado ? normalize(selectedEstado) : null;
+    Object.entries(layersRef.current).forEach(([gn, layer]) => {
+      const name = layer.feature?.properties?.name || layer.feature?.properties?.NAME_1 || '';
+      const baseColor = getColor(name, plantasRef.current);
+      const isSelected = selNorm && (gn === selNorm || gn.startsWith(selNorm) || selNorm.startsWith(gn));
+      layer.setStyle({
+        fillColor: isSelected ? '#2563eb' : baseColor,
+        weight: isSelected ? 2.5 : 1.2,
+        color: isSelected ? '#1a2332' : '#ffffff',
+        fillOpacity: isSelected ? 0.95 : 0.7,
+      });
     });
-  };
+  }, [selectedEstado]);
+
+  useEffect(() => {
+    if (instanceRef.current) return;
+
+    import('leaflet').then(L => {
+      import('leaflet/dist/leaflet.css');
+      if (!mapRef.current) return;
+      if (mapRef.current._leaflet_id) mapRef.current._leaflet_id = null;
+
+      const map = L.map(mapRef.current, {
+        zoomControl: true,
+        scrollWheelZoom: false,
+      }).setView([23.5, -101.5], 5);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap',
+        opacity: 0.3,
+      }).addTo(map);
+
+      L.geoJson(mexicoGeoJson, {
+        style: feature => {
+          const name = feature.properties.name || feature.properties.NAME_1 || '';
+          return {
+            fillColor: getColor(name, plantasRef.current),
+            weight: 1.2,
+            color: '#ffffff',
+            fillOpacity: 0.7,
+          };
+        },
+        onEachFeature: (feature, layer) => {
+          const name = feature.properties.name || feature.properties.NAME_1 || '';
+          const n = normalize(name);
+          layersRef.current[n] = layer;
+
+          const planta = plantasRef.current.find(p => {
+            const pn = normalize(p.estado ?? '');
+            return n === pn || n.startsWith(pn) || pn.startsWith(n);
+          });
+
+          const tip = planta
+            ? `<strong>${name}</strong><br/>Planta: ${planta.nombre}<br/>Riesgo: ${planta.riesgoLabel}`
+            : `<strong>${name}</strong><br/>Sin datos`;
+
+          layer.bindTooltip(tip, { sticky: true });
+
+          layer.on({
+            mouseover: e => e.target.setStyle({ weight: 2.5, color: '#1a2332', fillOpacity: 0.9 }),
+            mouseout: () => {
+              const baseColor = getColor(name, plantasRef.current);
+              const isSel = selectedEstadoRef.current && (
+                n === normalize(selectedEstadoRef.current) ||
+                n.startsWith(normalize(selectedEstadoRef.current)) ||
+                normalize(selectedEstadoRef.current).startsWith(n)
+              );
+              layer.setStyle({
+                fillColor: isSel ? '#2563eb' : baseColor,
+                weight: isSel ? 2.5 : 1.2,
+                color: isSel ? '#1a2332' : '#ffffff',
+                fillOpacity: isSel ? 0.95 : 0.7,
+              });
+            },
+            click: () => planta && onSelectRef.current?.(planta),
+          });
+        },
+      }).addTo(map);
+
+      instanceRef.current = map;
+    });
+
+    return () => {
+      if (instanceRef.current) {
+        instanceRef.current.remove();
+        instanceRef.current = null;
+        layersRef.current = {};
+      }
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div style={{ fontFamily: 'Inter, sans-serif' }}>
-      <h3 style={{ fontSize: 15, fontWeight: 500, color: '#111827', margin: '0 0 12px' }}>
-        Mapa de riesgo hídrico por ubicación (Semáforo)
-      </h3>
-
+    <div style={{
+      background: '#fff',
+      border: '1px solid #e6eaf0',
+      borderRadius: 12,
+      overflow: 'hidden',
+      boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    }}>
+      <div ref={mapRef} style={{ height, width: '100%' }} />
       <div style={{
-        position: 'relative',
-        background: '#f9fafb',
-        borderRadius: 10,
-        overflow: 'hidden',
+        display: 'flex', gap: 10, padding: '10px 16px',
+        borderTop: '1px solid #e6eaf0', flexWrap: 'wrap',
       }}>
-        <MapContainer
-          center={[24, -102]}
-          zoom={5}
-          style={{ height: 360, width: '100%' }}
-          zoomControl={false}
-          scrollWheelZoom={true}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          {geoData && (
-            <GeoJSON data={geoData} style={geoStyle} onEachFeature={onEachState} />
-          )}
-          {plantas.map((planta) => (
-            <CircleMarker
-              key={planta.idPlanta}
-              center={[planta.latitud, planta.longitud]}
-              radius={7}
-              fillColor={RISK_COLORS[planta.nivelRiesgo] || '#6b7280'}
-              color="#ffffff"
-              weight={1.5}
-              fillOpacity={1}
-            >
-              <Tooltip direction="top" offset={[0, -8]} opacity={1} permanent={false}>
-                <div style={{ fontSize: 12 }}>
-                  <p style={{ fontWeight: 600, margin: '0 0 2px', color: '#111827' }}>
-                    {planta.nombrePlanta}
-                  </p>
-                  <p style={{ margin: 0, color: '#6b7280' }}>{planta.ubicacionNombre}</p>
-                  <p
-                    style={{
-                      margin: '4px 0 0',
-                      fontWeight: 500,
-                      color: RISK_COLORS[planta.nivelRiesgo],
-                    }}
-                  >
-                    {planta.nivelRiesgo.replace('_', ' ')}
-                  </p>
-                </div>
-              </Tooltip>
-            </CircleMarker>
-          ))}
-          <ZoomControls />
-        </MapContainer>
-      </div>
-
-      <div style={{ display: 'flex', gap: 20, marginTop: 10, flexWrap: 'wrap' }}>
-        {LEGEND_ITEMS.map(({ key, label }) => (
-          <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span
-              style={{
-                width: 12,
-                height: 12,
-                borderRadius: '50%',
-                background: RISK_COLORS[key],
-                flexShrink: 0,
-              }}
-            />
-            <span style={{ fontSize: 12, color: '#374151' }}>
-              {label} ({leyendaConteos[key]})
-            </span>
-          </div>
+        {[
+          { color: '#2ea36b', label: 'Riesgo bajo' },
+          { color: '#e89923', label: 'Riesgo medio' },
+          { color: '#e23b3b', label: 'Riesgo alto' },
+          { color: '#2563eb', label: 'Seleccionada' },
+        ].map(({ color, label }) => (
+          <span key={label} style={{
+            display: 'inline-flex', alignItems: 'center', gap: 5,
+            background: color + '20', color, borderRadius: 999,
+            padding: '2px 9px', fontWeight: 600, fontSize: 11,
+            border: `1px solid ${color}40`,
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: color, display: 'inline-block' }} />
+            {label}
+          </span>
         ))}
       </div>
     </div>

@@ -29,7 +29,7 @@ export default function RiskGauge({ nivel = 'alto', regiones = 3 }) {
         Riesgo hídrico general
       </p>
 
-      <svg viewBox="0 0 200 120" width="220" height="132" aria-label={`Riesgo ${nivel}`}>
+      <svg viewBox="0 0 200 120" width="220" height="100" aria-label={`Riesgo ${nivel}`}>
         {/* Arco de fondo gris */}
         <path
           d="M 20 100 A 80 80 0 0 1 180 100"

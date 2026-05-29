@@ -28,7 +28,18 @@ function TriangleIcon({ color }) {
 }
 
 export default function AlertsList({ alerts = [] }) {
-  if (alerts.length === 0) {
+  // Ordenar de más reciente a más antigua (por fecha/hora)
+  const sortedAlerts = [...alerts].sort((a, b) => {
+    const dateA = a.fecha ? new Date(a.fecha) : 0;
+    const dateB = b.fecha ? new Date(b.fecha) : 0;
+    if (dateA && dateB) return dateB - dateA;
+    return 0;
+  });
+
+  // Tomar solo las 3 más recientes
+  const recentAlerts = sortedAlerts.slice(0, 3);
+
+  if (recentAlerts.length === 0) {
     return (
       <p style={{ fontFamily: 'Inter, sans-serif', color: '#6b7280', fontSize: 14 }}>
         No hay alertas recientes.
@@ -41,9 +52,9 @@ export default function AlertsList({ alerts = [] }) {
       <h2 style={{ fontSize: 18, fontWeight: 500, color: '#111827', margin: '0 0 1.25rem' }}>
         Alertas recientes
       </h2>
-      {alerts.map((alert, index) => {
+      {recentAlerts.map((alert, index) => {
         const iconColor = ICON_COLOR[alert.tipo] ?? ICON_COLOR.ADVERTENCIA;
-        const isLast = index === alerts.length - 1;
+        const isLast = index === recentAlerts.length - 1;
         return (
           <div
             key={alert.id}
