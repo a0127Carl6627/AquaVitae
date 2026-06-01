@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useAuditoriaResumen, useAuditoriaLogs, useAuditoriaDetail } from '../hooks/useAquavitaeQueries';
-import AuditoriaKpis from '../components/auditoria/AuditoriaKpis';
-import AuditoriaTable from '../components/auditoria/AuditoriaTable';
-import AuditoriaDetailPanel from '../components/auditoria/AuditoriaDetailPanel';
-import AuditoriaFilters from '../components/auditoria/AuditoriaFilters';
+import AuditoriaKpis from '../components/Auditoria/AuditoriaKpis';
+import AuditoriaTable from '../components/Auditoria/AuditoriaTable';
+import AuditoriaDetailPanel from '../components/Auditoria/AuditoriaDetailPanel';
+import AuditoriaFilters from '../components/Auditoria/AuditoriaFilters';
 import './AdminAuditoriaPage.css';
 
 function AdminAuditoriaPage() {
