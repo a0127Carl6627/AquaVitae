@@ -113,23 +113,13 @@ export default function TablaCostosUbicacion({
       </div>
 
       <div style={{
-        padding: '12px 18px',
-        borderTop: '1px solid #e6eaf0',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      }}>
-        <span style={{ fontSize: 11, color: '#8a93a3' }}>
-          {alternativas.length} ubicaciones analizadas · 1 recomendada
-        </span>
-        <a href="javascript:void(0)" style={{
-          fontSize: 12, fontWeight: 600, color: '#1d4ed8',
-          textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4,
-        }}>
-          Ver todas las ubicaciones
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-            <path d="M5 12h14M13 5l7 7-7 7"/>
-          </svg>
-        </a>
-      </div>
+  padding: '12px 18px',
+  borderTop: '1px solid #e6eaf0',
+}}>
+  <span style={{ fontSize: 11, color: '#8a93a3' }}>
+    {alternativas.length} ubicaciones analizadas · 1 recomendada
+  </span>
+</div>
     </div>
   );
 }
