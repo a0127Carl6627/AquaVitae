@@ -114,33 +114,21 @@ export default function MapaRiesgoHidrico({
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const leyenda = [
+    { chip: 'bg-[#2ea36b20] text-[#2ea36b] border-[#2ea36b40]', dot: 'bg-[#2ea36b]', label: 'Riesgo bajo' },
+    { chip: 'bg-[#e8992320] text-[#e89923] border-[#e8992340]', dot: 'bg-[#e89923]', label: 'Riesgo medio' },
+    { chip: 'bg-[#e23b3b20] text-[#e23b3b] border-[#e23b3b40]', dot: 'bg-[#e23b3b]', label: 'Riesgo alto' },
+  ];
+
   return (
-    <div style={{
-      background: '#fff',
-      border: '1px solid #e6eaf0',
-      borderRadius: 12,
-      overflow: 'hidden',
-      boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-    }}>
-      <div ref={mapRef} style={{ height, width: '100%' }} />
-      <div style={{
-        display: 'flex', gap: 10, padding: '10px 16px',
-        borderTop: '1px solid #e6eaf0', flexWrap: 'wrap',
-      }}>
-        {[
-          { color: '#2ea36b', label: 'Riesgo bajo' },
-          { color: '#e89923', label: 'Riesgo medio' },
-          { color: '#e23b3b', label: 'Riesgo alto' },
-        ].map(({ color, label }) => (
-          <span key={label} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11.5, color: '#5a6577' }}>
-            <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: 5,
-              background: color + '20', color, borderRadius: 999,
-              padding: '2px 9px', fontWeight: 600, fontSize: 11,
-              border: `1px solid ${color}40`,
-            }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: color, display: 'inline-block' }} />
+    <div className="overflow-hidden rounded-xl border border-[#e6eaf0] bg-white font-sans shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+      {/* height es prop numérica dinámica: inline justificado */}
+      <div ref={mapRef} className="w-full" style={{ height }} />
+      <div className="flex flex-wrap gap-2.5 border-t border-[#e6eaf0] px-4 py-2.5">
+        {leyenda.map(({ chip, dot, label }) => (
+          <span key={label} className="inline-flex items-center gap-1.5 text-[11.5px] text-[#5a6577]">
+            <span className={`inline-flex items-center gap-[5px] rounded-full border px-[9px] py-0.5 text-[11px] font-semibold ${chip}`}>
+              <span className={`inline-block h-1.5 w-1.5 rounded-full ${dot}`} />
               {label}
             </span>
           </span>
