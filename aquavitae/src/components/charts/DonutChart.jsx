@@ -6,6 +6,13 @@ const COLORS = {
   BAJO:  '#22c55e',
 };
 
+// Clases de fondo para los puntos de la leyenda (set fijo, detectables por el JIT).
+const BG_CLASS = {
+  ALTO:  'bg-[#ef4444]',
+  MEDIO: 'bg-[#f97316]',
+  BAJO:  'bg-[#22c55e]',
+};
+
 function describeArc(cx, cy, r, startDeg, endDeg, thickness = 22) {
   const toRad = (d) => ((d - 90) * Math.PI) / 180;
   const inner = r - thickness;
@@ -49,13 +56,13 @@ export default function DonutChart({ alto = 2, medio = 4, bajo = 6 }) {
   });
 
   return (
-    <div style={{ fontFamily: 'Inter, sans-serif', width: '100%' }}>
-      <h3 style={{ fontSize: 15, fontWeight: 500, color: '#111827', margin: '0 0 16px' }}>
+    <div className="w-full [font-family:Inter,sans-serif]">
+      <h3 className="m-0 mb-4 text-[15px] font-medium text-gray-900">
         Distribución de plantas por nivel de riesgo
       </h3>
 
       {/* Dona centrada y más grande */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+      <div className="mb-3 flex justify-center">
         <svg viewBox="0 0 200 200" width="200" height="200" aria-label="Distribución de plantas">
           {arcs.map((arc) => (
             <path
@@ -75,22 +82,14 @@ export default function DonutChart({ alto = 2, medio = 4, bajo = 6 }) {
       </div>
 
       {/* Leyenda debajo de la dona */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap' }}>
+      <div className="flex flex-wrap justify-center gap-6">
         {segments.map((seg) => {
           const pct = total > 0 ? ((seg.value / total) * 100).toFixed(1) : '0.0';
           return (
-            <div key={seg.key} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span
-                style={{
-                  width: 12,
-                  height: 12,
-                  borderRadius: '50%',
-                  background: COLORS[seg.key],
-                  flexShrink: 0,
-                }}
-              />
-              <span style={{ fontSize: 13, color: '#374151' }}>{seg.label}</span>
-              <span style={{ fontSize: 13, color: '#6b7280', marginLeft: 4 }}>
+            <div key={seg.key} className="flex items-center gap-2">
+              <span className={`h-3 w-3 shrink-0 rounded-full ${BG_CLASS[seg.key]}`} />
+              <span className="text-[13px] text-gray-700">{seg.label}</span>
+              <span className="ml-1 text-[13px] text-gray-500">
                 {seg.value} ({pct}%)
               </span>
             </div>

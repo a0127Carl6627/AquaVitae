@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import clsx from 'clsx';
 import ActionBadge from '../ui/ActionBadge';
 
 // Mapeo de tendencia a dirección y color
@@ -23,10 +24,7 @@ function TrendArrow({ tendencia }) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{
-        transform: `rotate(${rotate}deg)`,
-        transition: 'transform 0.2s ease',
-      }}
+      className={clsx('transition-transform duration-200 ease', rotate === 180 && 'rotate-180')}
     >
       {tendencia === 'BAJANDO' && <polyline points="18 15 12 9 6 15" />}
       {tendencia === 'SUBIENDO' && <polyline points="18 9 12 15 6 9" />}
@@ -70,38 +68,24 @@ export default function PlantRiskList({ plants = [], selectedId = null, onSelect
 
   if (plants.length === 0) {
     return (
-      <p style={{ fontFamily: 'var(--font-family, "Inter", sans-serif)' }}>
+      <p className="font-sans">
         No hay datos de plantas.
       </p>
     );
   }
 
   return (
-    <div style={{ fontFamily: 'var(--font-family, "Inter", sans-serif)' }}>
+    <div className="font-sans">
       {/* Controles de filtro y búsqueda */}
-      <div style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 12,
-        marginBottom: 20,
-        alignItems: 'center',
-        justifyContent: 'space-between'
-      }}>
-        <h3 style={{ fontSize: 15, fontWeight: 500, color: '#111827', margin: 0 }}>
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <h3 className="m-0 text-[15px] font-medium text-gray-900">
           Plantas por nivel de riesgo
         </h3>
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <div className="flex flex-wrap gap-3">
           <select
             value={riskFilter}
             onChange={(e) => setRiskFilter(e.target.value)}
-            style={{
-              padding: '6px 12px',
-              borderRadius: 6,
-              border: '1px solid #e5e7eb',
-              fontSize: 13,
-              background: 'white',
-              cursor: 'pointer'
-            }}
+            className="cursor-pointer rounded-md border border-gray-200 bg-white px-3 py-1.5 text-[13px]"
           >
             <option value="TODOS">Todos los niveles</option>
             <option value="ALTO">Alto riesgo</option>
@@ -109,20 +93,14 @@ export default function PlantRiskList({ plants = [], selectedId = null, onSelect
             <option value="BAJO">Bajo riesgo</option>
           </select>
 
-          <div style={{ position: 'relative' }}>
+          <div className="relative">
             <input
               type="text"
               placeholder="Buscar por nombre..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               list="plant-names"
-              style={{
-                padding: '6px 12px',
-                borderRadius: 6,
-                border: '1px solid #e5e7eb',
-                fontSize: 13,
-                width: '200px'
-              }}
+              className="w-[200px] rounded-md border border-gray-200 px-3 py-1.5 text-[13px]"
             />
             <datalist id="plant-names">
               {matchingSuggestions.map(name => (
@@ -137,14 +115,7 @@ export default function PlantRiskList({ plants = [], selectedId = null, onSelect
                 setRiskFilter('TODOS');
                 setSearchTerm('');
               }}
-              style={{
-                padding: '6px 12px',
-                borderRadius: 6,
-                border: '1px solid #e5e7eb',
-                background: '#f9fafb',
-                fontSize: 13,
-                cursor: 'pointer'
-              }}
+              className="cursor-pointer rounded-md border border-gray-200 bg-gray-50 px-3 py-1.5 text-[13px]"
             >
               Limpiar filtros
             </button>
@@ -153,20 +124,20 @@ export default function PlantRiskList({ plants = [], selectedId = null, onSelect
       </div>
 
       {/* Tabla */}
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse text-sm">
           <thead>
-            <tr style={{ textAlign: 'left', borderBottom: '2px solid #e5e7eb' }}>
-              <th style={{ padding: '12px 8px' }}>Planta</th>
-              <th style={{ padding: '12px 8px' }}>Ubicación</th>
-              <th style={{ padding: '12px 8px' }}>Nivel de riesgo</th>
-              <th style={{ padding: '12px 8px' }}>Tendencia</th>
+            <tr className="border-b-2 border-gray-200 text-left">
+              <th className="px-2 py-3">Planta</th>
+              <th className="px-2 py-3">Ubicación</th>
+              <th className="px-2 py-3">Nivel de riesgo</th>
+              <th className="px-2 py-3">Tendencia</th>
             </tr>
           </thead>
           <tbody>
             {paginatedPlants.length === 0 ? (
               <tr>
-                <td colSpan="4" style={{ textAlign: 'center', padding: '30px', color: '#9ca3af' }}>
+                <td colSpan="4" className="p-[30px] text-center text-gray-400">
                   No se encontraron plantas con los criterios seleccionados.
                 </td>
               </tr>
@@ -183,24 +154,22 @@ export default function PlantRiskList({ plants = [], selectedId = null, onSelect
                   <tr
                     key={plant.idPlanta}
                     onClick={() => onSelectPlanta?.(plant)}
-                    style={{
-                      borderBottom: '1px solid #e5e7eb',
-                      borderLeft: `3px solid ${isSelected ? '#2563eb' : 'transparent'}`,
-                      background: isSelected ? '#eaf1fe' : 'transparent',
-                      cursor: 'pointer',
-                    }}
+                    className={clsx(
+                      'cursor-pointer border-b border-l-[3px] border-gray-200',
+                      isSelected ? 'border-l-[#2563eb] bg-[#eaf1fe]' : 'border-l-transparent bg-transparent',
+                    )}
                   >
-                    <td style={{ padding: '12px 8px', fontWeight: 500 }}>
+                    <td className="px-2 py-3 font-medium">
                       {plant.nombrePlanta}
                     </td>
-                    <td style={{ padding: '12px 8px', color: '#4b5563' }}>
+                    <td className="px-2 py-3 text-gray-600">
                       {plant.ubicacionNombre || '—'}
                     </td>
-                    <td style={{ padding: '12px 8px' }}>
+                    <td className="px-2 py-3">
                       <ActionBadge label={plant.nivelRiesgo} type={badgeType} />
                     </td>
-                    <td style={{ padding: '12px 8px', fontWeight: 500, color: '#1f2937' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <td className="px-2 py-3 font-medium text-gray-800">
+                      <div className="flex items-center gap-2">
                         <TrendArrow tendencia={tendencia} />
                         <span>{Math.round(plant.indiceHidrico * 100)}%</span>
                       </div>
@@ -215,42 +184,27 @@ export default function PlantRiskList({ plants = [], selectedId = null, onSelect
 
       {/* Paginación */}
       {filteredPlants.length > itemsPerPage && (
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 8,
-          marginTop: 20,
-          flexWrap: 'wrap'
-        }}>
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
           <button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            style={{
-              padding: '6px 12px',
-              borderRadius: 6,
-              border: '1px solid #e5e7eb',
-              background: 'white',
-              cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-              opacity: currentPage === 1 ? 0.5 : 1
-            }}
+            className={clsx(
+              'rounded-md border border-gray-200 bg-white px-3 py-1.5',
+              currentPage === 1 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer opacity-100',
+            )}
           >
             Anterior
           </button>
-          <span style={{ fontSize: 13, color: '#6b7280' }}>
+          <span className="text-[13px] text-gray-500">
             Página {currentPage} de {totalPages}
           </span>
           <button
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            style={{
-              padding: '6px 12px',
-              borderRadius: 6,
-              border: '1px solid #e5e7eb',
-              background: 'white',
-              cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-              opacity: currentPage === totalPages ? 0.5 : 1
-            }}
+            className={clsx(
+              'rounded-md border border-gray-200 bg-white px-3 py-1.5',
+              currentPage === totalPages ? 'cursor-not-allowed opacity-50' : 'cursor-pointer opacity-100',
+            )}
           >
             Siguiente
           </button>

@@ -33,18 +33,14 @@ export default function RiskEvolutionChart({ data = [] }) {
 
   if (chartData.length === 0) {
     return (
-      <p style={{ fontFamily: 'var(--font-family, "Inter", sans-serif)' }}>
+      <p className="font-sans">
         No hay datos de evolución.
       </p>
     );
   }
 
   return (
-    <div style={{
-      fontFamily: 'var(--font-family, "Inter", sans-serif)',
-      width: '100%',
-      height: '300px',
-    }}>
+    <div className="h-[300px] w-full font-sans">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={chartData} margin={{ top: 20, right: 20, left: 10, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
