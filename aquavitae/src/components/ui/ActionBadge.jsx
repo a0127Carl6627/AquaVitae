@@ -1,14 +1,15 @@
 import React from 'react';
+import clsx from 'clsx';
 
+// Cada tipo mapea a un set COMPLETO de clases (no interpoladas) para que
+// el JIT de Tailwind las detecte. Este es el patron para estilos dinamicos.
 const tipos = {
   critical: {
-    color: '#ef4444',
-    fondo: '#fef2f2',
+    classes: 'bg-red-50 text-red-500 border-red-500',
     icono: '❗',
   },
   warning: {
-    color: '#f59e0b',
-    fondo: '#fffbeb',
+    classes: 'bg-amber-50 text-amber-500 border-amber-500',
     icono: (
       <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 2L1 21h22L12 2z"/>
@@ -17,8 +18,7 @@ const tipos = {
     ),
   },
   safe: {
-    color: '#22c55e',
-    fondo: '#f0fdf4',
+    classes: 'bg-green-50 text-green-500 border-green-500',
     icono: (
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="20 6 9 17 4 12"/>
@@ -31,23 +31,14 @@ export default function ActionBadge({ label = '', type = 'safe' }) {
   const config = tipos[type] || tipos.safe;
 
   return (
-    <span style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '5px',
-      backgroundColor: config.fondo,
-      color: config.color,
-      border: `1px solid ${config.color}`,
-      borderRadius: '9999px',
-      padding: '3px 10px',
-      fontSize: '12px',
-      fontWeight: '600',
-      fontFamily: 'sans-serif',
-      whiteSpace: 'nowrap',
-      width: 'fit-content',
-    }}>
+    <span
+      className={clsx(
+        'inline-flex w-fit items-center gap-[5px] whitespace-nowrap rounded-full border px-2.5 py-[3px] font-sans text-xs font-semibold',
+        config.classes,
+      )}
+    >
       {typeof config.icono === 'string'
-        ? <span style={{ fontSize: '12px' }}>{config.icono}</span>
+        ? <span className="text-xs">{config.icono}</span>
         : config.icono
       }
       {label}
