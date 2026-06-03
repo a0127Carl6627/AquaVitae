@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 
 const ICON_COLOR = {
   CRÍTICO:     '#E24B4A',
@@ -17,7 +18,7 @@ function TriangleIcon({ color }) {
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{ flexShrink: 0, marginTop: 2 }}
+      className="mt-0.5 shrink-0"
       aria-hidden="true"
     >
       <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
@@ -41,15 +42,15 @@ export default function AlertsList({ alerts = [] }) {
 
   if (recentAlerts.length === 0) {
     return (
-      <p style={{ fontFamily: 'Inter, sans-serif', color: '#6b7280', fontSize: 14 }}>
+      <p className="text-sm text-gray-500 [font-family:Inter,sans-serif]">
         No hay alertas recientes.
       </p>
     );
   }
 
   return (
-    <div style={{ fontFamily: 'Inter, sans-serif' }}>
-      <h2 style={{ fontSize: 18, fontWeight: 500, color: '#111827', margin: '0 0 1.25rem' }}>
+    <div className="[font-family:Inter,sans-serif]">
+      <h2 className="m-0 mb-5 text-lg font-medium text-gray-900">
         Alertas recientes
       </h2>
       {recentAlerts.map((alert, index) => {
@@ -58,24 +59,21 @@ export default function AlertsList({ alerts = [] }) {
         return (
           <div
             key={alert.id}
-            style={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: 12,
-              padding: '14px 0',
-              borderBottom: isLast ? 'none' : '1px solid #f3f4f6',
-            }}
+            className={clsx(
+              'flex items-start gap-3 py-3.5',
+              !isLast && 'border-b border-gray-100',
+            )}
           >
             <TriangleIcon color={iconColor} />
-            <div style={{ flex: 1 }}>
-              <p style={{ fontSize: 14, fontWeight: 500, color: '#111827', margin: '0 0 4px' }}>
+            <div className="flex-1">
+              <p className="m-0 mb-1 text-sm font-medium text-gray-900">
                 {alert.titulo}
               </p>
-              <p style={{ fontSize: 13, color: '#6b7280', margin: 0, lineHeight: 1.45 }}>
+              <p className="m-0 text-[13px] leading-[1.45] text-gray-500">
                 {alert.descripcion}
               </p>
             </div>
-            <span style={{ fontSize: 12, color: '#9ca3af', whiteSpace: 'nowrap', marginTop: 2 }}>
+            <span className="mt-0.5 whitespace-nowrap text-xs text-gray-400">
               {alert.hora}
             </span>
           </div>

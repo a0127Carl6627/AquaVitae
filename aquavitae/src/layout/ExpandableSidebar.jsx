@@ -1,135 +1,11 @@
 import React, { useState } from 'react';
+import clsx from 'clsx';
 
-const styles = {
-  sidebar: {
-    background: '#fff',
-    borderRight: '1px solid #e6eaf0',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '18px 12px',
-    gap: 8,
-    position: 'fixed',
-    left: 0,
-    top: 0,
-    bottom: 0,
-    height: '100vh',
-    flexShrink: 0,
-    transition: 'width 0.3s ease',
-    overflow: 'hidden',
-    zIndex: 1000,
-    boxSizing: 'border-box',
-  },
-
-  logo: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    background: 'linear-gradient(160deg,#2563eb,#1577a8)',
-    display: 'grid',
-    placeItems: 'center',
-    color: '#fff',
-    fontWeight: 700,
-    marginBottom: 18,
-    fontSize: 14,
-    flexShrink: 0,
-  },
-
-  toggleBtn: {
-    width: '100%',
-    height: 40,
-    borderRadius: 10,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    border: 'none',
-    background: 'transparent',
-    color: '#8a93a3',
-    transition: 'all 0.15s',
-    marginBottom: 8,
-    fontSize: 18,
-    flexShrink: 0,
-  },
-
-  navContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-    flex: 1,
-    overflowY: 'auto',
-    overflowX: 'hidden',
-    minHeight: 0,
-  },
-
-  navItem: {
-    width: '100%',
-    height: 40,
-    borderRadius: 10,
-    display: 'flex',
-    alignItems: 'center',
-    gap: 12,
-    cursor: 'pointer',
-    border: 'none',
-    background: 'transparent',
-    color: '#8a93a3',
-    transition: 'all 0.15s',
-    padding: '0 10px',
-    fontSize: 14,
-    fontWeight: 500,
-    whiteSpace: 'nowrap',
-    flexShrink: 0,
-  },
-
-  navItemActive: {
-    background: '#eaf1fe',
-    color: '#1d4ed8',
-  },
-
-  icon: {
-    width: 20,
-    height: 20,
-    flexShrink: 0,
-  },
-
-  label: {
-    fontSize: 14,
-    fontWeight: 500,
-    whiteSpace: 'nowrap',
-  },
-
-  divider: {
-    height: '1px',
-    background: '#e6eaf0',
-    margin: '8px 0',
-    flexShrink: 0,
-  },
-
-  footer: {
-    marginTop: 'auto',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-    flexShrink: 0,
-  },
-
-  logoutBtn: {
-    width: '100%',
-    height: 40,
-    borderRadius: 10,
-    display: 'flex',
-    alignItems: 'center',
-    gap: 12,
-    cursor: 'pointer',
-    border: 'none',
-    background: 'transparent',
-    color: '#8a93a3',
-    transition: 'all 0.15s',
-    padding: '0 10px',
-    fontSize: 14,
-    fontWeight: 500,
-    flexShrink: 0,
-  },
-};
+// Clases base reutilizables (antes objeto `styles`)
+const NAV_BASE = 'flex h-10 w-full shrink-0 cursor-pointer items-center gap-3 whitespace-nowrap rounded-[10px] border-none px-2.5 text-sm font-medium transition-all duration-150';
+const ICON_CLASS = 'h-5 w-5 shrink-0';
+const LABEL_CLASS = 'whitespace-nowrap text-sm font-medium';
+const DIVIDER_CLASS = 'my-2 h-px shrink-0 bg-[#e6eaf0]';
 
 const NAVIGATION_ITEMS = [
   {
@@ -219,8 +95,6 @@ export default function ExpandableSidebar({
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const sidebarWidth = isExpanded ? 220 : 64;
-
   const role = userRole || user?.rol;
 
   const visibleItems = NAVIGATION_ITEMS.filter((item) =>
@@ -228,8 +102,13 @@ export default function ExpandableSidebar({
   );
 
   return (
-    <aside style={{ ...styles.sidebar, width: sidebarWidth }}>
-      <div style={styles.logo}>
+    <aside
+      className={clsx(
+        'fixed bottom-0 left-0 top-0 z-[1000] box-border flex h-screen shrink-0 flex-col gap-2 overflow-hidden border-r border-[#e6eaf0] bg-white px-3 py-[18px] transition-[width] duration-300 ease-in-out',
+        isExpanded ? 'w-[220px]' : 'w-[64px]',
+      )}
+    >
+      <div className="mb-[18px] grid h-9 w-9 shrink-0 place-items-center rounded-[10px] bg-[linear-gradient(160deg,#2563eb,#1577a8)] text-sm font-bold text-white">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
           <path
             d="M12 3C12 3 5 11 5 16a7 7 0 0 0 14 0c0-5-7-13-7-13Z"
@@ -240,7 +119,7 @@ export default function ExpandableSidebar({
       </div>
 
       <button
-        style={styles.toggleBtn}
+        className="mb-2 flex h-10 w-full shrink-0 cursor-pointer items-center justify-center rounded-[10px] border-none bg-transparent text-lg text-[#8a93a3] transition-all duration-150"
         onClick={() => setIsExpanded(!isExpanded)}
         title={isExpanded ? 'Contraer' : 'Expandir'}
       >
@@ -255,26 +134,26 @@ export default function ExpandableSidebar({
         )}
       </button>
 
-      <div style={styles.divider} />
+      <div className={DIVIDER_CLASS} />
 
-      <div style={styles.navContainer}>
+      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto overflow-x-hidden">
         {visibleItems.map(({ key, label, icon }) => {
           const isActive = activePage === key;
 
           return (
             <button
               key={key}
-              style={{
-                ...styles.navItem,
-                ...(isActive ? styles.navItemActive : {}),
-              }}
+              className={clsx(
+                NAV_BASE,
+                isActive ? 'bg-[#eaf1fe] text-[#1d4ed8]' : 'bg-transparent text-[#8a93a3]',
+              )}
               onClick={() => onNavigate(key)}
               title={label}
             >
-              <span style={styles.icon}>{icon(20)}</span>
+              <span className={ICON_CLASS}>{icon(20)}</span>
 
               {isExpanded && (
-                <span style={styles.label}>
+                <span className={LABEL_CLASS}>
                   {label}
                 </span>
               )}
@@ -283,15 +162,15 @@ export default function ExpandableSidebar({
         })}
       </div>
 
-      <div style={styles.footer}>
-        <div style={styles.divider} />
+      <div className="mt-auto flex shrink-0 flex-col gap-2">
+        <div className={DIVIDER_CLASS} />
 
         <button
-          style={styles.logoutBtn}
+          className={`${NAV_BASE} bg-transparent text-[#8a93a3]`}
           onClick={onLogout}
           title="Salir"
         >
-          <span style={styles.icon}>
+          <span className={ICON_CLASS}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
               <polyline points="16 17 21 12 16 7" />
@@ -300,7 +179,7 @@ export default function ExpandableSidebar({
           </span>
 
           {isExpanded && (
-            <span style={styles.label}>
+            <span className={LABEL_CLASS}>
               Salir
             </span>
           )}

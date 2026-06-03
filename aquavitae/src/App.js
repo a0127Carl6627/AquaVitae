@@ -111,14 +111,7 @@ export default function App() {
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        minHeight: '100vh',
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif',
-      }}
-    >
+    <div className="flex min-h-screen font-sans">
       <ExpandableSidebar
         activePage={page}
         onNavigate={handleNavigate}

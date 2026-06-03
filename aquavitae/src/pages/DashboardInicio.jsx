@@ -35,8 +35,8 @@ export default function DashboardInicio() {
   const { data: alertasRaw } = useAlertas(10);
   const { data: evolucionRaw } = useEvolucion(7);
 
-  if (isLoading) return <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Cargando resumen ejecutivo…</div>;
-  if (error) return <div style={{ flex: 1, color: 'red', textAlign: 'center', padding: 20 }}>Error: {error.message}</div>;
+  if (isLoading) return <div className="flex flex-1 items-center justify-center">Cargando resumen ejecutivo…</div>;
+  if (error) return <div className="flex-1 p-5 text-center text-[red]">Error: {error.message}</div>;
 
   const plantas = dashboard?.plantas || [];
   const resumenRaw = dashboard?.resumen || {};
@@ -66,48 +66,48 @@ export default function DashboardInicio() {
   const nivelGeneral = totalPlantas === 0 ? 'bajo' : resumen.alto > 0 ? 'alto' : resumen.medio > 0 ? 'medio' : 'bajo';
 
   return (
-    <div style={{ flex: 1, backgroundColor: '#f9fafb', padding: '24px 32px', fontFamily: "'Inter', sans-serif", minHeight: '100vh' }}>
-      <div style={{ maxWidth: 1400, margin: '0 auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, marginBottom: 24, backgroundColor: '#fff', borderRadius: 12, padding: '20px 24px' }}>
-          <div><h1 style={{ fontSize: 22, fontWeight: 600 }}>Resumen ejecutivo hídrico</h1><p style={{ fontSize: 13, color: '#6b7280' }}>Visión general del riesgo hídrico y nivel de riesgo de plantas.</p></div>
+    <div className="min-h-screen flex-1 bg-gray-50 px-8 py-6 [font-family:'Inter',sans-serif]">
+      <div className="mx-auto max-w-[1400px]">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-white px-6 py-5">
+          <div><h1 className="text-[22px] font-semibold">Resumen ejecutivo hídrico</h1><p className="text-[13px] text-gray-500">Visión general del riesgo hídrico y nivel de riesgo de plantas.</p></div>
           <LastUpdated fechaActualizacion={new Date()} onRefresh={refetch} loading={isLoading} />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 16, marginBottom: 20 }}>
-          <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: '16px 12px', display: 'flex', justifyContent: 'center' }}>
+        <div className="mb-5 grid grid-cols-[220px_1fr] gap-4">
+          <div className="flex justify-center rounded-xl bg-white px-3 py-4">
             <RiskGauge nivel={nivelGeneral} regiones={resumen.alto} />
           </div>
           <StatCards crisisActivas={resumen.crisisActivas} plantasAltoRiesgo={resumen.alto} plantasMedioRiesgo={resumen.medio} plantasBajoRiesgo={resumen.bajo} totalPlantas={totalPlantas} />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
-          <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: '20px 24px' }}>
+        <div className="mb-5 grid grid-cols-2 gap-4">
+          <div className="rounded-xl bg-white px-6 py-5">
             <MexicoRiskMap plantas={plantas} height={340} selectedEstado={plantas.find(p => p.idPlanta === selectedId)?.estado ?? null} onSelectPlanta={p => setSelectedId(p.idPlanta)} />
           </div>
-          <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: '20px 24px' }}>
+          <div className="rounded-xl bg-white px-6 py-5">
             <PlantRiskList plants={plantas} selectedId={selectedId} onSelectPlanta={p => setSelectedId(p.idPlanta)} />
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr 300px', gap: 16, marginBottom: 20 }}>
-          <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: '20px 24px' }}>
+        <div className="mb-5 grid grid-cols-[260px_1fr_300px] gap-4">
+          <div className="rounded-xl bg-white px-6 py-5">
             <DonutChart alto={resumen.alto} medio={resumen.medio} bajo={resumen.bajo} />
           </div>
-          <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: '20px 24px', display: 'flex', flexDirection: 'column' }}>
-            <h3 style={{ fontSize: 15, margin: '0 0 2px' }}>Evolución del riesgo hídrico</h3>
-            <p style={{ fontSize: 12, color: '#9ca3af', margin: '0 0 12px' }}>(últimos 7 días)</p>
+          <div className="flex flex-col rounded-xl bg-white px-6 py-5">
+            <h3 className="m-0 mb-0.5 text-[15px]">Evolución del riesgo hídrico</h3>
+            <p className="m-0 mb-3 text-xs text-gray-400">(últimos 7 días)</p>
             <RiskEvolutionChart data={evolucion} />
           </div>
-          <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: '20px 24px' }}>
+          <div className="rounded-xl bg-white px-6 py-5">
             <AlertsList alerts={alertas} />
           </div>
         </div>
 
-        <div style={{ backgroundColor: '#fff', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="flex items-center gap-3 rounded-xl bg-white px-5 py-3.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#eff6ff]">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           </div>
-          <div><p style={{ fontSize: 13, fontWeight: 600, margin: '0 0 2px' }}>Notificaciones activas por correo</p><p style={{ fontSize: 12, color: '#9ca3af' }}>Recibe alertas inmediatas cuando se detecten niveles críticos o riesgo de sequía.</p></div>
+          <div><p className="m-0 mb-0.5 text-[13px] font-semibold">Notificaciones activas por correo</p><p className="text-xs text-gray-400">Recibe alertas inmediatas cuando se detecten niveles críticos o riesgo de sequía.</p></div>
         </div>
       </div>
     </div>

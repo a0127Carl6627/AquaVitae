@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 
 function formatDate(value) {
   const date = value instanceof Date ? value : new Date(value);
@@ -19,17 +20,12 @@ function formatDate(value) {
 
 export default function LastUpdated({ fechaActualizacion, onRefresh, loading = false }) {
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'flex-start',
-      gap: 8,
-      fontFamily: 'Inter, sans-serif',
-    }}>
+    <div className="flex items-start gap-2 [font-family:Inter,sans-serif]">
       <div>
-        <p style={{ fontSize: 12, color: '#6b7280', margin: 0, lineHeight: 1.5 }}>
+        <p className="m-0 text-xs leading-normal text-gray-500">
           Última actualización:
         </p>
-        <p style={{ fontSize: 12, color: '#6b7280', margin: 0, lineHeight: 1.5 }}>
+        <p className="m-0 text-xs leading-normal text-gray-500">
           {formatDate(fechaActualizacion)}
         </p>
       </div>
@@ -37,18 +33,10 @@ export default function LastUpdated({ fechaActualizacion, onRefresh, loading = f
         onClick={onRefresh}
         aria-label="Actualizar datos"
         disabled={loading}
-        style={{
-          background: 'none',
-          border: 'none',
-          cursor: loading ? 'default' : 'pointer',
-          padding: 4,
-          borderRadius: 4,
-          color: '#6b7280',
-          display: 'flex',
-          alignItems: 'center',
-          marginTop: 2,
-          opacity: loading ? 0.5 : 1,
-        }}
+        className={clsx(
+          'mt-0.5 flex items-center rounded border-none bg-transparent p-1 text-gray-500',
+          loading ? 'cursor-default opacity-50' : 'cursor-pointer opacity-100',
+        )}
       >
         <svg
           width="16"
@@ -60,19 +48,13 @@ export default function LastUpdated({ fechaActualizacion, onRefresh, loading = f
           strokeLinecap="round"
           strokeLinejoin="round"
           aria-hidden="true"
-          style={{
-            animation: loading ? 'spin 1s linear infinite' : 'none',
-          }}
+          className={clsx(loading && 'animate-spin')}
         >
           <polyline points="23 4 23 10 17 10" />
           <polyline points="1 20 1 14 7 14" />
           <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
         </svg>
       </button>
-
-      <style>{`
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-      `}</style>
     </div>
   );
 }

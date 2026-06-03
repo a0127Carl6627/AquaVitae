@@ -1,11 +1,13 @@
 import React from 'react';
 
-const ROL_COLORS = {
-  'Director':          { bg: '#dbeafe', text: '#1d4ed8', border: '#bfdbfe' },
-  'Gerente de Planta': { bg: '#dcfce7', text: '#15803d', border: '#bbf7d0' },
-  'Analista':          { bg: '#ffedd5', text: '#c2410c', border: '#fed7aa' },
-  'Operador':          { bg: '#fce7f3', text: '#be185d', border: '#fbcfe8' },
+// Clases de badge por rol (set fijo, detectables por el JIT).
+const ROL_CLASS = {
+  'Director':          'bg-[#dbeafe] text-[#1d4ed8] border-[#bfdbfe]',
+  'Gerente de Planta': 'bg-[#dcfce7] text-[#15803d] border-[#bbf7d0]',
+  'Analista':          'bg-[#ffedd5] text-[#c2410c] border-[#fed7aa]',
+  'Operador':          'bg-[#fce7f3] text-[#be185d] border-[#fbcfe8]',
 };
+const getRolClass = (rol) => ROL_CLASS[rol] || 'bg-[#f1f5f9] text-[#475569] border-[#e2e8f0]';
 
 function CheckIcon() {
   return (
@@ -19,8 +21,7 @@ function CheckIcon() {
 
 function DashIcon() {
   return (
-    <span style={{ color: '#d1d5db', fontSize: 16, fontWeight: 500, lineHeight: 1 }}
-      aria-label="Sin permiso">
+    <span className="text-base font-medium leading-none text-gray-300" aria-label="Sin permiso">
       —
     </span>
   );
@@ -34,66 +35,43 @@ export default function PermissionsMatrix({
   const rolesVisibles = roles.filter(r => r !== 'Administrador');
 
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
-      <h3 style={{ fontSize: 15, fontWeight: 600, color: '#111827', margin: '0 0 16px' }}>
+    <div className="[font-family:'Inter',system-ui,sans-serif]">
+      <h3 className="m-0 mb-4 text-[15px] font-semibold text-gray-900">
         Detalle de permisos por módulo
       </h3>
 
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 480 }}>
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[480px] border-collapse">
           <thead>
-            <tr style={{ borderBottom: '2px solid #f3f4f6' }}>
-              <th style={{
-                padding: '10px 14px', textAlign: 'left',
-                fontWeight: 500, fontSize: 13, color: '#6b7280',
-                width: '30%',
-              }}>
+            <tr className="border-b-2 border-gray-100">
+              <th className="w-[30%] px-3.5 py-2.5 text-left text-[13px] font-medium text-gray-500">
                 Módulo
               </th>
 
-              {rolesVisibles.map(rol => {
-                const c = ROL_COLORS[rol] ?? { bg: '#f1f5f9', text: '#475569', border: '#e2e8f0' };
-                return (
-                  <th key={rol} style={{ padding: '10px 10px', textAlign: 'center' }}>
-                    <span style={{
-                      display: 'inline-block',
-                      padding: '4px 12px',
-                      borderRadius: 20,
-                      fontSize: 12,
-                      fontWeight: 500,
-                      background: c.bg,
-                      color: c.text,
-                      border: `1px solid ${c.border}`,
-                      whiteSpace: 'nowrap',
-                    }}>
-                      {rol}
-                    </span>
-                  </th>
-                );
-              })}
+              {rolesVisibles.map(rol => (
+                <th key={rol} className="px-2.5 py-2.5 text-center">
+                  <span className={`inline-block whitespace-nowrap rounded-[20px] border px-3 py-1 text-xs font-medium ${getRolClass(rol)}`}>
+                    {rol}
+                  </span>
+                </th>
+              ))}
             </tr>
           </thead>
 
           <tbody>
             {modules.map((mod, i) => (
-              <tr key={mod}
-                style={{ borderBottom: i === modules.length - 1 ? 'none' : '1px solid #f3f4f6' }}
-                onMouseEnter={e => e.currentTarget.style.background = '#f9fafb'}
-                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-
-                <td style={{
-                  padding: '13px 14px',
-                  fontSize: 13,
-                  fontWeight: 500,
-                  color: '#374151',
-                }}>
+              <tr
+                key={mod}
+                className={`hover:bg-[#f9fafb] ${i === modules.length - 1 ? '' : 'border-b border-gray-100'}`}
+              >
+                <td className="px-3.5 py-[13px] text-[13px] font-medium text-gray-700">
                   {mod}
                 </td>
 
                 {rolesVisibles.map(rol => {
                   const tiene = permissions[rol]?.[mod] ?? false;
                   return (
-                    <td key={rol} style={{ padding: '13px 10px', textAlign: 'center' }}>
+                    <td key={rol} className="px-2.5 py-[13px] text-center">
                       {tiene ? <CheckIcon /> : <DashIcon />}
                     </td>
                   );

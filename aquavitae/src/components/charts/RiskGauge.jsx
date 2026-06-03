@@ -1,9 +1,9 @@
 import React from 'react';
 
 const NIVELES = {
-  bajo:  { label: 'Bajo',  color: '#22c55e', angle: -90 },
-  medio: { label: 'Medio', color: '#f97316', angle: 0   },
-  alto:  { label: 'Alto',  color: '#ef4444', angle: 72  },
+  bajo:  { label: 'Bajo',  color: '#22c55e', textClass: 'text-[#22c55e]', angle: -90 },
+  medio: { label: 'Medio', color: '#f97316', textClass: 'text-[#f97316]', angle: 0   },
+  alto:  { label: 'Alto',  color: '#ef4444', textClass: 'text-[#ef4444]', angle: 72  },
 };
 
 export default function RiskGauge({ nivel = 'alto', regiones = 3 }) {
@@ -11,21 +11,8 @@ export default function RiskGauge({ nivel = 'alto', regiones = 3 }) {
   const needleAngle = config.angle;
 
   return (
-    <div style={{
-      fontFamily: 'Inter, sans-serif',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      gap: 4,
-    }}>
-      <p style={{
-        fontSize: 11,
-        fontWeight: 500,
-        letterSpacing: '0.08em',
-        color: '#6b7280',
-        margin: '0 0 4px',
-        textTransform: 'uppercase',
-      }}>
+    <div className="flex flex-col items-center gap-1 [font-family:Inter,sans-serif]">
+      <p className="m-0 mb-1 text-[11px] font-medium uppercase tracking-[0.08em] text-gray-500">
         Riesgo hídrico general
       </p>
 
@@ -58,10 +45,10 @@ export default function RiskGauge({ nivel = 'alto', regiones = 3 }) {
         </g>
       </svg>
 
-      <p style={{ fontSize: 26, fontWeight: 600, color: config.color, margin: '-12px 0 2px' }}>
+      <p className={`-mt-3 mb-0.5 text-[26px] font-semibold ${config.textClass}`}>
         {config.label}
       </p>
-      <p style={{ fontSize: 12, color: '#6b7280', margin: 0 }}>
+      <p className="m-0 text-xs text-gray-500">
         El riesgo hídrico es {nivel} en {regiones} {regiones === 1 ? 'región' : 'regiones'}.
       </p>
     </div>

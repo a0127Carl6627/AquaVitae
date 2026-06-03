@@ -1,11 +1,12 @@
 import React from 'react';
 
-const COLORS = {
-  red:   { bg: '#fef2f2', text: '#e23b3b', border: '#fecaca' },
-  amber: { bg: '#fffbeb', text: '#e89923', border: '#fde68a' },
-  green: { bg: '#f0fdf4', text: '#2ea36b', border: '#bbf7d0' },
-  blue:  { bg: '#eff6ff', text: '#2563eb', border: '#bfdbfe' },
-  gray:  { bg: '#f8fafc', text: '#64748b', border: '#e2e8f0' },
+// Solo se usa el color de texto del icono; mapeamos a clase completa.
+const COLOR_TEXT = {
+  red:   'text-[#e23b3b]',
+  amber: 'text-[#e89923]',
+  green: 'text-[#2ea36b]',
+  blue:  'text-[#2563eb]',
+  gray:  'text-[#64748b]',
 };
 
 export default function SimulacionKpiCard({
@@ -15,43 +16,27 @@ export default function SimulacionKpiCard({
   color = 'red',
   icon,
 }) {
-  const c = COLORS[color] || COLORS.gray;
+  const textClass = COLOR_TEXT[color] || COLOR_TEXT.gray;
 
   return (
-    <div style={{
-      background: '#ffffff',
-      border: '1px solid #f3f4f6',
-      borderRadius: 10,
-      padding: '16px 18px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 10,
-      fontFamily: 'Inter, sans-serif',
-    }}>
-      <p style={{
-        fontSize: 10,
-        fontWeight: 600,
-        letterSpacing: '0.07em',
-        textTransform: 'uppercase',
-        color: '#6b7280',
-        margin: 0,
-      }}>
+    <div className="flex flex-col gap-2.5 rounded-[10px] border border-gray-100 bg-white px-[18px] py-4 [font-family:Inter,sans-serif]">
+      <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.07em] text-gray-500">
         {label}
       </p>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div className="flex items-center gap-3">
         {icon && (
-          <div style={{ color: c.text, display: 'flex', alignItems: 'center' }}>
+          <div className={`flex items-center ${textClass}`}>
             {icon}
           </div>
         )}
-        <span style={{ fontSize: 32, fontWeight: 600, color: '#111827', lineHeight: 1 }}>
+        <span className="text-[32px] font-semibold leading-none text-gray-900">
           {value}
         </span>
       </div>
 
       {sublabel && (
-        <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>{sublabel}</p>
+        <p className="m-0 text-xs text-gray-400">{sublabel}</p>
       )}
     </div>
   );

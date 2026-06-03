@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import clsx from 'clsx';
 
 export default function TablaCostosUbicacion({
   alternativas = [],
@@ -23,43 +24,27 @@ export default function TablaCostosUbicacion({
   }, { v: Infinity, i: -1 });
 
   return (
-    <div style={{
-      background: '#fff',
-      border: '1px solid #e6eaf0',
-      borderRadius: 12,
-      boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
-      display: 'flex',
-      flexDirection: 'column',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-    }}>
-      <div style={{
-        padding: '16px 18px 10px',
-        display: 'flex', alignItems: 'flex-start',
-        justifyContent: 'space-between', gap: 12,
-        borderBottom: '1px solid #e6eaf0',
-      }}>
+    <div className="flex flex-col rounded-xl border border-[#e6eaf0] bg-white font-sans shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+      <div className="flex items-start justify-between gap-3 border-b border-[#e6eaf0] px-[18px] pb-2.5 pt-4">
         <div>
-          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#1a2332', margin: 0 }}>
+          <h3 className="m-0 text-sm font-semibold text-[#1a2332]">
             Costos estimados de cierre y apertura por ubicación
           </h3>
-          <div style={{ fontSize: 11.5, color: '#8a93a3', marginTop: 2 }}>
+          <div className="mt-0.5 text-[11.5px] text-[#8a93a3]">
             Comparación de escenarios operativos · Valores estimados en MXN millones
           </div>
         </div>
       </div>
 
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5 }}>
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse text-[12.5px]">
           <thead>
             <tr>
               {['Ubicación', 'Costo de cierre', 'Tiempo de cierre', 'Costo de apertura', 'Costo TOTAL'].map(h => (
-                <th key={h} style={{
-                  textAlign: 'left', fontWeight: 500, color: '#8a93a3',
-                  fontSize: 11, letterSpacing: '.03em', textTransform: 'uppercase',
-                  padding: '10px 14px', background: '#fafbfc',
-                  borderBottom: '1px solid #e6eaf0',
-                  whiteSpace: 'nowrap',
-                }}>{h}</th>
+                <th
+                  key={h}
+                  className="whitespace-nowrap border-b border-[#e6eaf0] bg-[#fafbfc] px-3.5 py-2.5 text-left text-[11px] font-medium uppercase tracking-[.03em] text-[#8a93a3]"
+                >{h}</th>
               ))}
             </tr>
           </thead>
@@ -71,40 +56,26 @@ export default function TablaCostosUbicacion({
                 <tr
                   key={i}
                   onClick={() => handleSelect(i)}
-                  style={{
-                    borderBottom: '1px solid #e6eaf0',
-                    borderLeft: `3px solid ${isSelected ? '#2563eb' : 'transparent'}`,
-                    background: isSelected ? '#eaf1fe' : 'transparent',
-                    cursor: 'pointer',
-                    transition: 'background .12s',
-                  }}
+                  className={clsx(
+                    'cursor-pointer border-b border-l-[3px] border-[#e6eaf0] transition-colors duration-[120ms]',
+                    isSelected ? 'border-l-[#2563eb] bg-[#eaf1fe]' : 'border-l-transparent bg-transparent',
+                  )}
                 >
-                  <td style={{ padding: '11px 14px', color: '#1a2332', verticalAlign: 'middle' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                  <td className="px-3.5 py-[11px] align-middle text-[#1a2332]">
+                    <div className="flex flex-wrap items-center gap-2">
                       {a.recommended && (
-                        <span style={{
-                          display: 'inline-flex', alignItems: 'center', gap: 4,
-                          padding: '2px 7px', borderRadius: 999,
-                          fontSize: 10, fontWeight: 600,
-                          background: '#e3f4ea', color: '#2ea36b',
-                          border: '1px solid rgba(46,163,107,.2)',
-                        }}>
-                          <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#2ea36b', display: 'inline-block' }} />
+                        <span className="inline-flex items-center gap-1 rounded-full border border-[rgba(46,163,107,0.2)] bg-[#e3f4ea] px-[7px] py-0.5 text-[10px] font-semibold text-[#2ea36b]">
+                          <span className="inline-block h-[5px] w-[5px] rounded-full bg-[#2ea36b]" />
                           Recomendada
                         </span>
                       )}
-                      <span style={{ fontWeight: isSelected ? 600 : 400 }}>{a.nombre}, {a.estado}</span>
+                      <span className={isSelected ? 'font-semibold' : 'font-normal'}>{a.nombre}, {a.estado}</span>
                     </div>
                   </td>
-                  <td style={{ padding: '11px 14px', color: '#1a2332', fontVariantNumeric: 'tabular-nums' }}>{a.costoCierre}</td>
-                  <td style={{ padding: '11px 14px', color: '#5a6577' }}>{a.tiempoCierre}</td>
-                  <td style={{ padding: '11px 14px', color: '#1a2332', fontVariantNumeric: 'tabular-nums' }}>{a.costoApertura}</td>
-                  <td style={{
-                    padding: '11px 14px',
-                    fontVariantNumeric: 'tabular-nums',
-                    fontWeight: 700,
-                    color: isLowest ? '#2ea36b' : '#1a2332',
-                  }}>{a.costoTotal}</td>
+                  <td className="px-3.5 py-[11px] tabular-nums text-[#1a2332]">{a.costoCierre}</td>
+                  <td className="px-3.5 py-[11px] text-[#5a6577]">{a.tiempoCierre}</td>
+                  <td className="px-3.5 py-[11px] tabular-nums text-[#1a2332]">{a.costoApertura}</td>
+                  <td className={clsx('px-3.5 py-[11px] font-bold tabular-nums', isLowest ? 'text-[#2ea36b]' : 'text-[#1a2332]')}>{a.costoTotal}</td>
                 </tr>
               );
             })}
@@ -112,14 +83,11 @@ export default function TablaCostosUbicacion({
         </table>
       </div>
 
-      <div style={{
-  padding: '12px 18px',
-  borderTop: '1px solid #e6eaf0',
-}}>
-  <span style={{ fontSize: 11, color: '#8a93a3' }}>
-    {alternativas.length} ubicaciones analizadas · 1 recomendada
-  </span>
-</div>
+      <div className="border-t border-[#e6eaf0] px-[18px] py-3">
+        <span className="text-[11px] text-[#8a93a3]">
+          {alternativas.length} ubicaciones analizadas · 1 recomendada
+        </span>
+      </div>
     </div>
   );
 }

@@ -83,17 +83,17 @@ export default function GestionUsuariosPage() {
   const timeStr = now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
   const dateStr = now.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' });
 
-  if (loading && usuarios.items.length === 0) return <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Cargando datos...</div>;
-  if (error) return <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#e23b3b' }}>Error: {error.message}</div>;
+  if (loading && usuarios.items.length === 0) return <div className="flex flex-1 items-center justify-center">Cargando datos...</div>;
+  if (error) return <div className="flex flex-1 items-center justify-center text-[#e23b3b]">Error: {error.message}</div>;
 
   return (
-    <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', background: '#f5f7fa' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 28px', background: '#fff', borderBottom: '1px solid #e6eaf0' }}>
-        <div style={{ fontSize: 12, color: '#8a93a3' }}>Administrador · <strong>Gestión de usuarios y roles</strong></div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}><span>{dateStr} · {timeStr}</span><div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(140deg,#c5d4e3,#8a9bb0)', display: 'grid', placeItems: 'center', color: '#fff' }}>AD</div></div>
+    <div className="flex min-w-0 flex-1 flex-col bg-[#f5f7fa]">
+      <div className="flex items-center justify-between border-b border-[#e6eaf0] bg-white px-7 py-3.5">
+        <div className="text-xs text-[#8a93a3]">Administrador · <strong>Gestión de usuarios y roles</strong></div>
+        <div className="flex items-center gap-3.5"><span>{dateStr} · {timeStr}</span><div className="grid h-8 w-8 place-items-center rounded-full bg-[linear-gradient(140deg,#c5d4e3,#8a9bb0)] text-white">AD</div></div>
       </div>
-      <div style={{ padding: '24px 28px 40px', maxWidth: 1400, margin: '0 auto', width: '100%' }}>
-        <div style={{ marginBottom: 24 }}><h1 style={{ fontSize: 24, fontWeight: 700, margin: 0, color: '#1a2332' }}>Usuarios y roles</h1><p style={{ fontSize: 14, color: '#5a6577', margin: 0 }}>Gestiona usuarios, roles y permisos de acceso a módulos y datos.</p></div>
+      <div className="mx-auto w-full max-w-[1400px] px-7 pb-10 pt-6">
+        <div className="mb-6"><h1 className="m-0 text-2xl font-bold text-[#1a2332]">Usuarios y roles</h1><p className="m-0 text-sm text-[#5a6577]">Gestiona usuarios, roles y permisos de acceso a módulos y datos.</p></div>
         <StatsGrid stats={stats} />
         <UsersTable usuarios={usuarios} onPageChange={handlePageChange} onEdit={handleEditUser} onDelete={handleDeleteClick} onAgregar={handleAddUser} loading={loadingUsuarios} />
         <RolesHighlight roles={rolesDestacados} />

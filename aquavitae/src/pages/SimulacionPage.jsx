@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import clsx from 'clsx';
 import { useDashboard, useKpis, useProyeccion, useRecuperacion } from '../hooks/useAquavitaeQueries';
 import SimulacionKpiCard from '../components/simulacion/SimulacionKpiCard';
 import MapaRiesgoHidrico from '../components/maps/MapaRiesgoHidrico';
 import GraficaProyeccionHidrica from '../components/charts/GraficaProyeccionHidrica';
 import GraficaRecuperacionHidrica from '../components/charts/GraficaRecuperacionHidrica';
 
-const RIESGO_COLOR = { ALTO: '#e23b3b', MEDIO: '#e89923', BAJO: '#2ea36b' };
-const RIESGO_BG   = { ALTO: '#fde8e8', MEDIO: '#fdf2dd', BAJO: '#e3f4ea' };
+// Sets de clases por nivel de riesgo (detectables por el JIT de Tailwind).
+const RIESGO_TEXT     = { ALTO: 'text-[#e23b3b]', MEDIO: 'text-[#e89923]', BAJO: 'text-[#2ea36b]' };
+const RIESGO_BADGE_BG = { ALTO: 'bg-[#fde8e8]', MEDIO: 'bg-[#fdf2dd]', BAJO: 'bg-[#e3f4ea]' };
+const RIESGO_BAR_BG   = { ALTO: 'bg-[#e23b3b]', MEDIO: 'bg-[#e89923]', BAJO: 'bg-[#2ea36b]' };
 
 function kpiColor(indice) { if (indice >= 0.70) return 'red'; if (indice >= 0.45) return 'amber'; return 'green'; }
 function diasColor(dias) { if (dias <= 14) return 'red'; if (dias <= 30) return 'amber'; return 'blue'; }
@@ -57,25 +60,25 @@ export default function SimulacionPage() {
   const dateStr = now.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' });
   const selectedPlanta = plantas.find(p => p.id === selectedId);
 
-  if (loadingDashboard) return <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Cargando datos...</div>;
-  if (dashboardError) return <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#e23b3b' }}>Error: {dashboardError.message}</div>;
+  if (loadingDashboard) return <div className="flex flex-1 items-center justify-center">Cargando datos...</div>;
+  if (dashboardError) return <div className="flex flex-1 items-center justify-center text-[#e23b3b]">Error: {dashboardError.message}</div>;
 
   return (
-    <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', background: '#f5f7fa' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 28px', background: '#fff', borderBottom: '1px solid #e6eaf0' }}>
-        <div style={{ fontSize: 12, color: '#8a93a3' }}>Director · <strong>Simulación y recuperación hídrica</strong></div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}><span>{dateStr} · {timeStr}</span><div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(140deg,#c5d4e3,#8a9bb0)', display: 'grid', placeItems: 'center', color: '#fff' }}>DR</div></div>
+    <div className="flex min-w-0 flex-1 flex-col bg-[#f5f7fa]">
+      <div className="flex items-center justify-between border-b border-[#e6eaf0] bg-white px-7 py-3.5">
+        <div className="text-xs text-[#8a93a3]">Director · <strong>Simulación y recuperación hídrica</strong></div>
+        <div className="flex items-center gap-3.5"><span>{dateStr} · {timeStr}</span><div className="grid h-8 w-8 place-items-center rounded-full bg-[linear-gradient(140deg,#c5d4e3,#8a9bb0)] text-white">DR</div></div>
       </div>
-      <div style={{ padding: '24px 28px 40px', maxWidth: 1440, margin: '0 auto', width: '100%' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 22 }}>
-          <div><h1 style={{ fontSize: 22, fontWeight: 700, margin: 0, color: '#1a2332' }}>Simulación y recuperación hídrica</h1><p style={{ fontSize: 13, color: '#5a6577', margin: 0 }}>Proyección de estrés hídrico y escenarios de recuperación por planta · Bachoco 2026</p></div>
-          <div><label style={{ fontSize: 11, color: '#8a93a3' }}>PLANTA</label><select value={selectedId ?? ''} onChange={e => setSelectedId(Number(e.target.value))} style={{ appearance: 'none', background: '#fff', border: '1px solid #d6dde6', borderRadius: 8, padding: '7px 30px 7px 11px', fontSize: 12.5, cursor: 'pointer', minWidth: 200 }}>{plantas.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}</select></div>
+      <div className="mx-auto w-full max-w-[1440px] px-7 pb-10 pt-6">
+        <div className="mb-[22px] flex justify-between">
+          <div><h1 className="m-0 text-[22px] font-bold text-[#1a2332]">Simulación y recuperación hídrica</h1><p className="m-0 text-[13px] text-[#5a6577]">Proyección de estrés hídrico y escenarios de recuperación por planta · Bachoco 2026</p></div>
+          <div><label className="text-[11px] text-[#8a93a3]">PLANTA</label><select value={selectedId ?? ''} onChange={e => setSelectedId(Number(e.target.value))} className="min-w-[200px] cursor-pointer appearance-none rounded-lg border border-[#d6dde6] bg-white py-[7px] pl-[11px] pr-[30px] text-[12.5px]">{plantas.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}</select></div>
         </div>
 
         {/* KPI Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 20 }}>
+        <div className="mb-5 grid grid-cols-4 gap-3.5">
           {(loadingDetail || !kpis) ? (
-            [...Array(4)].map((_, i) => <div key={i} style={{ background: '#fff', borderRadius: 12, height: 100 }} />)
+            [...Array(4)].map((_, i) => <div key={i} className="h-[100px] rounded-xl bg-white" />)
           ) : (
             <>
               <SimulacionKpiCard label="Índice hídrico actual" value={`${Math.round(kpis.indiceHidricoActual * 100)}%`} sublabel="Nivel de estrés" color={kpiColor(kpis.indiceHidricoActual)} icon={<WaterIcon />} />
@@ -87,42 +90,44 @@ export default function SimulacionPage() {
         </div>
 
         {/* Grid de 2 columnas */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
+        <div className="mb-5 grid grid-cols-2 gap-4">
           <MapaRiesgoHidrico plantas={plantas} height={340} selectedEstado={selectedPlanta?.estado ?? null} onSelectPlanta={p => setSelectedId(p.id)} />
-          
+
           {loadingDetail || !proyeccion ? (
-            <div style={{ background: '#fff', borderRadius: 12, height: 420, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Cargando proyección...</div>
+            <div className="flex h-[420px] items-center justify-center rounded-xl bg-white">Cargando proyección...</div>
           ) : (
             <GraficaProyeccionHidrica data={proyeccion.data} startDay={proyeccion.startDay} peakDay={proyeccion.peakDay} peakValue={proyeccion.peakValue} height={340} />
           )}
 
-          <div style={{ background: '#fff', borderRadius: 12, overflow: 'hidden' }}>
-            <div style={{ padding: '16px 18px 10px', borderBottom: '1px solid #e6eaf0' }}>
-              <div style={{ fontSize: 14, fontWeight: 600 }}>Plantas monitoreadas</div>
-              <div style={{ fontSize: 11.5, color: '#8a93a3' }}>{resumen.alto ?? 0} alto · {resumen.medio ?? 0} medio · {resumen.bajo ?? 0} bajo</div>
+          <div className="overflow-hidden rounded-xl bg-white">
+            <div className="border-b border-[#e6eaf0] px-[18px] pb-2.5 pt-4">
+              <div className="text-sm font-semibold">Plantas monitoreadas</div>
+              <div className="text-[11.5px] text-[#8a93a3]">{resumen.alto ?? 0} alto · {resumen.medio ?? 0} medio · {resumen.bajo ?? 0} bajo</div>
             </div>
-            <div style={{ overflowY: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5 }}>
+            <div className="overflow-y-auto">
+              <table className="w-full border-collapse text-[12.5px]">
                 <thead>
-                  <tr>{['Planta','Estado','Estrés','Riesgo'].map(h => <th key={h} style={{ textAlign: 'left', padding: '10px 14px', background: '#fafbfc' }}>{h}</th>)}</tr>
+                  <tr>{['Planta','Estado','Estrés','Riesgo'].map(h => <th key={h} className="bg-[#fafbfc] px-3.5 py-2.5 text-left">{h}</th>)}</tr>
                 </thead>
                 <tbody>
                   {plantas.map(p => {
                     const isSelected = p.id === selectedId;
-                    const color = RIESGO_COLOR[p.nivelRiesgo] || '#94a0b3';
-                    const bg = RIESGO_BG[p.nivelRiesgo] || '#eef1f5';
+                    const textColor = RIESGO_TEXT[p.nivelRiesgo] || 'text-[#94a0b3]';
+                    const badgeBg = RIESGO_BADGE_BG[p.nivelRiesgo] || 'bg-[#eef1f5]';
+                    const barBg = RIESGO_BAR_BG[p.nivelRiesgo] || 'bg-[#94a0b3]';
                     return (
-                      <tr key={p.id} onClick={() => setSelectedId(p.id)} style={{ borderLeft: `3px solid ${isSelected ? '#2563eb' : 'transparent'}`, background: isSelected ? '#eaf1fe' : 'transparent', cursor: 'pointer' }}>
-                        <td style={{ padding: '11px 14px', fontWeight: isSelected ? 600 : 400 }}>{p.nombre}</td>
-                        <td style={{ padding: '11px 14px', color: '#5a6577' }}>{p.estado}</td>
-                        <td style={{ padding: '11px 14px' }}>
-                          <div style={{ width: 72, height: 6, background: '#eef1f5', borderRadius: 999, overflow: 'hidden' }}>
-                            <div style={{ width: `${p.indice}%`, height: '100%', background: color }} />
+                      <tr key={p.id} onClick={() => setSelectedId(p.id)} className={clsx('cursor-pointer border-l-[3px]', isSelected ? 'border-l-[#2563eb] bg-[#eaf1fe]' : 'border-l-transparent bg-transparent')}>
+                        <td className={clsx('px-3.5 py-[11px]', isSelected ? 'font-semibold' : 'font-normal')}>{p.nombre}</td>
+                        <td className="px-3.5 py-[11px] text-[#5a6577]">{p.estado}</td>
+                        <td className="px-3.5 py-[11px]">
+                          <div className="h-1.5 w-[72px] overflow-hidden rounded-full bg-[#eef1f5]">
+                            {/* ancho 100% dinámico desde datos: excepción inline justificada */}
+                            <div className={`h-full ${barBg}`} style={{ width: `${p.indice}%` }} />
                           </div>
-                          <span style={{ fontWeight: 600, marginLeft: 8 }}>{p.indice}%</span>
+                          <span className="ml-2 font-semibold">{p.indice}%</span>
                         </td>
-                        <td style={{ padding: '11px 14px' }}>
-                          <span style={{ background: bg, color, padding: '3px 9px', borderRadius: 999, fontSize: 11, fontWeight: 600 }}>{p.riesgoLabel}</span>
+                        <td className="px-3.5 py-[11px]">
+                          <span className={`rounded-full px-[9px] py-[3px] text-[11px] font-semibold ${badgeBg} ${textColor}`}>{p.riesgoLabel}</span>
                         </td>
                       </tr>
                     );
@@ -133,17 +138,17 @@ export default function SimulacionPage() {
           </div>
 
           {loadingDetail || !recuperacion ? (
-            <div style={{ background: '#fff', borderRadius: 12, height: 420, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Cargando simulación...</div>
+            <div className="flex h-[420px] items-center justify-center rounded-xl bg-white">Cargando simulación...</div>
           ) : (
             <GraficaRecuperacionHidrica data={recuperacion} height={340} />
           )}
         </div>
 
-        <div style={{ background: '#eaf1fe', borderRadius: 12, padding: '16px 22px', display: 'flex', alignItems: 'center' }}>
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: '#2563eb', color: '#fff', display: 'grid', placeItems: 'center', marginRight: 14 }}>📍</div>
+        <div className="flex items-center rounded-xl bg-[#eaf1fe] px-[22px] py-4">
+          <div className="mr-3.5 grid h-9 w-9 place-items-center rounded-[10px] bg-[#2563eb] text-white">📍</div>
           <div>
-            <strong style={{ display: 'block', fontSize: 14 }}>¿Necesitas evaluar ubicaciones alternativas?</strong>
-            <span style={{ fontSize: 12, color: '#5a6577' }}>{selectedPlanta ? `${selectedPlanta.nombre} tiene estrés hídrico ${selectedPlanta.riesgoLabel?.toLowerCase()}.` : 'Selecciona una planta para ver su análisis.'} Consulta el análisis de alternativas.</span>
+            <strong className="block text-sm">¿Necesitas evaluar ubicaciones alternativas?</strong>
+            <span className="text-xs text-[#5a6577]">{selectedPlanta ? `${selectedPlanta.nombre} tiene estrés hídrico ${selectedPlanta.riesgoLabel?.toLowerCase()}.` : 'Selecciona una planta para ver su análisis.'} Consulta el análisis de alternativas.</span>
           </div>
         </div>
       </div>

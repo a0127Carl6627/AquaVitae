@@ -68,41 +68,21 @@ export default function StatCards({
   };
 
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(4, 1fr)',
-      gap: 12,
-      fontFamily: 'Inter, sans-serif',
-    }}>
+    <div className="grid grid-cols-4 gap-3 [font-family:Inter,sans-serif]">
       {CARDS.map(({ key, label, subLabel, color, Icon }) => (
-        <div key={key} style={{
-          background: '#ffffff',
-          border: '1px solid #f3f4f6',
-          borderRadius: 10,
-          padding: '16px 18px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 10,
-        }}>
-          <p style={{
-            fontSize: 10,
-            fontWeight: 600,
-            letterSpacing: '0.07em',
-            textTransform: 'uppercase',
-            color: '#6b7280',
-            margin: 0,
-          }}>
+        <div key={key} className="flex flex-col gap-2.5 rounded-[10px] border border-gray-100 bg-white px-[18px] py-4">
+          <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.07em] text-gray-500">
             {label}
           </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div className="flex items-center gap-3">
             <Icon color={color} size={30} />
-            <span style={{ fontSize: 32, fontWeight: 600, color: '#111827', lineHeight: 1 }}>
+            <span className="text-[32px] font-semibold leading-none text-gray-900">
               {values[key]}
             </span>
           </div>
 
-          <p style={{ fontSize: 12, color: '#9ca3af', margin: 0 }}>
+          <p className="m-0 text-xs text-gray-400">
             {typeof subLabel === 'function' ? subLabel(totalPlantas) : subLabel}
           </p>
         </div>

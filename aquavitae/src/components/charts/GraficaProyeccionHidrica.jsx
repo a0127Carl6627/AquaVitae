@@ -7,14 +7,11 @@ import {
 const TooltipCustom = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   const val = payload.find(p => p.dataKey === 'valor')?.value;
-  const color = val >= 75 ? '#e23b3b' : val >= 50 ? '#e89923' : '#2563eb';
+  const colorClass = val >= 75 ? 'text-[#e23b3b]' : val >= 50 ? 'text-[#e89923]' : 'text-[#2563eb]';
   return (
-    <div style={{
-      background: '#1a2332', borderRadius: 6, padding: '8px 12px',
-      fontSize: 12, fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
-    }}>
-      <div style={{ color: '#94a3b8', marginBottom: 3, fontSize: 10.5 }}>Día {label}</div>
-      <div style={{ color, fontWeight: 700 }}>{val?.toFixed(1)}% estrés</div>
+    <div className="rounded-md bg-[#1a2332] px-3 py-2 font-sans text-xs">
+      <div className="mb-[3px] text-[10.5px] text-[#94a3b8]">Día {label}</div>
+      <div className={`font-bold ${colorClass}`}>{val?.toFixed(1)}% estrés</div>
     </div>
   );
 };
@@ -27,19 +24,12 @@ export default function GraficaProyeccionHidrica({
   height = 240,
 }) {
   return (
-    <div style={{
-      background: '#fff',
-      border: '1px solid #e6eaf0',
-      borderRadius: 12,
-      padding: '18px 18px 10px',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-      boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
-    }}>
-      <div style={{ marginBottom: 14 }}>
-        <h3 style={{ fontSize: 13.5, fontWeight: 700, color: '#1a2332', margin: '0 0 3px 0' }}>
+    <div className="rounded-xl border border-[#e6eaf0] bg-white px-[18px] pb-2.5 pt-[18px] font-sans shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+      <div className="mb-3.5">
+        <h3 className="m-0 mb-[3px] text-[13.5px] font-bold text-[#1a2332]">
           Proyección de estrés hídrico
         </h3>
-        <p style={{ fontSize: 11.5, color: '#8a93a3', margin: 0 }}>
+        <p className="m-0 text-[11.5px] text-[#8a93a3]">
           Escenario sin intervención · 90 días
         </p>
       </div>
@@ -93,21 +83,18 @@ export default function GraficaProyeccionHidrica({
       </ResponsiveContainer>
 
       {/* Leyenda */}
-      <div style={{ display: 'flex', gap: 14, padding: '10px 0 0', borderTop: '1px solid #e6eaf0', marginTop: 8 }}>
-        <LegendItem color="#e23b3b" dashed={false} label="Estrés proyectado" />
-        <LegendItem color="#e23b3b" dashed label="Umbral crítico (75%)" />
+      <div className="mt-2 flex gap-3.5 border-t border-[#e6eaf0] pt-2.5">
+        <LegendItem lineClass="h-0.5 bg-[#e23b3b]" label="Estrés proyectado" />
+        <LegendItem lineClass="border-t-2 border-dashed border-[#e23b3b]" label="Umbral crítico (75%)" />
       </div>
     </div>
   );
 }
 
-function LegendItem({ color, dashed, label }) {
+function LegendItem({ lineClass, label }) {
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 10, color: '#5a6577' }}>
-      <span style={{
-        width: 20, height: 2, background: dashed ? 'transparent' : color,
-        borderTop: dashed ? `2px dashed ${color}` : 'none', display: 'inline-block',
-      }} />
+    <span className="inline-flex items-center gap-1.5 text-[10px] text-[#5a6577]">
+      <span className={`inline-block w-5 ${lineClass}`} />
       {label}
     </span>
   );

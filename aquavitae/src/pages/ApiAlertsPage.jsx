@@ -1,6 +1,30 @@
 import React, { useMemo } from 'react';
 import { useApiStatus, useApiAlerts, useTriggerApiCheck } from '../hooks/useAquavitaeQueries';
-import './ApiAlertsPage.css';
+
+const PANEL = 'rounded-2xl border border-[#eef2f7] bg-white p-5 shadow-[0_10px_24px_rgba(15,23,42,0.04)]';
+const TH = 'border-b border-[#edf2f7] px-2.5 py-3 text-left font-[650] text-[#64748b]';
+const TD = 'border-b border-[#f1f5f9] px-2.5 py-[13px] text-[#334155]';
+
+const METRIC_VALUE_TONE = {
+  red: 'text-[#ef4444]',
+  orange: 'text-[#f97316]',
+  purple: 'text-[#7c3aed]',
+  blue: 'text-[#2563eb]',
+};
+const METRIC_ICON_TONE = {
+  red: 'bg-[#fee2e2] text-[#ef4444]',
+  orange: 'bg-[#ffedd5] text-[#f97316]',
+  purple: 'bg-[#ede9fe] text-[#7c3aed]',
+  blue: 'bg-[#dbeafe] text-[#2563eb]',
+};
+const CODE_PILL = {
+  401: 'bg-[#fee2e2] text-[#ef4444]',
+  404: 'bg-[#ffedd5] text-[#f97316]',
+};
+const SEVERITY = {
+  critica: 'bg-[#fee2e2] text-[#dc2626]',
+  alta: 'bg-[#ffedd5] text-[#f97316]',
+};
 
 export default function ApiAlertsPage() {
   const { data: statusList = [], isLoading: loadingStatus, error: statusError } = useApiStatus();
@@ -22,77 +46,84 @@ export default function ApiAlertsPage() {
     triggerCheck.mutate();
   };
 
+  const pageClass = 'ml-16 box-border min-h-screen w-[calc(100%-64px)] flex-1 bg-[#f8fafc] px-[18px] py-[22px] min-[700px]:px-8 min-[700px]:py-7';
+
   if (loading) {
     return (
-      <main className="api-alerts-page">
-        <p className="api-loading">Cargando monitoreo de APIs...</p>
+      <main className={pageClass}>
+        <p className="text-sm text-[#94a3b8]">Cargando monitoreo de APIs...</p>
       </main>
     );
   }
 
   if (error) {
     return (
-      <main className="api-alerts-page">
-        <div className="api-error-banner">Error: {error.message}</div>
+      <main className={pageClass}>
+        <div className="mb-[18px] rounded-[10px] border-l-4 border-[#ef4444] bg-[#fee2e2] px-4 py-3 text-sm text-[#991b1b]">Error: {error.message}</div>
       </main>
     );
   }
 
   return (
-    <main className="api-alerts-page">
-      <header className="api-header">
+    <main className={pageClass}>
+      <header className="mb-6 flex flex-col items-start justify-between gap-6 min-[1100px]:flex-row">
         <div>
-          <h1>Alertas de API</h1>
-          <p>Monitorea errores de integración para detectar y resolver problemas antes de que afecten al usuario.</p>
+          <h1 className="m-0 text-[28px] font-[750] text-[#111827]">Alertas de API</h1>
+          <p className="mb-0 mt-1.5 text-sm text-[#64748b]">Monitorea errores de integración para detectar y resolver problemas antes de que afecten al usuario.</p>
         </div>
-        <div className="api-header-actions">
-          <span className="api-last-update">
+        <div className="flex items-center gap-3.5">
+          <span className="text-[13px] text-[#64748b]">
             Última actualización: {new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
           </span>
-          <button className="api-refresh-btn" onClick={handleRefresh} disabled={triggerCheck.isPending}>
+          <button
+            className="cursor-pointer rounded-[10px] border border-[#dbe3ef] bg-white px-3.5 py-2.5 font-[650] text-[#2563eb] disabled:cursor-not-allowed disabled:opacity-70"
+            onClick={handleRefresh}
+            disabled={triggerCheck.isPending}
+          >
             {triggerCheck.isPending ? 'Actualizando...' : 'Actualizar APIs'}
           </button>
         </div>
       </header>
 
-      <section className="api-cards-grid">
+      <section className="mb-5 grid grid-cols-1 gap-[18px] min-[700px]:grid-cols-2 min-[1100px]:grid-cols-4">
         <MetricCard title="Errores 401" subtitle="No autorizado" value={metrics.errores401} tone="red" icon="🔒" />
         <MetricCard title="Errores 404" subtitle="No encontrado" value={metrics.errores404} tone="orange" icon="!" />
         <MetricCard title="Total de errores" subtitle="401 y 404" value={metrics.totalErrores} tone="purple" icon="⌁" />
         <MetricCard title="APIs afectadas" subtitle="Con errores" value={metrics.apisAfectadas} tone="blue" icon="▦" />
       </section>
 
-      <section className="api-content-grid">
-        <div className="api-panel">
-          <h2>Estado de APIs externas</h2>
-          <div className="api-status-list">
+      <section className="mb-5 grid grid-cols-1 gap-[18px] min-[1100px]:grid-cols-2">
+        <div className={PANEL}>
+          <h2 className="m-0 mb-4 text-base font-bold text-[#111827]">Estado de APIs externas</h2>
+          <div className="flex flex-col gap-3">
             {statusList.length === 0 ? (
-              <p className="api-empty">Sin APIs monitoreadas todavía.</p>
+              <p className="text-sm text-[#94a3b8]">Sin APIs monitoreadas todavía.</p>
             ) : (
               statusList.map((api) => (
-                <div className="api-status-item" key={`${api.nombreApi}-${api.endpoint}`}>
+                <div className="grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-xl border border-[#f1f5f9] p-3" key={`${api.nombreApi}-${api.endpoint}`}>
                   <div>
-                    <strong>{api.nombreApi}</strong>
-                    <span>{api.endpoint}</span>
+                    <strong className="block text-sm text-[#111827]">{api.nombreApi}</strong>
+                    <span className="text-xs text-[#64748b]">{api.endpoint}</span>
                   </div>
-                  <div className={`api-status-badge ${api.estado === 'OK' ? 'ok' : 'error'}`}>
+                  <div className={`rounded-full px-2.5 py-[5px] text-xs font-bold ${api.estado === 'OK' ? 'bg-[#dcfce7] text-[#16a34a]' : 'bg-[#fee2e2] text-[#dc2626]'}`}>
                     {api.estado}
                   </div>
-                  <span className="api-code">{api.ultimoCodigo ?? '—'}</span>
+                  <span className="font-bold text-[#475569]">{api.ultimoCodigo ?? '—'}</span>
                 </div>
               ))
             )}
           </div>
         </div>
 
-        <div className="api-panel">
-          <h2>Errores por API</h2>
-          <div className="api-error-summary">
+        <div className={PANEL}>
+          <h2 className="m-0 mb-4 text-base font-bold text-[#111827]">Errores por API</h2>
+          <div className="flex flex-col gap-3.5">
             {statusList.map((api) => (
-              <div className="api-error-row" key={api.nombreApi}>
+              <div className="grid grid-cols-[120px_1fr_30px] items-center gap-3.5 text-[13px] text-[#475569]" key={api.nombreApi}>
                 <span>{api.nombreApi}</span>
-                <div className="api-bar">
-                  <div className={`api-bar-fill ${api.estado === 'OK' ? 'ok' : 'error'}`} style={{ width: `${api.estado === 'OK' ? 20 : 70}%` }} />
+                <div className="h-2 overflow-hidden rounded-full bg-[#f1f5f9]">
+                  {/* ancho dinámico: inline justificado */}
+                  <div className={`h-full rounded-full ${api.estado === 'OK' ? 'bg-[#60a5fa]' : 'bg-[#ef4444]'}`} style={{ width: `${api.estado === 'OK' ? 20 : 70}%` }} />
                 </div>
                 <strong>{api.erroresActivos}</strong>
               </div>
@@ -101,26 +132,26 @@ export default function ApiAlertsPage() {
         </div>
       </section>
 
-      <section className="api-panel">
-        <div className="api-table-header">
-          <h2>Alertas recientes</h2>
+      <section className={PANEL}>
+        <div>
+          <h2 className="m-0 mb-4 text-base font-bold text-[#111827]">Alertas recientes</h2>
         </div>
-        <div className="api-table-wrapper">
-          <table className="api-table">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-[13px]">
             <thead>
-              <tr><th>API</th><th>Endpoint</th><th>Código</th><th>Mensaje</th><th>Severidad</th></tr>
+              <tr><th className={TH}>API</th><th className={TH}>Endpoint</th><th className={TH}>Código</th><th className={TH}>Mensaje</th><th className={TH}>Severidad</th></tr>
             </thead>
             <tbody>
               {alerts.length === 0 ? (
-                <tr><td colSpan="5" className="api-empty-cell">No hay alertas activas.</td></tr>
+                <tr><td colSpan="5" className="p-[30px] text-center text-sm text-[#94a3b8]">No hay alertas activas.</td></tr>
               ) : (
                 alerts.map((alert, idx) => (
                   <tr key={`${alert.nombreApi}-${alert.endpoint}-${idx}`}>
-                    <td>{alert.nombreApi}</td>
-                    <td>{alert.endpoint}</td>
-                    <td><span className={`api-code-pill code-${alert.codigoError}`}>{alert.codigoError}</span></td>
-                    <td>{alert.mensaje}</td>
-                    <td><span className={`api-severity ${alert.severidad?.toLowerCase()}`}>{alert.severidad}</span></td>
+                    <td className={TD}>{alert.nombreApi}</td>
+                    <td className={TD}>{alert.endpoint}</td>
+                    <td className={TD}><span className={`rounded-full px-2 py-1 font-extrabold ${CODE_PILL[alert.codigoError] || ''}`}>{alert.codigoError}</span></td>
+                    <td className={TD}>{alert.mensaje}</td>
+                    <td className={TD}><span className={`rounded-full px-2.5 py-1 text-xs font-bold ${SEVERITY[alert.severidad?.toLowerCase()] || ''}`}>{alert.severidad}</span></td>
                   </tr>
                 ))
               )}
@@ -134,13 +165,13 @@ export default function ApiAlertsPage() {
 
 function MetricCard({ title, subtitle, value, tone, icon }) {
   return (
-    <article className="api-metric-card">
+    <article className="flex items-center justify-between rounded-2xl border border-[#eef2f7] bg-white p-5 shadow-[0_10px_24px_rgba(15,23,42,0.04)]">
       <div>
-        <h3>{title}</h3>
-        <p>{subtitle}</p>
-        <strong className={`metric-value ${tone}`}>{value}</strong>
+        <h3 className="m-0 text-sm text-[#334155]">{title}</h3>
+        <p className="mb-2.5 mt-1 text-xs text-[#94a3b8]">{subtitle}</p>
+        <strong className={`text-[32px] font-extrabold ${METRIC_VALUE_TONE[tone] || ''}`}>{value}</strong>
       </div>
-      <div className={`metric-icon ${tone}`}>{icon}</div>
+      <div className={`grid h-[58px] w-[58px] place-items-center rounded-full text-[22px] font-extrabold ${METRIC_ICON_TONE[tone] || ''}`}>{icon}</div>
     </article>
   );
 }
