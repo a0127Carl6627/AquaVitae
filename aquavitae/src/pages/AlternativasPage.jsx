@@ -45,53 +45,53 @@ export default function AlternativasPage() {
   const dateStr = now.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' });
   const selectedPlanta = plantas.find(p => p.id === selectedId);
 
-  if (loadingDashboard) return <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Cargando datos...</div>;
-  if (dashboardError) return <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#e23b3b' }}>Error: {dashboardError.message}</div>;
+  if (loadingDashboard) return <div className="flex flex-1 items-center justify-center">Cargando datos...</div>;
+  if (dashboardError) return <div className="flex flex-1 items-center justify-center text-[#e23b3b]">Error: {dashboardError.message}</div>;
 
   return (
-    <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', background: '#f5f7fa' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 28px', background: '#fff', borderBottom: '1px solid #e6eaf0' }}>
-        <div style={{ fontSize: 12, color: '#8a93a3' }}>Director · <strong>Alternativas de ubicación</strong></div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <select value={selectedId ?? ''} onChange={e => setSelectedId(Number(e.target.value))} style={{ appearance: 'none', background: '#fff', border: '1px solid #d6dde6', borderRadius: 8, padding: '6px 28px 6px 10px', fontSize: 12, cursor: 'pointer' }}>
+    <div className="flex min-w-0 flex-1 flex-col bg-[#f5f7fa]">
+      <div className="flex items-center justify-between border-b border-[#e6eaf0] bg-white px-7 py-3.5">
+        <div className="text-xs text-[#8a93a3]">Director · <strong>Alternativas de ubicación</strong></div>
+        <div className="flex items-center gap-3.5">
+          <select value={selectedId ?? ''} onChange={e => setSelectedId(Number(e.target.value))} className="cursor-pointer appearance-none rounded-lg border border-[#d6dde6] bg-white py-1.5 pl-2.5 pr-7 text-xs">
             {plantas.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
           </select>
-          <span style={{ fontSize: 12, color: '#5a6577' }}>{dateStr} · {timeStr}</span>
-          <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(140deg,#c5d4e3,#8a9bb0)', display: 'grid', placeItems: 'center', color: '#fff' }}>DR</div>
+          <span className="text-xs text-[#5a6577]">{dateStr} · {timeStr}</span>
+          <div className="grid h-8 w-8 place-items-center rounded-full bg-[linear-gradient(140deg,#c5d4e3,#8a9bb0)] text-white">DR</div>
         </div>
       </div>
 
-      <div style={{ padding: '24px 28px 40px', maxWidth: 1440, margin: '0 auto', width: '100%' }}>
-        <div style={{ marginBottom: 20 }}>
-          <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0, color: '#1a2332' }}>Alternativas de ubicación</h1>
-          <p style={{ fontSize: 13, color: '#5a6577', margin: 0 }}>Análisis comparativo de ubicaciones para reubicación operativa · Factores hídricos, logísticos y financieros</p>
+      <div className="mx-auto w-full max-w-[1440px] px-7 pb-10 pt-6">
+        <div className="mb-5">
+          <h1 className="m-0 text-[22px] font-bold text-[#1a2332]">Alternativas de ubicación</h1>
+          <p className="m-0 text-[13px] text-[#5a6577]">Análisis comparativo de ubicaciones para reubicación operativa · Factores hídricos, logísticos y financieros</p>
         </div>
 
         {loadingDetail || !alerta ? (
-          <div style={{ background: '#fde8e8', borderRadius: 12, padding: '20px', marginBottom: 20, height: 80, display: 'flex', alignItems: 'center', color: '#8a93a3' }}>Cargando alerta...</div>
+          <div className="mb-5 flex h-20 items-center rounded-xl bg-[#fde8e8] p-5 text-[#8a93a3]">Cargando alerta...</div>
         ) : alerta.estresActual < 45 ? (
-          <div style={{ background: '#e3f4ea', borderRadius: 12, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
-            <div style={{ width: 40, height: 40, borderRadius: 10, background: '#2ea36b', display: 'grid', placeItems: 'center', color: '#fff' }}>✓</div>
-            <div><strong style={{ display: 'block', fontSize: 13.5, color: '#2ea36b' }}>Operación normal en {alerta.nombrePlanta}</strong><span style={{ fontSize: 12, color: '#5a6577' }}>Estrés hídrico actual: {alerta.estresActual}% · Sin riesgo de cierre en los próximos 90 días · Costo apertura referencia: {alerta.costoAperturaStr}</span></div>
+          <div className="mb-5 flex items-center gap-4 rounded-xl bg-[#e3f4ea] px-5 py-4">
+            <div className="grid h-10 w-10 place-items-center rounded-[10px] bg-[#2ea36b] text-white">✓</div>
+            <div><strong className="block text-[13.5px] text-[#2ea36b]">Operación normal en {alerta.nombrePlanta}</strong><span className="text-xs text-[#5a6577]">Estrés hídrico actual: {alerta.estresActual}% · Sin riesgo de cierre en los próximos 90 días · Costo apertura referencia: {alerta.costoAperturaStr}</span></div>
           </div>
         ) : (
-          <div style={{ marginBottom: 20 }}><AlertaBannerHidrico plantaNombre={alerta.nombrePlanta} estresActual={alerta.estresActual} cierreRecomendadoDias={alerta.diasCierreRecomendado <= 0 ? 0 : alerta.diasCierreRecomendado} costoApertura={alerta.costoAperturaStr} costoOperacion={alerta.costoOperacionStr} diasApertura={alerta.diasAperturaStr} /></div>
+          <div className="mb-5"><AlertaBannerHidrico plantaNombre={alerta.nombrePlanta} estresActual={alerta.estresActual} cierreRecomendadoDias={alerta.diasCierreRecomendado <= 0 ? 0 : alerta.diasCierreRecomendado} costoApertura={alerta.costoAperturaStr} costoOperacion={alerta.costoOperacionStr} diasApertura={alerta.diasAperturaStr} /></div>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: '4fr 3fr', gap: 16, marginBottom: 16 }}>
-          {loadingDetail || alternativas?.length === 0 ? <div style={{ background: '#fff', borderRadius: 12, height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Cargando mapa...</div> : <MapaAlternativas key={selectedId} plantaActual={selectedPlanta ? { nombre: selectedPlanta.nombre, estado: selectedPlanta.estado } : null} alternativas={alternativas} selectedEstado={selectedAlternativa?.estado ?? null} height={340} onSelectAlternativa={alt => setSelectedAlternativa(alt)} />}
-          {loadingDetail || disponibilidadData.length === 0 ? <div style={{ background: '#fff', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Cargando gráfica...</div> : <GraficaDisponibilidadOperativa data={disponibilidadData} inicioDeclive={proyeccion?.startDay ?? 10} cierreForzoso={proyeccion?.peakDay ?? 80} perdidaProyectada={kpis ? formatMXN(kpis.perdidaEconomicaProyectada) : '—'} probEvento={kpis ? `${Math.round(kpis.probabilidadEventoCritico * 100)}%` : '—'} height={280} />}
+        <div className="mb-4 grid grid-cols-[4fr_3fr] gap-4">
+          {loadingDetail || alternativas?.length === 0 ? <div className="flex h-[400px] items-center justify-center rounded-xl bg-white">Cargando mapa...</div> : <MapaAlternativas key={selectedId} plantaActual={selectedPlanta ? { nombre: selectedPlanta.nombre, estado: selectedPlanta.estado } : null} alternativas={alternativas} selectedEstado={selectedAlternativa?.estado ?? null} height={340} onSelectAlternativa={alt => setSelectedAlternativa(alt)} />}
+          {loadingDetail || disponibilidadData.length === 0 ? <div className="flex items-center justify-center rounded-xl bg-white">Cargando gráfica...</div> : <GraficaDisponibilidadOperativa data={disponibilidadData} inicioDeclive={proyeccion?.startDay ?? 10} cierreForzoso={proyeccion?.peakDay ?? 80} perdidaProyectada={kpis ? formatMXN(kpis.perdidaEconomicaProyectada) : '—'} probEvento={kpis ? `${Math.round(kpis.probabilidadEventoCritico * 100)}%` : '—'} height={280} />}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: 16, marginBottom: 20 }}>
-          {loadingDetail || alternativas?.length === 0 ? <div style={{ background: '#fff', borderRadius: 12, padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Cargando alternativas...</div> : <TablaCostosUbicacion alternativas={alternativas} selectedNombre={selectedAlternativa?.nombre ?? null} onSelectAlternativa={alt => setSelectedAlternativa(alt)} />}
-          {loadingDetail || factores?.length === 0 ? <div style={{ background: '#fff', borderRadius: 12, padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Cargando factores...</div> : <FactoresClave titulo={selectedPlanta ? `Para ${selectedPlanta.nombre}` : 'Para la ubicación seleccionada'} factores={factores} />}
+        <div className="mb-5 grid grid-cols-[3fr_2fr] gap-4">
+          {loadingDetail || alternativas?.length === 0 ? <div className="flex items-center justify-center rounded-xl bg-white p-5">Cargando alternativas...</div> : <TablaCostosUbicacion alternativas={alternativas} selectedNombre={selectedAlternativa?.nombre ?? null} onSelectAlternativa={alt => setSelectedAlternativa(alt)} />}
+          {loadingDetail || factores?.length === 0 ? <div className="flex items-center justify-center rounded-xl bg-white p-5">Cargando factores...</div> : <FactoresClave titulo={selectedPlanta ? `Para ${selectedPlanta.nombre}` : 'Para la ubicación seleccionada'} factores={factores} />}
         </div>
 
-        <div style={{ background: '#eaf1fe', borderRadius: 12, padding: '16px 22px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: '#2563eb', color: '#fff', display: 'grid', placeItems: 'center' }}>📈</div>
-            <div><strong style={{ display: 'block', fontSize: 14 }}>¿Necesitas proyectar la recuperación hídrica?</strong><span style={{ fontSize: 12, color: '#5a6577' }}>Consulta la simulación de recuperación con y sin intervención en el módulo de Simulación.</span></div>
+        <div className="flex items-center justify-between rounded-xl bg-[#eaf1fe] px-[22px] py-4">
+          <div className="flex items-center gap-3.5">
+            <div className="grid h-9 w-9 place-items-center rounded-[10px] bg-[#2563eb] text-white">📈</div>
+            <div><strong className="block text-sm">¿Necesitas proyectar la recuperación hídrica?</strong><span className="text-xs text-[#5a6577]">Consulta la simulación de recuperación con y sin intervención en el módulo de Simulación.</span></div>
           </div>
         </div>
       </div>
