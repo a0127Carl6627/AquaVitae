@@ -1,32 +1,11 @@
 import React, { useState } from 'react';
+import clsx from 'clsx';
 import { crearUsuario, generarContrasena } from '../../services/aquavitaeApi';
 
-// ── Estilos base ──────────────────────────────────────────────────────────────
-const estiloInput = {
-  padding: '10px 14px',
-  border: '1px solid #e2e8f0',
-  borderRadius: '8px',
-  fontSize: '14px',
-  color: '#1a2332',
-  outline: 'none',
-  fontFamily: 'inherit',
-  backgroundColor: '#fff',
-  width: '100%',
-  boxSizing: 'border-box',
-};
-
-const estiloLabel = {
-  fontSize: '13px',
-  fontWeight: '500',
-  color: '#5a6577',
-  marginBottom: '6px',
-  display: 'block',
-};
-
-const estiloLabelRequerido = {
-  ...estiloLabel,
-  color: '#1a2332',
-};
+// ── Clases base ───────────────────────────────────────────────────────────────
+const INPUT = 'box-border w-full rounded-lg border border-[#e2e8f0] bg-white px-3.5 py-2.5 text-sm text-[#1a2332] outline-none [font-family:inherit]';
+const LABEL = 'mb-1.5 block text-[13px] font-medium text-[#5a6577]';
+const LABEL_REQ = 'mb-1.5 block text-[13px] font-medium text-[#1a2332]';
 
 // Módulos de permiso del rol
 const MODULOS_PERMISO = [
@@ -42,9 +21,9 @@ const MODULOS_PERMISO = [
 
 function Campo({ label, required, children }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <label style={required ? estiloLabelRequerido : estiloLabel}>
-        {label}{required && <span style={{ color: '#e23b3b', marginLeft: 2 }}>*</span>}
+    <div className="flex flex-col">
+      <label className={required ? LABEL_REQ : LABEL}>
+        {label}{required && <span className="ml-0.5 text-[#e23b3b]">*</span>}
       </label>
       {children}
     </div>
@@ -131,60 +110,26 @@ export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpre
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        backgroundColor: 'rgba(15,23,42,0.45)',
-        zIndex: 1000,
-        overflowY: 'auto',
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-        padding: '32px 16px 48px',
-        fontFamily: "'Inter', 'Segoe UI', sans-serif",
-      }}
-    >
-      <div
-        style={{
-          background: '#fff',
-          borderRadius: '16px',
-          width: '100%',
-          maxWidth: '920px',
-          boxShadow: '0 16px 48px rgba(15,23,42,0.18)',
-          overflow: 'hidden',
-        }}
-      >
+    <div className="fixed inset-0 z-[1000] flex items-start justify-center overflow-y-auto bg-[rgba(15,23,42,0.45)] px-4 pb-12 pt-8 [font-family:'Inter','Segoe_UI',sans-serif]">
+      <div className="w-full max-w-[920px] overflow-hidden rounded-2xl bg-white shadow-[0_16px_48px_rgba(15,23,42,0.18)]">
         {/* ── Encabezado ── */}
-        <div style={{ padding: '28px 32px 20px', borderBottom: '1px solid #e6eaf0' }}>
+        <div className="border-b border-[#e6eaf0] px-8 pb-5 pt-7">
           {/* Breadcrumb */}
-          <div style={{ fontSize: '12px', color: '#8a93a3', marginBottom: '8px' }}>
-            Usuarios y roles &rsaquo; <span style={{ color: '#1a2332', fontWeight: 500 }}>Agregar usuario</span>
+          <div className="mb-2 text-xs text-[#8a93a3]">
+            Usuarios y roles &rsaquo; <span className="font-medium text-[#1a2332]">Agregar usuario</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+          <div className="flex items-start justify-between">
             <div>
-              <h1 style={{ fontSize: '22px', fontWeight: '700', color: '#1a2332', margin: '0 0 4px' }}>
+              <h1 className="m-0 mb-1 text-[22px] font-bold text-[#1a2332]">
                 Agregar nuevo usuario
               </h1>
-              <p style={{ fontSize: '13px', color: '#5a6577', margin: 0 }}>
+              <p className="m-0 text-[13px] text-[#5a6577]">
                 Completa la información para registrar un nuevo usuario en la plataforma.
               </p>
             </div>
             <button
               onClick={onClose}
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '13px',
-                color: '#3b7dd8',
-                fontWeight: '500',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                padding: '4px 0',
-                flexShrink: 0,
-              }}
+              className="flex shrink-0 cursor-pointer items-center gap-1 border-none bg-none py-1 text-[13px] font-medium text-[#3b7dd8]"
             >
               ← Volver a usuarios
             </button>
@@ -192,26 +137,26 @@ export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpre
         </div>
 
         {/* ── Cuerpo ── */}
-        <div style={{ padding: '28px 32px 24px' }}>
+        <div className="px-8 pb-6 pt-7">
 
           {/* Fila superior: Información general (2/3) + Sobre los usuarios (1/3) */}
-          <div style={{ display: 'flex', gap: '24px', marginBottom: '28px', alignItems: 'flex-start' }}>
+          <div className="mb-7 flex items-start gap-6">
 
             {/* Información general */}
-            <div style={{ flex: '2', minWidth: 0 }}>
-              <h2 style={{ fontSize: '15px', fontWeight: '600', color: '#1a2332', margin: '0 0 16px' }}>
+            <div className="min-w-0 flex-[2]">
+              <h2 className="m-0 mb-4 text-[15px] font-semibold text-[#1a2332]">
                 Información general
               </h2>
 
               {/* Fila 1: Nombre completo + Nombre de usuario */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+              <div className="mb-4 grid grid-cols-2 gap-4">
                 <Campo label="Nombre completo" required>
                   <input
                     type="text"
                     placeholder="Ej. María Fernanda López"
                     value={form.nombreCompleto}
                     onChange={e => handleChange('nombreCompleto', e.target.value)}
-                    style={estiloInput}
+                    className={INPUT}
                   />
                 </Campo>
                 <Campo label="Nombre de usuario" required>
@@ -220,75 +165,56 @@ export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpre
                     placeholder="Ej. maria.lopez"
                     value={form.nombreUsuario}
                     onChange={e => handleChange('nombreUsuario', e.target.value)}
-                    style={estiloInput}
+                    className={INPUT}
                   />
                 </Campo>
               </div>
 
               {/* Fila 2: Correo + Estado (fijo "Activo") */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+              <div className="mb-4 grid grid-cols-2 gap-4">
                 <Campo label="Correo electrónico" required>
                   <input
                     type="email"
                     placeholder="usuario@empresa.com"
                     value={form.correo}
                     onChange={e => handleChange('correo', e.target.value)}
-                    style={estiloInput}
+                    className={INPUT}
                   />
                 </Campo>
                 <Campo label="Estado">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: '8px', backgroundColor: '#f8fafc' }}>
-                    <span style={{
-                      width: '8px',
-                      height: '8px',
-                      borderRadius: '50%',
-                      backgroundColor: '#22c55e',
-                      display: 'inline-block',
-                      flexShrink: 0,
-                    }} />
-                    <span style={{ fontSize: '14px', color: '#1a2332', fontWeight: '500' }}>Activo</span>
+                  <div className="flex items-center gap-2.5 rounded-lg border border-[#e2e8f0] bg-[#f8fafc] px-3.5 py-2.5">
+                    <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-[#22c55e]" />
+                    <span className="text-sm font-medium text-[#1a2332]">Activo</span>
                   </div>
                 </Campo>
               </div>
 
               {/* Fila 3: Teléfono + Contraseña temporal + Generar */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div className="grid grid-cols-2 gap-4">
                 <Campo label="Teléfono (opcional)">
                   <input
                     type="tel"
                     placeholder="+52 81 2345 6789"
                     value={form.telefono}
                     onChange={e => handleChange('telefono', e.target.value)}
-                    style={estiloInput}
+                    className={INPUT}
                   />
                 </Campo>
                 <Campo label="Contraseña temporal" required>
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                    <div style={{ position: 'relative', flex: 1 }}>
+                  <div className="flex items-center gap-2">
+                    <div className="relative flex-1">
                       <input
                         type={mostrarContrasena ? 'text' : 'password'}
                         placeholder="••••••••"
                         value={form.contrasenaTemp}
                         onChange={e => handleChange('contrasenaTemp', e.target.value)}
-                        style={{ ...estiloInput, paddingRight: '38px' }}
+                        className="box-border w-full rounded-lg border border-[#e2e8f0] bg-white py-2.5 pl-3.5 pr-[38px] text-sm text-[#1a2332] outline-none [font-family:inherit]"
                       />
                       {/* Toggle show/hide */}
                       <button
                         type="button"
                         onClick={() => setMostrarContrasena(v => !v)}
-                        style={{
-                          position: 'absolute',
-                          right: '10px',
-                          top: '50%',
-                          transform: 'translateY(-50%)',
-                          background: 'none',
-                          border: 'none',
-                          cursor: 'pointer',
-                          color: '#94a3b8',
-                          padding: '0',
-                          lineHeight: 1,
-                          fontSize: '15px',
-                        }}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 cursor-pointer border-none bg-none p-0 text-[15px] leading-none text-[#94a3b8]"
                         title={mostrarContrasena ? 'Ocultar contraseña' : 'Ver contraseña'}
                       >
                         {mostrarContrasena ? (
@@ -310,19 +236,7 @@ export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpre
                       type="button"
                       onClick={handleGenerarContrasena}
                       disabled={generando}
-                      style={{
-                        padding: '10px 14px',
-                        borderRadius: '8px',
-                        border: '1px solid #3b7dd8',
-                        background: generando ? '#93b8eb' : '#3b7dd8',
-                        color: '#fff',
-                        fontSize: '13px',
-                        fontWeight: '500',
-                        cursor: generando ? 'not-allowed' : 'pointer',
-                        whiteSpace: 'nowrap',
-                        flexShrink: 0,
-                        transition: 'background 0.15s',
-                      }}
+                      className={clsx('shrink-0 whitespace-nowrap rounded-lg border border-[#3b7dd8] px-3.5 py-2.5 text-[13px] font-medium text-white transition-colors', generando ? 'cursor-not-allowed bg-[#93b8eb]' : 'cursor-pointer bg-[#3b7dd8]')}
                     >
                       {generando ? 'Generando...' : 'Generar contraseña'}
                     </button>
@@ -332,22 +246,14 @@ export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpre
             </div>
 
             {/* Sobre los usuarios */}
-            <div style={{
-              flex: '1',
-              minWidth: '220px',
-              backgroundColor: '#f0f6ff',
-              border: '1px solid #bfdbfe',
-              borderRadius: '12px',
-              padding: '20px',
-              marginTop: '32px',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                <span style={{ fontSize: '20px', flexShrink: 0 }}>ℹ️</span>
+            <div className="mt-8 min-w-[220px] flex-1 rounded-xl border border-[#bfdbfe] bg-[#f0f6ff] p-5">
+              <div className="flex items-start gap-2.5">
+                <span className="shrink-0 text-xl">ℹ️</span>
                 <div>
-                  <p style={{ fontSize: '13px', fontWeight: '600', color: '#1e40af', margin: '0 0 6px' }}>
+                  <p className="m-0 mb-1.5 text-[13px] font-semibold text-[#1e40af]">
                     Sobre los usuarios
                   </p>
-                  <p style={{ fontSize: '12.5px', color: '#3b5999', margin: 0, lineHeight: '1.5' }}>
+                  <p className="m-0 text-[12.5px] leading-normal text-[#3b5999]">
                     El usuario recibirá un correo con su contraseña temporal y deberá cambiarla en su primer inicio de sesión.
                   </p>
                 </div>
@@ -356,39 +262,36 @@ export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpre
           </div>
 
           {/* ── Asignación de rol y permisos ── */}
-          <div style={{ borderTop: '1px solid #e6eaf0', paddingTop: '24px', marginBottom: '24px' }}>
-            <h2 style={{ fontSize: '15px', fontWeight: '600', color: '#1a2332', margin: '0 0 20px' }}>
+          <div className="mb-6 border-t border-[#e6eaf0] pt-6">
+            <h2 className="m-0 mb-5 text-[15px] font-semibold text-[#1a2332]">
               Asignación de rol y permisos
             </h2>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '24px', alignItems: 'flex-start' }}>
+            <div className="grid grid-cols-3 items-start gap-6">
 
               {/* Columna izquierda: Rol */}
               <div>
                 <Campo label="Seleccionar rol" required>
-                  <div style={{ position: 'relative' }}>
+                  <div className="relative">
                     <select
                       value={form.idRol}
                       onChange={e => handleChange('idRol', e.target.value)}
-                      style={{ ...estiloInput, appearance: 'none', paddingRight: '32px' }}
+                      className="box-border w-full appearance-none rounded-lg border border-[#e2e8f0] bg-white py-2.5 pl-3.5 pr-8 text-sm text-[#1a2332] outline-none [font-family:inherit]"
                     >
                       <option value="">Seleccionar rol</option>
                       {roles.map(r => (
                         <option key={r.id} value={String(r.id)}>{r.nombre}</option>
                       ))}
                     </select>
-                    <span style={{
-                      position: 'absolute', right: '12px', top: '50%',
-                      transform: 'translateY(-50%)', pointerEvents: 'none', color: '#94a3b8',
-                    }}>▾</span>
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#94a3b8]">▾</span>
                   </div>
                 </Campo>
                 {rolSeleccionado?.descripcion && (
-                  <div style={{ marginTop: '10px' }}>
-                    <p style={{ fontSize: '12px', color: '#5a6577', margin: '0 0 4px', fontWeight: '500' }}>
+                  <div className="mt-2.5">
+                    <p className="m-0 mb-1 text-xs font-medium text-[#5a6577]">
                       Descripción del rol
                     </p>
-                    <p style={{ fontSize: '12.5px', color: '#5a6577', margin: 0, lineHeight: '1.5' }}>
+                    <p className="m-0 text-[12.5px] leading-normal text-[#5a6577]">
                       {rolSeleccionado.descripcion}
                     </p>
                   </div>
@@ -397,10 +300,10 @@ export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpre
 
               {/* Columna derecha: Permisos del rol */}
               <div>
-                <p style={{ fontSize: '13px', fontWeight: '500', color: '#1a2332', margin: '0 0 12px' }}>
+                <p className="m-0 mb-3 text-[13px] font-medium text-[#1a2332]">
                   Permisos del rol
                 </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div className="flex flex-col gap-2">
                   {MODULOS_PERMISO.map(modulo => {
                     const tienePermiso = rolSeleccionado
                       ? (permisosRol[modulo] !== undefined
@@ -410,20 +313,16 @@ export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpre
                     return (
                       <label
                         key={modulo}
-                        style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'default' }}
+                        className="flex cursor-default items-center gap-2.5"
                       >
                         <input
                           type="checkbox"
                           checked={!!tienePermiso}
                           readOnly
                           disabled
-                          style={{ accentColor: '#3b7dd8', width: '15px', height: '15px' }}
+                          className="h-[15px] w-[15px] accent-[#3b7dd8]"
                         />
-                        <span style={{
-                          fontSize: '13px',
-                          color: tienePermiso ? '#1a2332' : '#94a3b8',
-                          fontWeight: tienePermiso ? '500' : '400',
-                        }}>
+                        <span className={clsx('text-[13px]', tienePermiso ? 'font-medium text-[#1a2332]' : 'font-normal text-[#94a3b8]')}>
                           {modulo}
                         </span>
                       </label>
@@ -435,54 +334,27 @@ export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpre
           </div>
 
           {/* ── Nota importante ── */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '10px',
-            backgroundColor: '#fffbeb',
-            border: '1px solid #fde68a',
-            borderRadius: '10px',
-            padding: '14px 16px',
-            marginBottom: '24px',
-          }}>
-            <span style={{ fontSize: '16px', flexShrink: 0 }}>ℹ️</span>
-            <p style={{ fontSize: '12.5px', color: '#92400e', margin: 0, lineHeight: '1.5' }}>
+          <div className="mb-6 flex items-start gap-2.5 rounded-[10px] border border-[#fde68a] bg-[#fffbeb] px-4 py-3.5">
+            <span className="shrink-0 text-base">ℹ️</span>
+            <p className="m-0 text-[12.5px] leading-normal text-[#92400e]">
               <strong>Importante:</strong> El usuario quedará registrado como activo y podrá iniciar sesión con su correo y la contraseña temporal enviada.
             </p>
           </div>
 
           {/* ── Error ── */}
           {errorMsg && (
-            <div style={{
-              backgroundColor: '#fef2f2',
-              border: '1px solid #fecaca',
-              borderRadius: '8px',
-              padding: '12px 16px',
-              marginBottom: '16px',
-              fontSize: '13px',
-              color: '#dc2626',
-            }}>
+            <div className="mb-4 rounded-lg border border-[#fecaca] bg-[#fef2f2] px-4 py-3 text-[13px] text-[#dc2626]">
               {errorMsg}
             </div>
           )}
 
           {/* ── Botones ── */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+          <div className="flex justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
               disabled={guardando}
-              style={{
-                padding: '10px 24px',
-                borderRadius: '8px',
-                border: '1px solid #e2e8f0',
-                background: '#f8fafc',
-                color: '#5a6577',
-                fontSize: '14px',
-                fontWeight: '500',
-                cursor: guardando ? 'not-allowed' : 'pointer',
-                opacity: guardando ? 0.6 : 1,
-              }}
+              className={clsx('rounded-lg border border-[#e2e8f0] bg-[#f8fafc] px-6 py-2.5 text-sm font-medium text-[#5a6577]', guardando ? 'cursor-not-allowed opacity-60' : 'cursor-pointer opacity-100')}
             >
               Cancelar
             </button>
@@ -490,20 +362,7 @@ export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpre
               type="button"
               onClick={handleGuardar}
               disabled={guardando}
-              style={{
-                padding: '10px 24px',
-                borderRadius: '8px',
-                border: 'none',
-                background: guardando ? '#93b8eb' : '#3b7dd8',
-                color: '#fff',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: guardando ? 'not-allowed' : 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                transition: 'background 0.15s',
-              }}
+              className={clsx('flex items-center gap-2 rounded-lg border-none px-6 py-2.5 text-sm font-semibold text-white transition-colors', guardando ? 'cursor-not-allowed bg-[#93b8eb]' : 'cursor-pointer bg-[#3b7dd8]')}
             >
               {guardando ? 'Guardando...' : 'Guardar usuario'}
             </button>

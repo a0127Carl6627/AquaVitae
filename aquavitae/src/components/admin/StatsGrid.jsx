@@ -2,18 +2,9 @@
 import React from 'react';
 import MetricCard from './MetricCard';
 
-const styles = {
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: 20,
-    marginBottom: 32,
-  },
-};
-
 export default function StatsGrid({ stats }) {
   return (
-    <div style={styles.grid}>
+    <div className="mb-8 grid grid-cols-4 gap-5">
       {stats.map((stat, idx) => (
         <MetricCard key={idx} {...stat} />
       ))}

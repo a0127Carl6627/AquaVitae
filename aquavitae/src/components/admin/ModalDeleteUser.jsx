@@ -1,121 +1,33 @@
 // Components/ModalDeleteUser.jsx
 import React from 'react';
 
-const styles = {
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1000,
-    fontFamily: "'Inter', system-ui, sans-serif",
-  },
-  modal: {
-    backgroundColor: '#ffffff',
-    borderRadius: 24,
-    width: '100%',
-    maxWidth: 480,
-    boxShadow: '0 20px 35px -10px rgba(0,0,0,0.2)',
-    overflow: 'hidden',
-  },
-  header: {
-    padding: '24px 28px 16px 28px',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 600,
-    color: '#1f2937',
-    margin: 0,
-  },
-  warningText: {
-    fontSize: 14,
-    color: '#6b7280',
-    marginTop: 8,
-    lineHeight: 1.5,
-  },
-  userCard: {
-    margin: '0 28px 24px 28px',
-    padding: '18px 20px',
-    backgroundColor: '#f9fafb',
-    borderRadius: 20,
-    border: '1px solid #f0f2f5',
-  },
-  userName: {
-    fontSize: 16,
-    fontWeight: 600,
-    color: '#111827',
-    marginBottom: 4,
-  },
-  userEmail: {
-    fontSize: 13,
-    color: '#6b7280',
-    marginBottom: 12,
-  },
-  userDetails: {
-    fontSize: 12,
-    color: '#4b5563',
-    display: 'flex',
-    gap: 16,
-    flexWrap: 'wrap',
-  },
-  actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    gap: 12,
-    padding: '16px 28px 28px 28px',
-    borderTop: '1px solid #edf2f7',
-    backgroundColor: '#ffffff',
-  },
-  cancelBtn: {
-    padding: '8px 18px',
-    borderRadius: 40,
-    border: '1px solid #e2e8f0',
-    backgroundColor: '#ffffff',
-    fontSize: 13,
-    fontWeight: 500,
-    color: '#4b5563',
-    cursor: 'pointer',
-    transition: 'all 0.15s',
-  },
-  deleteBtn: {
-    padding: '8px 18px',
-    borderRadius: 40,
-    border: 'none',
-    backgroundColor: '#ef4444',
-    fontSize: 13,
-    fontWeight: 500,
-    color: '#ffffff',
-    cursor: 'pointer',
-    transition: 'all 0.15s',
-  },
-};
-
 export default function ModalDeleteUser({ user, onConfirm, onCancel }) {
   if (!user) return null;
 
   const { nombreCompleto, correo, nombreRol, regionPlanta } = user;
 
   return (
-    <div style={styles.overlay} onClick={onCancel}>
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <div style={styles.header}>
-          <h2 style={styles.title}>¿Eliminar usuario?</h2>
-          <p style={styles.warningText}>
+    <div
+      className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 [font-family:'Inter',system-ui,sans-serif]"
+      onClick={onCancel}
+    >
+      <div
+        className="w-full max-w-[480px] overflow-hidden rounded-3xl bg-white shadow-[0_20px_35px_-10px_rgba(0,0,0,0.2)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="px-7 pb-4 pt-6">
+          <h2 className="m-0 text-xl font-semibold text-gray-800">¿Eliminar usuario?</h2>
+          <p className="mt-2 text-sm leading-normal text-gray-500">
             Esta acción no se puede deshacer.
             <br />
             El usuario y su acceso a la plataforma serán eliminados permanentemente.
           </p>
         </div>
 
-        <div style={styles.userCard}>
-          <div style={styles.userName}>{nombreCompleto || 'Usuario'}</div>
-          <div style={styles.userEmail}>{correo || '—'}</div>
-          <div style={styles.userDetails}>
+        <div className="mx-7 mb-6 rounded-[20px] border border-[#f0f2f5] bg-gray-50 px-5 py-[18px]">
+          <div className="mb-1 text-base font-semibold text-gray-900">{nombreCompleto || 'Usuario'}</div>
+          <div className="mb-3 text-[13px] text-gray-500">{correo || '—'}</div>
+          <div className="flex flex-wrap gap-4 text-xs text-gray-600">
             <span>
               <strong>Rol:</strong> {nombreRol || '—'}
             </span>
@@ -125,20 +37,16 @@ export default function ModalDeleteUser({ user, onConfirm, onCancel }) {
           </div>
         </div>
 
-        <div style={styles.actions}>
+        <div className="flex justify-end gap-3 border-t border-[#edf2f7] bg-white px-7 pb-7 pt-4">
           <button
-            style={styles.cancelBtn}
+            className="cursor-pointer rounded-[40px] border border-[#e2e8f0] bg-white px-[18px] py-2 text-[13px] font-medium text-gray-600 transition-colors hover:bg-gray-50"
             onClick={onCancel}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f9fafb')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ffffff')}
           >
             Cancelar
           </button>
           <button
-            style={styles.deleteBtn}
+            className="cursor-pointer rounded-[40px] border-none bg-[#ef4444] px-[18px] py-2 text-[13px] font-medium text-white transition-colors hover:bg-[#dc2626]"
             onClick={() => onConfirm(user)}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#dc2626')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ef4444')}
           >
             Eliminar usuario
           </button>
