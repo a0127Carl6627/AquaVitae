@@ -97,42 +97,52 @@ export default function ExpandableSidebar({
 
   const role = userRole || user?.rol;
 
+  const displayName = [user?.nombre, user?.apellido].filter(Boolean).join(' ').trim()
+    || user?.email
+    || '';
+
   const visibleItems = NAVIGATION_ITEMS.filter((item) =>
     item.roles.includes(role)
   );
 
   return (
     <aside
+      onMouseEnter={() => setIsExpanded(true)}
+      onMouseLeave={() => setIsExpanded(false)}
       className={clsx(
         'fixed bottom-0 left-0 top-0 z-[1000] box-border flex h-screen shrink-0 flex-col gap-2 overflow-hidden border-r border-[#e6eaf0] bg-white px-3 py-[18px] transition-[width] duration-300 ease-in-out',
         isExpanded ? 'w-[220px]' : 'w-[64px]',
       )}
     >
-      <div className="mb-[18px] grid h-9 w-9 shrink-0 place-items-center rounded-[10px] bg-[linear-gradient(160deg,#2563eb,#1577a8)] text-sm font-bold text-white">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M12 3C12 3 5 11 5 16a7 7 0 0 0 14 0c0-5-7-13-7-13Z"
-            fill="#fff"
-            opacity=".95"
-          />
-        </svg>
+      <div className="mb-[18px] flex items-center gap-2.5">
+        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] bg-[linear-gradient(160deg,#2563eb,#1577a8)] text-sm font-bold text-white">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M12 3C12 3 5 11 5 16a7 7 0 0 0 14 0c0-5-7-13-7-13Z"
+              fill="#fff"
+              opacity=".95"
+            />
+          </svg>
+        </div>
+        {isExpanded && (
+          <span className="whitespace-nowrap text-lg font-bold text-[#1a2332]">
+            AquaVitae
+          </span>
+        )}
       </div>
 
-      <button
-        className="mb-2 flex h-10 w-full shrink-0 cursor-pointer items-center justify-center rounded-[10px] border-none bg-transparent text-lg text-[#8a93a3] transition-all duration-150"
-        onClick={() => setIsExpanded(!isExpanded)}
-        title={isExpanded ? 'Contraer' : 'Expandir'}
-      >
-        {isExpanded ? (
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-        ) : (
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
-        )}
-      </button>
+      {isExpanded && displayName && (
+        <div className="mb-1 px-1">
+          <div className="truncate text-[13px] font-semibold text-[#1a2332]">
+            {displayName}
+          </div>
+          {role && (
+            <div className="truncate text-[11px] text-[#8a93a3]">
+              {role}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className={DIVIDER_CLASS} />
 
