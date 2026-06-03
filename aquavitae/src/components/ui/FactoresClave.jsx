@@ -31,12 +31,13 @@ const ICONS = {
   ),
 };
 
+// Set completo de clases por icono (no interpoladas) para el JIT de Tailwind.
 const ICON_BG = {
-  water: { background: '#dbeafe', color: '#2563eb' },
-  money: { background: '#e3f4ea', color: '#2ea36b' },
-  clock: { background: '#fdf2dd', color: '#e89923' },
-  shield: { background: '#ede9fe', color: '#7c3aed' },
-  truck: { background: '#fef3c7', color: '#d97706' },
+  water: 'bg-[#dbeafe] text-[#2563eb]',
+  money: 'bg-[#e3f4ea] text-[#2ea36b]',
+  clock: 'bg-[#fdf2dd] text-[#e89923]',
+  shield: 'bg-[#ede9fe] text-[#7c3aed]',
+  truck: 'bg-[#fef3c7] text-[#d97706]',
 };
 
 export default function FactoresClave({
@@ -44,45 +45,33 @@ export default function FactoresClave({
   factores = [],
 }) {
   return (
-    <div style={{
-      background: '#fff',
-      border: '1px solid #e6eaf0',
-      borderRadius: 12,
-      boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
-      display: 'flex',
-      flexDirection: 'column',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-    }}>
-      <div style={{
-        padding: '16px 18px 10px',
-        borderBottom: '1px solid #e6eaf0',
-      }}>
-        <h3 style={{ fontSize: 14, fontWeight: 600, color: '#1a2332', margin: 0 }}>Factores clave considerados</h3>
-        <div style={{ fontSize: 11.5, color: '#8a93a3', marginTop: 2 }}>{titulo}</div>
+    <div className="flex flex-col rounded-xl border border-[#e6eaf0] bg-white font-sans shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
+      <div className="border-b border-[#e6eaf0] px-[18px] pb-2.5 pt-4">
+        <h3 className="m-0 text-sm font-semibold text-[#1a2332]">Factores clave considerados</h3>
+        <div className="mt-0.5 text-[11.5px] text-[#8a93a3]">{titulo}</div>
       </div>
 
-      <div style={{ padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 16, flex: 1 }}>
+      <div className="flex flex-1 flex-col gap-4 px-[18px] py-4">
         {factores.map((f, i) => {
-          const bg = ICON_BG[f.icon] || { background: '#f1f5f9', color: '#64748b' };
+          const bg = ICON_BG[f.icon] || 'bg-[#f1f5f9] text-[#64748b]';
           return (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{
-                width: 32, height: 32, borderRadius: 8,
-                display: 'grid', placeItems: 'center', flexShrink: 0,
-                ...bg,
-              }}>
-                <div style={{ width: 16, height: 16 }}>{ICONS[f.icon]}</div>
+            <div key={i} className="flex items-center gap-3">
+              <div className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg ${bg}`}>
+                <div className="h-4 w-4">{ICONS[f.icon]}</div>
               </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 12.5, fontWeight: 500, color: '#1a2332', marginBottom: 6 }}>{f.nombre}</div>
-                <div style={{ display: 'flex', gap: 4 }}>
+              <div className="min-w-0 flex-1">
+                <div className="mb-1.5 text-[12.5px] font-medium text-[#1a2332]">{f.nombre}</div>
+                <div className="flex gap-1">
                   {Array.from({ length: 5 }, (_, j) => (
-                    <div key={j} style={{
-                      width: 9, height: 9, borderRadius: '50%',
-                      background: j < f.puntos ? f.color : 'transparent',
-                      border: `1.5px solid ${f.color}`,
-                      opacity: j < f.puntos ? 1 : 0.28,
-                    }} />
+                    <div
+                      key={j}
+                      className={`h-[9px] w-[9px] rounded-full border-[1.5px] ${j < f.puntos ? 'opacity-100' : 'opacity-[0.28]'}`}
+                      // color 100% dinámico desde datos: única excepción inline justificada
+                      style={{
+                        backgroundColor: j < f.puntos ? f.color : 'transparent',
+                        borderColor: f.color,
+                      }}
+                    />
                   ))}
                 </div>
               </div>
