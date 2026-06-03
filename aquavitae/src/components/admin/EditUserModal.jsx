@@ -7,16 +7,24 @@ const INPUT = 'box-border w-full rounded-lg border border-[#e2e8f0] bg-white px-
 const LABEL = 'mb-1.5 block text-[13px] font-medium text-[#5a6577]';
 const LABEL_REQ = 'mb-1.5 block text-[13px] font-medium text-[#1a2332]';
 
-// Módulos de permiso del rol
 const MODULOS_PERMISO = [
   'Resumen',
   'Plantas',
   'Fuentes de agua',
   'Riesgos',
+  'Alertas',
   'Simulaciones',
   'Reportes',
   'Configuración',
 ];
+
+const PERMISOS_DEFAULT_POR_ROL = {
+  'Administrador':     ['Resumen', 'Plantas', 'Fuentes de agua', 'Riesgos', 'Alertas', 'Simulaciones', 'Reportes', 'Configuración'],
+  'Director':          ['Resumen', 'Plantas', 'Fuentes de agua', 'Riesgos', 'Alertas', 'Simulaciones', 'Reportes'],
+  'Gerente de Planta': ['Resumen', 'Plantas', 'Riesgos', 'Alertas', 'Reportes'],
+  'Analista':          ['Resumen', 'Plantas', 'Riesgos', 'Alertas', 'Reportes'],
+  'Operador':          ['Resumen', 'Plantas'],
+};
 
 
 function Campo({ label, required, children }) {
@@ -44,6 +52,7 @@ export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [permisosActivos, setPermisosActivos] = useState(new Set());
 
   // Sync form when usuario prop changes
   useEffect(() => {
@@ -60,17 +69,32 @@ export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [
       });
       setMostrarContrasena(false);
       setErrorMsg('');
+      const rolDelUsuario = roles.find(r => String(r.id) === String(usuario.idRol));
+      const modulosIniciales = usuario.modulosEfectivos?.length
+        ? usuario.modulosEfectivos
+        : (PERMISOS_DEFAULT_POR_ROL[rolDelUsuario?.nombre] || []);
+      setPermisosActivos(new Set(modulosIniciales));
     }
-  }, [usuario]);
+  }, [usuario, roles]);
 
   if (!isOpen || !usuario) return null;
 
-  // Rol seleccionado y sus permisos
   const rolSeleccionado = roles.find(r => String(r.id) === String(form.idRol));
-  const permisosRol = rolSeleccionado?.permisos || {};
 
   function handleChange(field, value) {
     setForm(prev => ({ ...prev, [field]: value }));
+    if (field === 'idRol') {
+      const rolNuevo = roles.find(r => String(r.id) === String(value));
+      setPermisosActivos(new Set(PERMISOS_DEFAULT_POR_ROL[rolNuevo?.nombre] || []));
+    }
+  }
+
+  function togglePermiso(modulo) {
+    setPermisosActivos(prev => {
+      const next = new Set(prev);
+      next.has(modulo) ? next.delete(modulo) : next.add(modulo);
+      return next;
+    });
   }
 
   async function handleGuardar() {
@@ -85,9 +109,10 @@ export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [
         telefono: form.telefono,
         activo: form.activo,
         idRol: form.idRol ? Number(form.idRol) : null,
+        modulos: Array.from(permisosActivos),
       };
       if (mostrarContrasena && form.contrasena) {
-        dto.contrasena = form.contrasena;
+        dto.nuevaContrasena = form.contrasena;
       }
       await editarUsuario(usuario.id, dto);
       onSave && onSave();
@@ -283,31 +308,26 @@ export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [
                 )}
               </div>
 
-              {/* Columna derecha: Permisos del rol */}
+              {/* Columna derecha: Permisos del usuario */}
               <div>
                 <p className="m-0 mb-3 text-[13px] font-medium text-[#1a2332]">
-                  Permisos del rol
+                  Permisos del usuario
                 </p>
                 <div className="flex flex-col gap-2">
                   {MODULOS_PERMISO.map(modulo => {
-                    const tienePermiso = permisosRol[modulo] !== undefined
-                      ? permisosRol[modulo]
-                      : rolSeleccionado
-                        ? !!permisosRol[modulo.toLowerCase()] || !!permisosRol[modulo]
-                        : false;
+                    const activo = permisosActivos.has(modulo);
                     return (
                       <label
                         key={modulo}
-                        className="flex cursor-default items-center gap-2.5"
+                        className="flex cursor-pointer items-center gap-2.5"
                       >
                         <input
                           type="checkbox"
-                          checked={!!tienePermiso}
-                          readOnly
-                          disabled
-                          className="h-[15px] w-[15px] accent-[#3b7dd8]"
+                          checked={activo}
+                          onChange={() => togglePermiso(modulo)}
+                          className="h-[15px] w-[15px] cursor-pointer accent-[#3b7dd8]"
                         />
-                        <span className={clsx('text-[13px]', tienePermiso ? 'font-medium text-[#1a2332]' : 'font-normal text-[#94a3b8]')}>
+                        <span className={clsx('text-[13px]', activo ? 'font-medium text-[#1a2332]' : 'font-normal text-[#94a3b8]')}>
                           {modulo}
                         </span>
                       </label>

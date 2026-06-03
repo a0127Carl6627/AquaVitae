@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDashboard, useAlertas, useEvolucion } from '../hooks/useAquavitaeQueries';
 import StatCards from '../components/dashboard/StatCards';
 import RiskGauge from '../components/charts/RiskGauge';
@@ -31,6 +31,10 @@ function formatFechaCorta(value) {
 
 export default function DashboardInicio() {
   const [selectedId, setSelectedId] = useState(null);
+  const [now, setNow] = useState(new Date());
+  useEffect(() => { const t = setInterval(() => setNow(new Date()), 60000); return () => clearInterval(t); }, []);
+  const timeStr = now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+  const dateStr = now.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' });
   const { data: dashboard, isLoading, error, refetch } = useDashboard();
   const { data: alertasRaw } = useAlertas(10);
   const { data: evolucionRaw } = useEvolucion(7);
@@ -66,10 +70,17 @@ export default function DashboardInicio() {
   const nivelGeneral = totalPlantas === 0 ? 'bajo' : resumen.alto > 0 ? 'alto' : resumen.medio > 0 ? 'medio' : 'bajo';
 
   return (
-    <div className="min-h-screen flex-1 bg-gray-50 px-8 py-6 [font-family:'Inter',sans-serif]">
-      <div className="mx-auto max-w-[1400px]">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-white px-6 py-5">
-          <div><h1 className="text-[22px] font-semibold">Resumen ejecutivo hídrico</h1><p className="text-[13px] text-gray-500">Visión general del riesgo hídrico y nivel de riesgo de plantas.</p></div>
+    <div className="flex min-w-0 flex-1 flex-col bg-[#f5f7fa]">
+      <div className="flex items-center justify-between border-b border-[#e6eaf0] bg-white px-7 py-3.5">
+        <div className="text-xs text-[#8a93a3]">Director · <strong>Resumen ejecutivo hídrico</strong></div>
+        <div className="flex items-center gap-3.5">
+          <span className="text-xs text-[#5a6577]">{dateStr} · {timeStr}</span>
+          <div className="grid h-8 w-8 place-items-center rounded-full bg-[linear-gradient(140deg,#c5d4e3,#8a9bb0)] text-white">DR</div>
+        </div>
+      </div>
+      <div className="mx-auto w-full max-w-[1400px] px-7 pb-10 pt-6">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <div><h1 className="m-0 text-[22px] font-bold text-[#1a2332]">Resumen ejecutivo hídrico</h1><p className="m-0 text-[13px] text-[#5a6577]">Visión general del riesgo hídrico y nivel de riesgo de plantas.</p></div>
           <LastUpdated fechaActualizacion={new Date()} onRefresh={refetch} loading={isLoading} />
         </div>
 
