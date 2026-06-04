@@ -60,8 +60,7 @@ export default function ApiAlertsPage() {
 
   return (
     <div className="flex min-w-0 flex-1 flex-col bg-[#f5f7fa]">
-      <div className="flex items-center justify-between border-b border-[#e6eaf0] bg-white px-7 py-3.5">
-        <div className="text-xs text-[#8a93a3]">Administrador · <strong>Alertas de API</strong></div>
+      <div className="flex items-center justify-end border-b border-[#e6eaf0] bg-white px-7 py-3.5">
         <div className="flex items-center gap-3.5">
           <span className="text-xs text-[#5a6577]">{dateStr} · {timeStr}</span>
           <div className="grid h-8 w-8 place-items-center rounded-full bg-[linear-gradient(140deg,#c5d4e3,#8a9bb0)] text-white">AD</div>
