@@ -61,6 +61,15 @@ export default function PlantRiskList({ plants = [], selectedId = null, onSelect
     setCurrentPage(1);
   }, [riskFilter, searchTerm]);
 
+  // Saltar a la página donde está la planta seleccionada (ej. al elegirla en el mapa)
+  useEffect(() => {
+    if (selectedId == null) return;
+    const idx = filteredPlants.findIndex(p => p.idPlanta === selectedId);
+    if (idx >= 0) {
+      setCurrentPage(Math.floor(idx / itemsPerPage) + 1);
+    }
+  }, [selectedId]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Sugerencias para el datalist
   const matchingSuggestions = allPlantNames.filter(name =>
     name.toLowerCase().includes(searchTerm.toLowerCase())
