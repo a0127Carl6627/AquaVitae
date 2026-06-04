@@ -66,12 +66,14 @@ export async function fetchEvolucion(dias = 7) {
 
 // SIMULACIÓN
 export async function fetchKpis(plantaId) {
-  const { data } = await api.get('/api/simulacion/kpis', { params: { plantaId: plantaId ?? 1 } });
+  // KPIs derivados del pronóstico ARIMA (días a umbral, prob. de escasez, pérdida esperada)
+  const { data } = await api.get('/api/predicciones/kpis', { params: { plantaId: plantaId ?? 1 } });
   return data;
 }
 
 export async function fetchProyeccion(plantaId, dias = 90) {
-  const { data } = await api.get('/api/simulacion/proyeccion', {
+  // Proyección generada por el modelo ARIMA (microservicio batch -> Prediccion_Hidrica)
+  const { data } = await api.get('/api/predicciones/proyeccion', {
     params: { plantaId: plantaId ?? 1, dias },
   });
   const chartData = (data.puntos || []).map((p, i) => ({
