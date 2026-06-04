@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useApiStatus, useApiAlerts, useTriggerApiCheck } from '../hooks/useAquavitaeQueries';
 
 const PANEL = 'rounded-2xl border border-[#eef2f7] bg-white p-5 shadow-[0_10px_24px_rgba(15,23,42,0.04)]';
@@ -30,6 +30,10 @@ export default function ApiAlertsPage() {
   const { data: statusList = [], isLoading: loadingStatus, error: statusError } = useApiStatus();
   const { data: alerts = [], isLoading: loadingAlerts, error: alertsError } = useApiAlerts();
   const triggerCheck = useTriggerApiCheck();
+  const [now, setNow] = useState(new Date());
+  useEffect(() => { const t = setInterval(() => setNow(new Date()), 60000); return () => clearInterval(t); }, []);
+  const timeStr = now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+  const dateStr = now.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' });
 
   const loading = loadingStatus || loadingAlerts;
   const error = statusError || alertsError;
@@ -46,44 +50,37 @@ export default function ApiAlertsPage() {
     triggerCheck.mutate();
   };
 
-  const pageClass = 'ml-16 box-border min-h-screen w-[calc(100%-64px)] flex-1 bg-[#f8fafc] px-[18px] py-[22px] min-[700px]:px-8 min-[700px]:py-7';
-
   if (loading) {
-    return (
-      <main className={pageClass}>
-        <p className="text-sm text-[#94a3b8]">Cargando monitoreo de APIs...</p>
-      </main>
-    );
+    return <div className="flex flex-1 items-center justify-center">Cargando monitoreo de APIs...</div>;
   }
 
   if (error) {
-    return (
-      <main className={pageClass}>
-        <div className="mb-[18px] rounded-[10px] border-l-4 border-[#ef4444] bg-[#fee2e2] px-4 py-3 text-sm text-[#991b1b]">Error: {error.message}</div>
-      </main>
-    );
+    return <div className="flex flex-1 items-center justify-center text-[#e23b3b]">Error: {error.message}</div>;
   }
 
   return (
-    <main className={pageClass}>
-      <header className="mb-6 flex flex-col items-start justify-between gap-6 min-[1100px]:flex-row">
-        <div>
-          <h1 className="m-0 text-[28px] font-[750] text-[#111827]">Alertas de API</h1>
-          <p className="mb-0 mt-1.5 text-sm text-[#64748b]">Monitorea errores de integración para detectar y resolver problemas antes de que afecten al usuario.</p>
-        </div>
+    <div className="flex min-w-0 flex-1 flex-col bg-[#f5f7fa]">
+      <div className="flex items-center justify-between border-b border-[#e6eaf0] bg-white px-7 py-3.5">
+        <div className="text-xs text-[#8a93a3]">Administrador · <strong>Alertas de API</strong></div>
         <div className="flex items-center gap-3.5">
-          <span className="text-[13px] text-[#64748b]">
-            Última actualización: {new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
-          </span>
-          <button
-            className="cursor-pointer rounded-[10px] border border-[#dbe3ef] bg-white px-3.5 py-2.5 font-[650] text-[#2563eb] disabled:cursor-not-allowed disabled:opacity-70"
-            onClick={handleRefresh}
-            disabled={triggerCheck.isPending}
-          >
-            {triggerCheck.isPending ? 'Actualizando...' : 'Actualizar APIs'}
-          </button>
+          <span className="text-xs text-[#5a6577]">{dateStr} · {timeStr}</span>
+          <div className="grid h-8 w-8 place-items-center rounded-full bg-[linear-gradient(140deg,#c5d4e3,#8a9bb0)] text-white">AD</div>
         </div>
-      </header>
+      </div>
+      <div className="mx-auto w-full max-w-[1400px] px-7 pb-10 pt-6">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="m-0 text-[22px] font-bold text-[#1a2332]">Alertas de API</h1>
+          <p className="m-0 text-[13px] text-[#5a6577]">Monitorea errores de integración para detectar y resolver problemas antes de que afecten al usuario.</p>
+        </div>
+        <button
+          className="cursor-pointer rounded-[10px] border border-[#dbe3ef] bg-white px-3.5 py-2.5 font-[650] text-[#2563eb] disabled:cursor-not-allowed disabled:opacity-70"
+          onClick={handleRefresh}
+          disabled={triggerCheck.isPending}
+        >
+          {triggerCheck.isPending ? 'Actualizando...' : 'Actualizar APIs'}
+        </button>
+      </div>
 
       <section className="mb-5 grid grid-cols-1 gap-[18px] min-[700px]:grid-cols-2 min-[1100px]:grid-cols-4">
         <MetricCard title="Errores 401" subtitle="No autorizado" value={metrics.errores401} tone="red" icon="🔒" />
@@ -159,7 +156,8 @@ export default function ApiAlertsPage() {
           </table>
         </div>
       </section>
-    </main>
+      </div>
+    </div>
   );
 }
 

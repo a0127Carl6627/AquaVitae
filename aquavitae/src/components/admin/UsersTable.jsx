@@ -112,13 +112,6 @@ export default function UsersTable({
             />
           </div>
 
-          <button className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-[13px] text-gray-700 [font-family:inherit]">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-              stroke="#6b7280" strokeWidth="2" strokeLinecap="round">
-              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-            </svg>
-            Filtros
-          </button>
         </div>
 
         <button

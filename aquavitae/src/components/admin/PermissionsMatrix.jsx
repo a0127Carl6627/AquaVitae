@@ -71,8 +71,10 @@ export default function PermissionsMatrix({
                 {rolesVisibles.map(rol => {
                   const tiene = permissions[rol]?.[mod] ?? false;
                   return (
-                    <td key={rol} className="px-2.5 py-[13px] text-center">
-                      {tiene ? <CheckIcon /> : <DashIcon />}
+                    <td key={rol} className="px-2.5 py-[13px]">
+                      <div className="flex items-center justify-center">
+                        {tiene ? <CheckIcon /> : <DashIcon />}
+                      </div>
                     </td>
                   );
                 })}

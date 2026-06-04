@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useResumenUsuarios, useUsuarios, useRoles, usePlantas, useCrearUsuario, useEditarUsuario, useEliminarUsuario } from '../hooks/useAquavitaeQueries';
 import StatsGrid from '../components/admin/StatsGrid';
 import UsersTable from '../components/admin/UsersTable';
-import RolesHighlight from '../components/admin/RolesHighlight';
 import PermissionsMatrix from '../components/admin/PermissionsMatrix';
-import DataAccessPolicy from '../components/admin/DataAccessPolicy';
 import ModalDeleteUser from '../components/admin/ModalDeleteUser';
 import EditUserModal from '../components/admin/EditUserModal';
 import NewUserModal from '../components/admin/NewUserModal';
@@ -28,22 +26,17 @@ export default function GestionUsuariosPage() {
   const { data: plantas } = usePlantas();
 
   const [matrizPermisos, setMatrizPermisos] = useState({ modules: [], roles: [], permissions: {} });
-  const [politicasAcceso, setPoliticasAcceso] = useState([]);
 
-  useEffect(() => {
-    if (!roles) return;
-    const politicaPorRol = { Administrador: 'Todas las regiones y plantas', Director: 'Todas las regiones y plantas', 'Gerente de Planta': 'Solo su planta asignada', Analista: 'Solo su región asignada', Operador: 'Solo su planta asignada' };
-    setPoliticasAcceso(roles.map(rol => ({ rol: rol.nombre, acceso: politicaPorRol[rol.nombre] || 'No definido' })));
-  }, [roles]);
+
 
   useEffect(() => {
     if (!roles || roles.length === 0) return;
     const modules = ['Resumen', 'Plantas', 'Fuentes de agua', 'Riesgos', 'Alertas', 'Simulaciones', 'Reportes'];
     const permsMap = {
-      Director:          { Resumen: true,  Plantas: true,  'Fuentes de agua': true,  Riesgos: true,  Alertas: true,  Simulaciones: true,  Reportes: true},
-      'Gerente de Planta': { Resumen: true,  Plantas: true,  'Fuentes de agua': false, Riesgos: true,  Alertas: true,  Simulaciones: false, Reportes: true},
-      Analista:          { Resumen: true,  Plantas: true,  'Fuentes de agua': false, Riesgos: true,  Alertas: true,  Simulaciones: false, Reportes: true},
-      Operador:          { Resumen: true,  Plantas: true,  'Fuentes de agua': false, Riesgos: true,  Alertas: true,  Simulaciones: false, Reportes: false},
+      Director:          { Resumen: true,  Plantas: true,  'Fuentes de agua': true,  Riesgos: true,  Alertas: true,  Simulaciones: true,  Reportes: true  },
+      'Gerente de Planta': { Resumen: true,  Plantas: true,  'Fuentes de agua': false, Riesgos: true,  Alertas: true,  Simulaciones: false, Reportes: true  },
+      Analista:          { Resumen: true,  Plantas: true,  'Fuentes de agua': false, Riesgos: true,  Alertas: true,  Simulaciones: false, Reportes: true  },
+      Operador:          { Resumen: true,  Plantas: true,  'Fuentes de agua': false, Riesgos: false, Alertas: false, Simulaciones: false, Reportes: false },
     };
     setMatrizPermisos({ modules, roles: roles.map(r => r.nombre).filter(r => r !== 'Administrador'), permissions: permsMap });
   }, [roles]);
@@ -63,7 +56,7 @@ export default function GestionUsuariosPage() {
     totalPages: usuariosData?.totalPages || 1,
   };
 
-  const rolesDestacados = (roles || []).map(r => ({ id: r.id, nombre: r.nombre, descripcion: r.descripcion || 'Sin descripción', cantidadPermisos: r.cantidadPermisos || 0 }));
+  const rolesDestacados = (roles || []).map(r => ({ id: r.id, nombre: r.nombre, descripcion: r.descripcion || 'Sin descripción', cantidadPermisos: r.cantidadPermisos || 0, permisos: r.permisos || [] }));
 
   const crearMutation = useCrearUsuario();
   const editarMutation = useEditarUsuario();
@@ -93,12 +86,11 @@ export default function GestionUsuariosPage() {
         <div className="flex items-center gap-3.5"><span>{dateStr} · {timeStr}</span><div className="grid h-8 w-8 place-items-center rounded-full bg-[linear-gradient(140deg,#c5d4e3,#8a9bb0)] text-white">AD</div></div>
       </div>
       <div className="mx-auto w-full max-w-[1400px] px-7 pb-10 pt-6">
-        <div className="mb-6"><h1 className="m-0 text-2xl font-bold text-[#1a2332]">Usuarios y roles</h1><p className="m-0 text-sm text-[#5a6577]">Gestiona usuarios, roles y permisos de acceso a módulos y datos.</p></div>
+        <div className="mb-6"><h1 className="m-0 text-[22px] font-bold text-[#1a2332]">Usuarios y roles</h1><p className="m-0 text-[13px] text-[#5a6577]">Gestiona usuarios, roles y permisos de acceso a módulos y datos.</p></div>
         <StatsGrid stats={stats} />
         <UsersTable usuarios={usuarios} onPageChange={handlePageChange} onEdit={handleEditUser} onDelete={handleDeleteClick} onAgregar={handleAddUser} loading={loadingUsuarios} />
-        <RolesHighlight roles={rolesDestacados} />
         <PermissionsMatrix modules={matrizPermisos.modules} roles={matrizPermisos.roles} permissions={matrizPermisos.permissions} />
-        <DataAccessPolicy politicas={politicasAcceso} />
+        
       </div>
       {userToDelete && <ModalDeleteUser user={userToDelete} onConfirm={confirmDelete} onCancel={() => setUserToDelete(null)} />}
       {usuarioEditar && <EditUserModal isOpen={!!usuarioEditar} usuario={usuarioEditar} roles={rolesDestacados} plantas={plantas || []} onClose={() => setUsuarioEditar(null)} onSave={handleSaveEdit} />}
