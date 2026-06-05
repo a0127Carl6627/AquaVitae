@@ -1,10 +1,7 @@
-const FIELD = 'h-[42px] min-w-[180px] rounded-[10px] border border-[#dbe4f0] bg-white px-3.5 text-sm text-[#172033] focus:border-[#2563eb] focus:outline-none';
+const FIELD =
+  'h-[42px] min-w-[180px] rounded-[10px] border border-[#dbe4f0] bg-white px-3.5 text-sm text-[#172033] focus:border-[#2563eb] focus:outline-none';
 
-function AuditoriaFilters({
-  filters,
-  onChange,
-  onSearch,
-}) {
+function AuditoriaFilters({ filters, onChange }) {
   function handleInputChange(e) {
     onChange?.({
       ...filters,
@@ -43,13 +40,6 @@ function AuditoriaFilters({
         <option value="MEDIA">MEDIA</option>
         <option value="ALTA">ALTA</option>
       </select>
-
-      <button
-        onClick={onSearch}
-        className="h-[42px] cursor-pointer rounded-[10px] border-none bg-[#2563eb] px-[18px] font-semibold text-white transition-colors hover:bg-[#1d4ed8]"
-      >
-        Buscar
-      </button>
     </div>
   );
 }
