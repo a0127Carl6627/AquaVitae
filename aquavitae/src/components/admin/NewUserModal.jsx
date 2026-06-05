@@ -41,7 +41,6 @@ function Campo({ label, required, children }) {
 export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpresa, onClose, onSave }) {
   const [form, setForm] = useState({
     nombreCompleto: '',
-    nombreUsuario: '',
     correo: '',
     telefono: '',
     contrasenaTemp: '',
@@ -169,23 +168,14 @@ export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpre
                 Información general
               </h2>
 
-              {/* Fila 1: Nombre completo + Nombre de usuario */}
-              <div className="mb-4 grid grid-cols-2 gap-4">
+              {/* Fila 1: Nombre completo */}
+              <div className="mb-4">
                 <Campo label="Nombre completo" required>
                   <input
                     type="text"
                     placeholder="Ej. María Fernanda López"
                     value={form.nombreCompleto}
                     onChange={e => handleChange('nombreCompleto', e.target.value)}
-                    className={INPUT}
-                  />
-                </Campo>
-                <Campo label="Nombre de usuario" required>
-                  <input
-                    type="text"
-                    placeholder="Ej. maria.lopez"
-                    value={form.nombreUsuario}
-                    onChange={e => handleChange('nombreUsuario', e.target.value)}
                     className={INPUT}
                   />
                 </Campo>
