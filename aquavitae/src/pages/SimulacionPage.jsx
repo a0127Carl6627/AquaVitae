@@ -65,14 +65,13 @@ export default function SimulacionPage() {
 
   return (
     <div className="flex min-w-0 flex-1 flex-col bg-[#f5f7fa]">
-      <div className="flex items-center justify-between border-b border-[#e6eaf0] bg-white px-7 py-3.5">
-        <div className="text-xs text-[#8a93a3]">Director · <strong>Simulación y recuperación hídrica</strong></div>
+      <div className="flex items-center justify-end border-b border-[#e6eaf0] bg-white px-7 py-3.5">
         <div className="flex items-center gap-3.5"><span>{dateStr} · {timeStr}</span><div className="grid h-8 w-8 place-items-center rounded-full bg-[linear-gradient(140deg,#c5d4e3,#8a9bb0)] text-white">DR</div></div>
       </div>
       <div className="mx-auto w-full max-w-[1440px] px-7 pb-10 pt-6">
         <div className="mb-[22px] flex justify-between">
           <div><h1 className="m-0 text-[22px] font-bold text-[#1a2332]">Simulación y recuperación hídrica</h1><p className="m-0 text-[13px] text-[#5a6577]">Proyección de estrés hídrico y escenarios de recuperación por planta · Bachoco 2026</p></div>
-          <div><label className="text-[11px] text-[#8a93a3]">PLANTA</label><select value={selectedId ?? ''} onChange={e => setSelectedId(Number(e.target.value))} className="min-w-[200px] cursor-pointer appearance-none rounded-lg border border-[#d6dde6] bg-white py-[7px] pl-[11px] pr-[30px] text-[12.5px]">{plantas.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}</select></div>
+          <div className="flex items-center gap-2"><label className="text-[11px] text-[#8a93a3]">PLANTA:</label><select value={selectedId ?? ''} onChange={e => setSelectedId(Number(e.target.value))} className="min-w-[200px] cursor-pointer appearance-none rounded-lg border border-[#d6dde6] bg-white py-[7px] pl-[11px] pr-[30px] text-[12.5px]">{plantas.map(p => <option key={p.id} value={p.id}>{p.nombre.replace(/^Planta\s+/i, '')}</option>)}</select></div>
         </div>
 
         {/* KPI Cards */}

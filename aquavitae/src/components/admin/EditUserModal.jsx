@@ -42,7 +42,6 @@ export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [
   const [form, setForm] = useState({
     nombre: '',
     apellido: '',
-    nombreUsuario: '',
     correo: '',
     telefono: '',
     activo: true,
@@ -60,7 +59,6 @@ export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [
       setForm({
         nombre: usuario.nombre || '',
         apellido: usuario.apellido || '',
-        nombreUsuario: usuario.nombreUsuario || '',
         correo: usuario.correo || '',
         telefono: usuario.telefono || '',
         activo: usuario.activo !== undefined ? usuario.activo : true,
@@ -104,7 +102,6 @@ export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [
       const dto = {
         nombre: form.nombre,
         apellido: form.apellido,
-        nombreUsuario: form.nombreUsuario,
         correo: form.correo,
         telefono: form.telefono,
         activo: form.activo,
@@ -163,23 +160,14 @@ export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [
                 Información general
               </h2>
 
-              {/* Fila 1: Nombre completo + Nombre de usuario */}
-              <div className="mb-4 grid grid-cols-2 gap-4">
+              {/* Fila 1: Nombre completo */}
+              <div className="mb-4">
                 <Campo label="Nombre completo" required>
                   <input
                     type="text"
                     placeholder="Ej. María Fernanda"
                     value={form.nombre}
                     onChange={e => handleChange('nombre', e.target.value)}
-                    className={INPUT}
-                  />
-                </Campo>
-                <Campo label="Nombre de usuario" required>
-                  <input
-                    type="text"
-                    placeholder="Ej. maria.gomez"
-                    value={form.nombreUsuario}
-                    onChange={e => handleChange('nombreUsuario', e.target.value)}
                     className={INPUT}
                   />
                 </Campo>

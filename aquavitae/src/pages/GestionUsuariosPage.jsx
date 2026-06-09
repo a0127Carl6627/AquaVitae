@@ -81,8 +81,7 @@ export default function GestionUsuariosPage() {
 
   return (
     <div className="flex min-w-0 flex-1 flex-col bg-[#f5f7fa]">
-      <div className="flex items-center justify-between border-b border-[#e6eaf0] bg-white px-7 py-3.5">
-        <div className="text-xs text-[#8a93a3]">Administrador · <strong>Gestión de usuarios y roles</strong></div>
+      <div className="flex items-center justify-end border-b border-[#e6eaf0] bg-white px-7 py-3.5">
         <div className="flex items-center gap-3.5"><span>{dateStr} · {timeStr}</span><div className="grid h-8 w-8 place-items-center rounded-full bg-[linear-gradient(140deg,#c5d4e3,#8a9bb0)] text-white">AD</div></div>
       </div>
       <div className="mx-auto w-full max-w-[1400px] px-7 pb-10 pt-6">
