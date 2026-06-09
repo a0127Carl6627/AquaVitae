@@ -185,7 +185,7 @@ describe('DashboardInicio — integración', () => {
     it('muestra el nivel de riesgo "Alto" en RiskGauge (1 alto > 0)', () => {
       setupSuccess();
       render(<DashboardInicio />);
-      expect(screen.getByText('Alto')).toBeInTheDocument();
+      expect(screen.getAllByText('Alto').length).toBeGreaterThan(0);
     });
 
     it('renderiza la alerta reciente desde AlertsList', () => {

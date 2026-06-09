@@ -8,17 +8,33 @@ jest.mock('../../../components/maps/assets/mexico-geojson.json', () => ({
   features: [],
 }));
 
-// Leaflet inicializa el mapa de forma asíncrona (import('leaflet').then(...)).
-// En jsdom esa promesa rechaza porque Canvas/WebGL no están disponibles.
-// El handler vacío evita que el worker de Jest colapse; los tests solo verifican
-// el HTML estático (leyenda, testid) que se renderiza de forma síncrona.
-const suppressLeafletRejection = () => {};
-beforeAll(() => {
-  process.on('unhandledRejection', suppressLeafletRejection);
+// import('leaflet') es dinámico: Jest no aplica src/__mocks__ automáticamente.
+// El factory debe ser inline (no usar require del archivo de mock: produciría
+// recursión infinita porque Jest intentaría mockearlo de nuevo).
+jest.mock('leaflet', () => {
+  const layerStub = () => ({
+    addTo: jest.fn().mockReturnThis(),
+    setStyle: jest.fn(),
+    bindTooltip: jest.fn(),
+    on: jest.fn(),
+    remove: jest.fn(),
+  });
+  const mapStub = { setView: jest.fn().mockReturnThis(), remove: jest.fn() };
+  const mod = {
+    __esModule: true,
+    icon: () => ({}),
+    Icon: { Default: { mergeOptions: () => {} } },
+    map: jest.fn(() => mapStub),
+    tileLayer: jest.fn(layerStub),
+    geoJson: jest.fn(layerStub),
+  };
+  mod.default = mod;
+  return mod;
 });
-afterAll(() => {
-  process.removeListener('unhandledRejection', suppressLeafletRejection);
-});
+
+// import('leaflet/dist/leaflet.css') carece de .catch(); en Node.js 24 un
+// rechazo no manejado mata el worker. Se neutraliza con un módulo vacío.
+jest.mock('leaflet/dist/leaflet.css', () => ({}));
 
 const plantasMock = [
   {

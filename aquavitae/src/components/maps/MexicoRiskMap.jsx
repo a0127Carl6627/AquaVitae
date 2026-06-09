@@ -49,21 +49,22 @@ export default function MexicoRiskMap({ plantas = [], height = 340, selectedEsta
     if (instanceRef.current) return;
 
     import('leaflet').then(L => {
-      import('leaflet/dist/leaflet.css');
+      import('leaflet/dist/leaflet.css').catch(() => {});
       if (!mapRef.current) return;
       if (mapRef.current._leaflet_id) mapRef.current._leaflet_id = null;
 
-      const map = L.map(mapRef.current, {
+      const LLib = L.default || L;
+      const map = LLib.map(mapRef.current, {
         zoomControl: true,
         scrollWheelZoom: false,
       }).setView([23.5, -101.5], 5);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      LLib.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap',
         opacity: 0.3,
       }).addTo(map);
 
-      L.geoJson(mexicoGeoJson, {
+      LLib.geoJson(mexicoGeoJson, {
         style: feature => {
           const name = feature.properties.name || feature.properties.NAME_1 || '';
           return {
@@ -111,7 +112,7 @@ export default function MexicoRiskMap({ plantas = [], height = 340, selectedEsta
       }).addTo(map);
 
       instanceRef.current = map;
-    });
+    }).catch(() => {});
 
     return () => {
       if (instanceRef.current) {

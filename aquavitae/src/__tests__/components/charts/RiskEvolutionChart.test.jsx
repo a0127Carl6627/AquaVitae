@@ -2,15 +2,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import RiskEvolutionChart from '../../../components/charts/RiskEvolutionChart';
 
-// Recharts usa ResizeObserver internamente; jsdom no lo implementa.
-beforeAll(() => {
-  global.ResizeObserver = class ResizeObserver {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  };
-});
-
 const dataVerde = [
   { fecha: '10 Ene', valorPromedio: 10.0 },
   { fecha: '11 Ene', valorPromedio: 15.0 },
