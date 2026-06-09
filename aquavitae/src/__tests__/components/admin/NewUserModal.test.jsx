@@ -40,6 +40,7 @@ function fillValidForm() {
 describe('NewUserModal', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    generarContrasena.mockResolvedValue('MockPass123!');
   });
 
   describe('Visibility', () => {

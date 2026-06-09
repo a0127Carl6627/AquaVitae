@@ -58,7 +58,7 @@ describe('EditUserModal', () => {
   describe('Initial data', () => {
     it('pre-fills form with usuario data', () => {
       render(<EditUserModal {...defaultProps} />);
-      expect(screen.getByDisplayValue('María')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('María González')).toBeInTheDocument();
       expect(screen.getByDisplayValue('maria@test.com')).toBeInTheDocument();
       expect(screen.getByDisplayValue('8180001234')).toBeInTheDocument();
     });

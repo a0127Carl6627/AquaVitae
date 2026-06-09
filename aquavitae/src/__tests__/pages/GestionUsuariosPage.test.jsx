@@ -10,7 +10,7 @@ import {
   useEditarUsuario,
   useEliminarUsuario,
 } from '../../hooks/useAquavitaeQueries';
-import { crearUsuario } from '../../services/aquavitaeApi';
+import { crearUsuario, generarContrasena } from '../../services/aquavitaeApi';
 
 jest.mock('../../hooks/useAquavitaeQueries', () => ({
   useResumenUsuarios: jest.fn(),
@@ -26,7 +26,7 @@ jest.mock('../../services/aquavitaeApi', () => ({
   crearUsuario: jest.fn(),
   editarUsuario: jest.fn(),
   eliminarUsuario: jest.fn(),
-  generarContrasena: jest.fn(),
+  generarContrasena: jest.fn().mockResolvedValue('MockPass123!'),
 }));
 
 
@@ -74,6 +74,7 @@ function setupMocks({ loading = false } = {}) {
 describe('GestionUsuariosPage (integración)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    generarContrasena.mockResolvedValue('MockPass123!');
   });
 
   describe('Estado de carga', () => {

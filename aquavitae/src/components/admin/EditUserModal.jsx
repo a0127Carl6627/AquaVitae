@@ -38,10 +38,16 @@ function Campo({ label, required, children }) {
   );
 }
 
+function parsearNombre(nombreCompleto) {
+  const trimmed = (nombreCompleto || '').trim();
+  const idx = trimmed.indexOf(' ');
+  if (idx === -1) return { nombre: trimmed, apellido: '-' };
+  return { nombre: trimmed.slice(0, idx), apellido: trimmed.slice(idx + 1) };
+}
+
 export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [], onClose, onSave }) {
   const [form, setForm] = useState({
-    nombre: '',
-    apellido: '',
+    nombreCompleto: '',
     correo: '',
     telefono: '',
     activo: true,
@@ -57,8 +63,7 @@ export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [
   useEffect(() => {
     if (usuario) {
       setForm({
-        nombre: usuario.nombre || '',
-        apellido: usuario.apellido || '',
+        nombreCompleto: usuario.nombreCompleto || ((usuario.nombre || '') + ' ' + (usuario.apellido || '')).trim(),
         correo: usuario.correo || '',
         telefono: usuario.telefono || '',
         activo: usuario.activo !== undefined ? usuario.activo : true,
@@ -99,9 +104,10 @@ export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [
     setErrorMsg('');
     setGuardando(true);
     try {
+      const { nombre, apellido } = parsearNombre(form.nombreCompleto);
       const dto = {
-        nombre: form.nombre,
-        apellido: form.apellido,
+        nombre,
+        apellido,
         correo: form.correo,
         telefono: form.telefono,
         activo: form.activo,
@@ -165,9 +171,9 @@ export default function EditUserModal({ isOpen, usuario, roles = [], plantas = [
                 <Campo label="Nombre completo" required>
                   <input
                     type="text"
-                    placeholder="Ej. María Fernanda"
-                    value={form.nombre}
-                    onChange={e => handleChange('nombre', e.target.value)}
+                    placeholder="Ej. María Fernanda López"
+                    value={form.nombreCompleto}
+                    onChange={e => handleChange('nombreCompleto', e.target.value)}
                     className={INPUT}
                   />
                 </Campo>
