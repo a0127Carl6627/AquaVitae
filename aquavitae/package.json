@@ -39,6 +39,12 @@
       "plugin:storybook/recommended"
     ]
   },
+  "jest": {
+    "moduleNameMapper": {
+      "^leaflet$": "<rootDir>/src/__mocks__/leaflet.js",
+      "^leaflet/dist/leaflet\\.css$": "<rootDir>/src/__mocks__/leaflet-css.js"
+    }
+  },
   "proxy": "http://localhost:8080",
   "browserslist": {
     "production": [

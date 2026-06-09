@@ -49,21 +49,22 @@ export default function MexicoRiskMap({ plantas = [], height = 340, selectedEsta
     if (instanceRef.current) return;
 
     import('leaflet').then(L => {
-      import('leaflet/dist/leaflet.css');
+      import('leaflet/dist/leaflet.css').catch(() => {});
       if (!mapRef.current) return;
       if (mapRef.current._leaflet_id) mapRef.current._leaflet_id = null;
 
-      const map = L.map(mapRef.current, {
+      const LLib = L.default || L;
+      const map = LLib.map(mapRef.current, {
         zoomControl: true,
         scrollWheelZoom: false,
       }).setView([23.5, -101.5], 5);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      LLib.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap',
         opacity: 0.3,
       }).addTo(map);
 
-      L.geoJson(mexicoGeoJson, {
+      LLib.geoJson(mexicoGeoJson, {
         style: feature => {
           const name = feature.properties.name || feature.properties.NAME_1 || '';
           return {
@@ -111,7 +112,7 @@ export default function MexicoRiskMap({ plantas = [], height = 340, selectedEsta
       }).addTo(map);
 
       instanceRef.current = map;
-    });
+    }).catch(() => {});
 
     return () => {
       if (instanceRef.current) {
@@ -132,7 +133,7 @@ export default function MexicoRiskMap({ plantas = [], height = 340, selectedEsta
   return (
     <div className="overflow-hidden rounded-xl border border-[#e6eaf0] bg-white font-sans shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
       {/* height es prop numérica dinámica: inline justificado */}
-      <div ref={mapRef} className="w-full" style={{ height }} />
+      <div ref={mapRef} data-testid="map-container" className="w-full" style={{ height }} />
       <div className="flex flex-wrap gap-2.5 border-t border-[#e6eaf0] px-4 py-2.5">
         {leyenda.map(({ chip, dot, label }) => (
           <span key={label} className={`inline-flex items-center gap-[5px] rounded-full border px-[9px] py-0.5 text-[11px] font-semibold ${chip}`}>
