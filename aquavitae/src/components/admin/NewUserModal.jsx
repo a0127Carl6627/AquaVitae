@@ -59,6 +59,18 @@ export default function NewUserModal({ isOpen, roles = [], plantas = [], idEmpre
     setPermisosActivos(new Set(PERMISOS_DEFAULT_POR_ROL[rolNuevo?.nombre] || []));
   }, [form.idRol, roles]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    setForm({ nombreCompleto: '', correo: '', telefono: '', contrasenaTemp: '', idRol: '' });
+    setErrorMsg('');
+    setMostrarContrasena(false);
+    generarContrasena()
+      .then(contrasena => {
+        setForm(prev => ({ ...prev, contrasenaTemp: contrasena || '' }));
+      })
+      .catch(() => {});
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   function handleChange(field, value) {
