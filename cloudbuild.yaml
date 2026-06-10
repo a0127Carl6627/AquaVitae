@@ -1,0 +1,33 @@
+# CI/CD del frontend (Create React App) -> Firebase Hosting
+# La app vive en el subdirectorio aquavitae/
+steps:
+  # 1. Instalar dependencias
+  - name: 'node:20'
+    dir: 'aquavitae'
+    entrypoint: npm
+    args: ['ci']
+
+  # 2. Build de producción (usa aquavitae/.env.production)
+  - name: 'node:20'
+    dir: 'aquavitae'
+    entrypoint: npm
+    args: ['run', 'build']
+    env:
+      - 'CI=false'   # evita que warnings de CRA rompan el build
+
+  # 3. Publicar en Firebase Hosting (autentica con la service account de Cloud Build vía ADC)
+  - name: 'node:20'
+    dir: 'aquavitae'
+    entrypoint: npx
+    args:
+      - 'firebase-tools@latest'
+      - 'deploy'
+      - '--only'
+      - 'hosting'
+      - '--project'
+      - 'aquavitaeback'
+      - '--non-interactive'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+timeout: 1200s
