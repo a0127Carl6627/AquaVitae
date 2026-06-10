@@ -1,0 +1,11 @@
+{
+  "puntos": [
+    { "fecha": "2026-06-03", "valorPromedio": 0.65 },
+    { "fecha": "2026-06-04", "valorPromedio": 0.68 },
+    { "fecha": "2026-06-05", "valorPromedio": 0.72 },
+    { "fecha": "2026-06-06", "valorPromedio": 0.70 },
+    { "fecha": "2026-06-07", "valorPromedio": 0.75 },
+    { "fecha": "2026-06-08", "valorPromedio": 0.78 },
+    { "fecha": "2026-06-09", "valorPromedio": 0.80 }
+  ]
+}

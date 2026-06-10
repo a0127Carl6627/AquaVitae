@@ -1,0 +1,39 @@
+{
+  "plantas": [
+    {
+      "idPlanta": 1,
+      "nombrePlanta": "Planta Monterrey Norte",
+      "latitud": 25.6866,
+      "longitud": -100.3161,
+      "indiceHidrico": 0.85,
+      "nivelRiesgo": "ALTO",
+      "ubicacionNombre": "Monterrey, Nuevo León",
+      "tendencia": "SUBIENDO"
+    },
+    {
+      "idPlanta": 2,
+      "nombrePlanta": "Planta Guadalajara Sur",
+      "latitud": 20.6597,
+      "longitud": -103.3496,
+      "indiceHidrico": 0.50,
+      "nivelRiesgo": "MEDIO",
+      "ubicacionNombre": "Guadalajara, Jalisco",
+      "tendencia": "ESTABLE"
+    },
+    {
+      "idPlanta": 3,
+      "nombrePlanta": "Planta CDMX Centro",
+      "latitud": 19.4326,
+      "longitud": -99.1332,
+      "indiceHidrico": 0.20,
+      "nivelRiesgo": "BAJO",
+      "ubicacionNombre": "Ciudad de México, CDMX",
+      "tendencia": "BAJANDO"
+    }
+  ],
+  "resumen": {
+    "alto": 1,
+    "medio": 1,
+    "bajo": 1
+  }
+}

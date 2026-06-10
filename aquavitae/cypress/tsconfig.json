@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "lib": ["es2015", "dom"],
+    "types": ["cypress", "node"],
+    "allowJs": true,
+    "checkJs": false
+  },
+  "include": ["e2e/**/*.js", "e2e/**/*.ts", "support/**/*.js", "support/**/*.ts"]
+}
