@@ -18,24 +18,56 @@ export default function App() {
   const [appUser, setAppUser] = useState(null);
 
   useEffect(() => {
+    /**
+     * Bypass exclusivo para Cypress.
+     *
+     * Permite que las pruebas E2E de pantallas internas como APIs y Auditoría
+     * arranquen con un usuario autenticado sin depender de Firebase.
+     *
+     * No afecta producción porque window.Cypress solo existe cuando Cypress
+     * está ejecutando la aplicación.
+     */
+    if (window.Cypress) {
+      const stored = getStoredUser();
+      const forcedPage = localStorage.getItem('aquavitae_e2e_page');
+
+      if (stored) {
+        setUser({ uid: stored.uid || 'cypress-user' });
+        setAppUser(stored);
+
+        if (forcedPage) {
+          setPage(forcedPage);
+        }
+
+        return () => {};
+      }
+    }
+
     const unsub = onAuthStateChanged(auth, async (u) => {
       setUser(u ?? null);
 
       if (u) {
         const stored = getStoredUser();
+
         if (stored) {
           setAppUser(stored);
         } else {
           try {
             const token = await u.getIdToken();
             const API_URL = process.env.REACT_APP_API_URL || '';
+
             const res = await fetch(`${API_URL}/auth/me`, {
-              headers: { Authorization: `Bearer ${token}` },
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
             });
+
             if (res.ok) {
               const backendUser = await res.json();
+
               localStorage.setItem('aquavitae_token', token);
               localStorage.setItem('aquavitae_user', JSON.stringify(backendUser));
+
               setAppUser(backendUser);
             } else {
               await logout();
@@ -56,6 +88,19 @@ export default function App() {
 
   useEffect(() => {
     if (!appUser) return;
+
+    /**
+     * Si Cypress forzó una pantalla interna, no se sobreescribe
+     * con la pantalla default del rol.
+     */
+    if (window.Cypress) {
+      const forcedPage = localStorage.getItem('aquavitae_e2e_page');
+
+      if (forcedPage) {
+        setPage(forcedPage);
+        return;
+      }
+    }
 
     if (appUser.rol === 'Administrador') {
       setPage('gestion-usuarios');
@@ -88,6 +133,9 @@ export default function App() {
 
   const handleLogout = async () => {
     await logout();
+
+    localStorage.removeItem('aquavitae_e2e_page');
+
     setAppUser(null);
     setPage('dashboard');
   };
