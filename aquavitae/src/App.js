@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import ExpandableSidebar from './components/ExpandableSidebar';
+import ExpandableSidebar from './layout/ExpandableSidebar';
 import DashboardInicio from './pages/DashboardInicio';
 import SimulacionPage from './pages/SimulacionPage';
 import AlternativasPage from './pages/AlternativasPage';
 import GestionUsuariosPage from './pages/GestionUsuariosPage';
-import LoginContainer from './components/LoginPage/LoginContainer';
-import ApiAlertsPage from './components/ApiAlertsPage/ApiAlertsPage';
-import AdminAuditoriaPage from './components/Auditoria/AdminAuditoriaPage';
+import LoginContainer from './pages/LoginContainer';
+import ApiAlertsPage from './pages/ApiAlertsPage';
+import AdminAuditoriaPage from './pages/AdminAuditoriaPage';
 
 import { auth } from './lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -111,14 +111,7 @@ export default function App() {
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        minHeight: '100vh',
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif',
-      }}
-    >
+    <div className="flex min-h-screen font-sans">
       <ExpandableSidebar
         activePage={page}
         onNavigate={handleNavigate}

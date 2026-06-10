@@ -10,6 +10,7 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.16.1",
+    "clsx": "^2.1.1",
     "firebase": "^12.13.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.1",
@@ -21,7 +22,6 @@
     "react-router-dom": "^7.15.1",
     "react-scripts": "5.0.1",
     "recharts": "^3.8.1",
-    "styled-components": "^6.4.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -38,6 +38,12 @@
       "react-app/jest",
       "plugin:storybook/recommended"
     ]
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^leaflet$": "<rootDir>/src/__mocks__/leaflet.js",
+      "^leaflet/dist/leaflet\\.css$": "<rootDir>/src/__mocks__/leaflet-css.js"
+    }
   },
   "proxy": "http://localhost:8080",
   "browserslist": {
@@ -59,10 +65,13 @@
     "@storybook/preset-create-react-app": "^10.3.5",
     "@storybook/react-webpack5": "^10.3.5",
     "@types/node": "^25.7.0",
+    "autoprefixer": "^10.5.0",
     "eslint-plugin-storybook": "^10.3.5",
     "null-loader": "^4.0.1",
+    "postcss": "^8.5.15",
     "prop-types": "^15.8.1",
     "storybook": "^10.3.5",
+    "tailwindcss": "^3.4.19",
     "webpack": "^5.106.1"
   }
 }

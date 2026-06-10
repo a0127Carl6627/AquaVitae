@@ -1,0 +1,84 @@
+import React from 'react';
+import clsx from 'clsx';
+
+const ICON_COLOR = {
+  CRÍTICO:     '#E24B4A',
+  ADVERTENCIA: '#EF9F27',
+  INFORMATIVO: '#378ADD',
+};
+
+function TriangleIcon({ color }) {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="mt-0.5 shrink-0"
+      aria-hidden="true"
+    >
+      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+      <line x1="12" y1="9" x2="12" y2="13" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>
+  );
+}
+
+export default function AlertsList({ alerts = [] }) {
+  // Ordenar de más reciente a más antigua (por fecha/hora)
+  const sortedAlerts = [...alerts].sort((a, b) => {
+    const dateA = a.fecha ? new Date(a.fecha) : 0;
+    const dateB = b.fecha ? new Date(b.fecha) : 0;
+    if (dateA && dateB) return dateB - dateA;
+    return 0;
+  });
+
+  // Tomar solo las 3 más recientes
+  const recentAlerts = sortedAlerts.slice(0, 3);
+
+  if (recentAlerts.length === 0) {
+    return (
+      <p className="text-sm text-gray-500 [font-family:Inter,sans-serif]">
+        No hay alertas recientes.
+      </p>
+    );
+  }
+
+  return (
+    <div className="[font-family:Inter,sans-serif]">
+      <h2 className="m-0 mb-5 text-lg font-medium text-gray-900">
+        Alertas recientes
+      </h2>
+      {recentAlerts.map((alert, index) => {
+        const iconColor = ICON_COLOR[alert.tipo] ?? ICON_COLOR.ADVERTENCIA;
+        const isLast = index === recentAlerts.length - 1;
+        return (
+          <div
+            key={alert.id}
+            className={clsx(
+              'flex items-start gap-3 py-3.5',
+              !isLast && 'border-b border-gray-100',
+            )}
+          >
+            <TriangleIcon color={iconColor} />
+            <div className="flex-1">
+              <p className="m-0 mb-1 text-sm font-medium text-gray-900">
+                {alert.titulo}
+              </p>
+              <p className="m-0 text-[13px] leading-[1.45] text-gray-500">
+                {alert.descripcion}
+              </p>
+            </div>
+            <span className="mt-0.5 whitespace-nowrap text-xs text-gray-400">
+              {alert.hora}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
