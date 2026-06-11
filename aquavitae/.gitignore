@@ -27,3 +27,9 @@ yarn-error.log*
 storybook-static
 
 
+
+# Cypress
+cypress.env.json
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/

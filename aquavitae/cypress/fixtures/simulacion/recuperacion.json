@@ -1,0 +1,12 @@
+{
+  "conIntervencion": [
+    { "dia": 1, "valor": 0.40 },
+    { "dia": 45, "valor": 0.55 },
+    { "dia": 90, "valor": 0.70 }
+  ],
+  "sinIntervencion": [
+    { "dia": 1, "valor": 0.40 },
+    { "dia": 45, "valor": 0.38 },
+    { "dia": 90, "valor": 0.35 }
+  ]
+}

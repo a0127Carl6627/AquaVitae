@@ -1,0 +1,36 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "nombre": "Juan",
+      "apellido": "Pérez",
+      "nombreCompleto": "Juan Pérez",
+      "correo": "juan@aquavitae.test",
+      "email": "juan@aquavitae.test",
+      "telefono": "5551234567",
+      "idRol": 1,
+      "nombreRol": "Administrador",
+      "nombreRegion": "Norte",
+      "activo": true,
+      "ultimoAcceso": "2026-06-01"
+    },
+    {
+      "id": 2,
+      "nombre": "Ana",
+      "apellido": "López",
+      "nombreCompleto": "Ana López",
+      "correo": "ana@aquavitae.test",
+      "email": "ana@aquavitae.test",
+      "telefono": "5559876543",
+      "idRol": 2,
+      "nombreRol": "Director",
+      "nombreRegion": "Sur",
+      "activo": true,
+      "ultimoAcceso": "Nunca"
+    }
+  ],
+  "total": 2,
+  "page": 0,
+  "size": 5,
+  "totalPages": 1
+}

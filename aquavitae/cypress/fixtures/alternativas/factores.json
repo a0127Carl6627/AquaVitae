@@ -1,0 +1,5 @@
+[
+  { "nombre": "Disponibilidad de agua", "icono": "water", "puntos": 4, "color": "#2ea36b" },
+  { "nombre": "Costo operativo", "icono": "money", "puntos": 3, "color": "#e89923" },
+  { "nombre": "Tiempo de traslado", "icono": "clock", "puntos": 5, "color": "#2ea36b" }
+]

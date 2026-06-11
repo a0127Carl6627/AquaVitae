@@ -1,0 +1,9 @@
+{
+  "nombrePlanta": "Planta Monterrey Norte",
+  "indiceActual": 0.85,
+  "diasCierreRecomendado": 5,
+  "costoApertura": 120000.0,
+  "costoOperacionEstimada": 45000.0,
+  "diasReaperturaMin": 30,
+  "diasReaperturaMax": 60
+}
