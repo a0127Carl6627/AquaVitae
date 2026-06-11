@@ -1,0 +1,30 @@
+[
+  {
+    "plantaId": 2,
+    "nombre": "Planta Saltillo",
+    "estado": "Coahuila",
+    "riesgo": "bajo",
+    "riesgoLabel": "Riesgo bajo",
+    "costoCierre": 50000.0,
+    "costoApertura": 80000.0,
+    "costoTotal": 130000.0,
+    "tiempoCierreDias": 15,
+    "tiempoAperturaMin": 30,
+    "tiempoAperturaMax": 45,
+    "recomendada": true
+  },
+  {
+    "plantaId": 3,
+    "nombre": "Planta Torreón",
+    "estado": "Coahuila",
+    "riesgo": "medio",
+    "riesgoLabel": "Riesgo medio",
+    "costoCierre": 60000.0,
+    "costoApertura": 90000.0,
+    "costoTotal": 150000.0,
+    "tiempoCierreDias": 20,
+    "tiempoAperturaMin": 35,
+    "tiempoAperturaMax": 55,
+    "recomendada": false
+  }
+]

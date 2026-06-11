@@ -1,0 +1,19 @@
+{
+  "puntos": [
+    { "dia": 1, "valor": 0.50 },
+    { "dia": 30, "valor": 0.60 },
+    { "dia": 60, "valor": 0.68 },
+    { "dia": 90, "valor": 0.72 }
+  ],
+  "bandaSuperior": [
+    { "dia": 1, "valor": 0.55 },
+    { "dia": 90, "valor": 0.78 }
+  ],
+  "bandaInferior": [
+    { "dia": 1, "valor": 0.45 },
+    { "dia": 90, "valor": 0.66 }
+  ],
+  "startDay": 1,
+  "peakDay": 90,
+  "peakValue": 0.72
+}
