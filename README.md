@@ -76,12 +76,23 @@ Storybook queda disponible en `http://localhost:6006`. Incluye todos los compone
 
 ## Páginas disponibles
 
-| Página | Ruta interna | Descripción |
-|---|---|---|
-| Login | — | Autenticación con Firebase |
-| Dashboard | `dashboard` | Resumen ejecutivo: mapa de riesgo, KPIs, alertas, evolución hídrica |
-| Simulación Hídrica | `simulacion` | KPIs, proyección 90 días, escenario de recuperación |
-| Alternativas de Ubicación | `alternativas` | Banner de alerta, mapa, tabla de costos, factores evaluados |
+| Página                    | Ruta interna   | Descripción                                                         |
+| ------------------------- | -------------- | ------------------------------------------------------------------- |
+| Login                     | —              | Autenticación con Firebase                                          |
+| Dashboard                 | `dashboard`    | Resumen ejecutivo: mapa de riesgo, KPIs, alertas, evolución hídrica |
+| Simulación Hídrica        | `simulacion`   | KPIs, proyección 90 días, escenario de recuperación                 |
+| Alternativas de Ubicación | `alternativas` | Banner de alerta, mapa, tabla de costos, factores evaluados         |
+
+---
+
+## Usuarios de prueba
+
+Para acceder al sistema en el entorno de desarrollo o producción se pueden usar las siguientes cuentas de prueba:
+
+| Rol           | Correo              | Contraseña     |
+| ------------- | ------------------- | -------------- |
+| Administrador | `admin@aqua.com`    | `45UdRwAqe9mu` |
+| Director      | `director@aqua.com` | `kZufrMOuD#$g` |
 
 ---
 
@@ -107,6 +118,7 @@ aquavitae/src/
 ## Despliegue en Firebase Hosting
 
 ### Requisitos
+
 - Tener `firebase-tools` instalado: `npm install -g firebase-tools`
 - Estar autenticado: `firebase login`
 - Tener acceso al proyecto `aquavitaeback`
